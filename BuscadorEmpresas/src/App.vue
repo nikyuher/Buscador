@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import Buscador from './views/Buscador.vue';
 </script>
 
 <template>
-  <header>
-    
-
-    <div class="wrapper">
-      
+  <header></header>
         <Buscador></Buscador>
-    </div>
-  </header>
-
-  
 </template>
 
 <style scoped>
