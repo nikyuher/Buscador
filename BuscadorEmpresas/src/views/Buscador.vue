@@ -8,50 +8,33 @@
       <div class="search-inputs">
         <!-- Input de palabras clave para empresas -->
         <div class="keyword-container">
-          <input
-            type="text"
-            v-model="keyword"
-            placeholder="Palabra clave"
-            @input="onKeywordInput"
-          />
+          <input type="text" v-model="keyword" placeholder="Palabra clave" @input="onKeywordInput" />
           <ul v-if="suggestions.length" class="suggestions-list">
-            <li
-              v-for="(suggestion, index) in suggestions"
-              :key="index"
-              @click="selectSuggestion(suggestion)"
-            >
+            <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
               {{ suggestion.nombre }}
             </li>
           </ul>
         </div>
 
-        <!-- Botón para buscar empresas -->
-        <button @click="submitSearch">
-          <img src="../assets/search-icon.png" alt="Buscar" />
+        <!-- Botón para buscar solo empresas -->
+        <button @click="submitSearchEmpresas">
+          <img src="../assets/search-icon.png" alt="Buscar empresas" />
         </button>
 
         <!-- Input de ciudades -->
         <div class="city-container">
-          <input
-            type="text"
-            v-model="city"
-            placeholder="Ciudad"
-            @input="onCityInput"
-          />
+          <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
           <ul v-if="citySuggestions.length" class="suggestions-list">
-            <li
-              v-for="(citySuggestion, index) in citySuggestions"
-              :key="index"
-              @click="selectCitySuggestion(citySuggestion)"
-            >
+            <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
+              @click="selectCitySuggestion(citySuggestion)">
               {{ citySuggestion.nombre }}
             </li>
           </ul>
         </div>
 
-        <!-- Botón para buscar con ciudad -->
-        <button @click="submitSearch">
-          <img src="../assets/search-icon.png" alt="Buscar" />
+        <!-- Botón para buscar solo ciudades -->
+        <button @click="submitSearchCiudades">
+          <img src="../assets/search-icon.png" alt="Buscar ciudades" />
         </button>
       </div>
     </div>
@@ -70,18 +53,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchSuggestions, fetchCitySuggestions,  fetchCategorias } from '../stores/Buscador'; // Importamos las funciones
+import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador'; // Importamos las funciones
 
 export default defineComponent({
   name: 'BuscadorEmpresa',
   data() {
     return {
       keyword: '',
-      nombre: '',
       city: '',
-      suggestions: [] as { idEmpresa: number; nombre: string }[], 
-      citySuggestions: [] as { idCiudad: number; nombre: string }[], 
-      empresas: [] as { nombre: string }[], 
+      suggestions: [] as { idEmpresa: number; nombre: string }[],
+      citySuggestions: [] as { idCiudad: number; nombre: string }[],
+      empresas: [] as { nombre: string }[],
       categorias: [] as { idCategoria: number; nombre: string }[]
     };
   },
@@ -98,7 +80,7 @@ export default defineComponent({
         this.suggestions = [];
       }
     },
-    selectSuggestion(keyword: { idEmpresa: number; nombre: string}) {
+    selectSuggestion(keyword: { idEmpresa: number; nombre: string }) {
       this.keyword = keyword.nombre;
       this.suggestions = [];
     },
@@ -106,7 +88,7 @@ export default defineComponent({
     // sugerencias de ciudades
     async onCityInput() {
       if (this.city.length >= 1) {
-        this.citySuggestions = await fetchCitySuggestions(this.city); // Llamada para sugerencias de ciudad
+        this.citySuggestions = await fetchCitySuggestions(this.city);
       } else {
         this.citySuggestions = [];
       }
@@ -116,28 +98,58 @@ export default defineComponent({
       this.citySuggestions = [];
     },
 
-    // Buscar empresas
-    async submitSearch() {
-      //this.empresas = await searchEmpresas(this.keyword, this.city); // Llamamos a la función de búsqueda
-      console.log(this.empresas);
+    // Buscar solo empresas
+    async submitSearchEmpresas() {
+      // Imprimir en consola los valores de keyword
+      console.log("Palabra clave (empresa):", this.keyword);
+
+      // Simular la búsqueda de empresas
+      //this.empresas = await searchEmpresas(this.keyword); // Llamada para empresas
+
+      // Navegar a la página de resultados con las query parameters
       this.$router.push({
         name: 'Empresas',
-        query: { keyword: this.keyword, city: this.city }
+        query: { keyword: this.keyword }
+      });
+    },
+
+    // Buscar solo ciudades
+    async submitSearchCiudades() {
+      // Imprimir en consola los valores de city
+      console.log("Ciudad:", this.city);
+
+      // Simular la búsqueda de ciudades
+      //this.cities = await searchCities(this.city); // Llamada para ciudades
+
+      // Navegar a la página de resultados con las query parameters
+      this.$router.push({
+        name: 'Ciudades',
+        query: { city: this.city }
       });
     }
   }
 });
 </script>
 
+
 <style scoped>
 .header {
   width: 100%;
   height: 7vh;
 }
-.header ,h1 {
+
+.header,
+h1 {
   text-align: center;
   height: 10vh;
 }
+
+li,
+h3,
+h2 {
+  color: black;
+}
+
 .search-container {
   text-align: center;
   background-color: #d3d3d3;
@@ -195,6 +207,7 @@ img {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
+
 .categories-container {
   margin-top: 20px;
   text-align: center;
