@@ -57,3 +57,14 @@ export const fetchCitySuggestions = async (cityName: string): Promise<Ciudad[]> 
      return [];   
     }
      };
+
+     export const fetchEmpresasByCategoria = async (idCategoria: number): Promise<{ categoriaNombre: string, empresas: { idEmpresa: number; nombre: string; direccion: string; telefono: string; email: string }[] }> => {
+      try {
+        const response = await fetch(`/api/Categoria/${idCategoria}/empresas`);
+        return await response.json(); 
+      } catch (error) {
+        console.error('Error fetching empresas by category:', error);
+        return { categoriaNombre: '', empresas: [] }; 
+      }
+    };
+    

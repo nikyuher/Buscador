@@ -5,7 +5,7 @@ import Buscador from './views/Buscador.vue';
 
 <template>
   <header></header>
-        <Buscador></Buscador>
+    <RouterView></RouterView>
 </template>
 
 <style scoped>

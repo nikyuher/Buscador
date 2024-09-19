@@ -56,21 +56,26 @@
       </div>
     </div>
 
-    <!-- Lista de categorías -->
+    <!-- Lista de categorías en columnas -->
     <div class="categories-container">
       <h3>Categorías</h3>
-      <ul v-if="categorias.length" class="categories-list">
-        <li v-for="(categoria, index) in categorias" :key="index">
+      <div class="categories-grid">
+        <router-link
+          v-for="(categoria, index) in categorias"
+          :key="index"
+          :to="{ name: 'CatEmpresas', params: { idCategoria: categoria.idCategoria }}"
+          class="category-item"
+        >
           {{ categoria.nombre }}
-        </li>
-      </ul>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchSuggestions, fetchCitySuggestions,  fetchCategorias } from '../stores/Buscador'; // Importamos las funciones
+import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador'; // Importamos las funciones
 
 export default defineComponent({
   name: 'BuscadorEmpresa',
@@ -118,8 +123,6 @@ export default defineComponent({
 
     // Buscar empresas
     async submitSearch() {
-      //this.empresas = await searchEmpresas(this.keyword, this.city); // Llamamos a la función de búsqueda
-      console.log(this.empresas);
       this.$router.push({
         name: 'Empresas',
         query: { keyword: this.keyword, city: this.city }
@@ -140,8 +143,37 @@ export default defineComponent({
 }
 .search-container {
   text-align: center;
-  background-color: #d3d3d3;
+  background-color: #f3f3f3;
   padding: 20px;
+}
+
+.categories-container {
+  margin-top: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Ajusta el número de columnas */
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.category-item {
+  background-color: #f0f0f0;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.category-item:hover {
+  background-color: #e0e0e0;
 }
 
 .search-box {
