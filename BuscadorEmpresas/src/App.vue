@@ -4,14 +4,24 @@ import Buscador from './views/Buscador.vue';
 </script>
 
 <template>
-  <header></header>
-    <RouterView></RouterView>
+  <header>
+    <RouterLink to="/"><h1>BuscaNet</h1></RouterLink>
+  </header>
+  <RouterView></RouterView>
 </template>
 
 <style scoped>
 header {
-  line-height: 1.5;
-  max-height: 100vh;
+  width: 100%;
+  height: 10vh;
+}
+
+a,h1 {
+  text-align: center;
+  margin: auto;
+  align-items: center;
+  text-decoration: none;
+  color: rgb(241, 201, 21);
 }
 
 .logo {
