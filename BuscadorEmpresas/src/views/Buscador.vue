@@ -27,7 +27,7 @@
 
         <!-- Botón para buscar empresas -->
         <button @click="submitSearch">
-          <img src="../assets/search-icon.png" alt="Buscar" />
+          <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232" alt="Buscar" />
         </button>
 
         <!-- Input de ciudades -->
@@ -51,7 +51,7 @@
 
         <!-- Botón para buscar con ciudad -->
         <button @click="submitSearch">
-          <img src="../assets/search-icon.png" alt="Buscar" />
+          <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232" alt="Buscar" />
         </button>
       </div>
     </div>
