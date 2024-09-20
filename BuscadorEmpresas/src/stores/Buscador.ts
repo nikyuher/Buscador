@@ -104,3 +104,47 @@ export const fetchEmpresasById = async (idEmpresa: number) => {
     return null; 
   }
 };
+
+export const fetchCiudadById = async (idCiudad: number) => {
+  try {
+    const response = await fetch(`/api/Ciudad/${idCiudad}`);
+    if (!response.ok) {
+      throw new Error(`Error al obtener los detalles de la ciudad: ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log('Respuesta completa del servidor (Ciudad):', data);
+    return {
+      idCiudad: data.idCiudad,
+      nombre: data.nombre,
+    };
+  } catch (error) {
+    console.error('Error fetching city:', error);
+    return null;
+  }
+};
+
+// Función para obtener las empresas por ID de ciudad
+export const fetchEmpresasByCiudad = async (idCiudad: number) => {
+  try {
+      const response = await fetch(`/api/Ciudad/${idCiudad}/empresas`);
+      if (!response.ok) {
+          throw new Error(`Error al obtener empresas por ciudad: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log('Respuesta completa del servidor (Empresas por Ciudad):', data);
+      
+      return {
+          idCiudad: data.idCiudad,
+          nombre: data.nombre,
+          empresas: data.empresasCiudades.map((empresaCiudad: any) => ({
+              idEmpresa: empresaCiudad.empresa.idEmpresa,
+              nombre: empresaCiudad.empresa.nombre,
+          })) || [] // Manejar el caso donde 'empresasCiudades' podría ser undefined
+      };
+  } catch (error) {
+      console.error('Error fetching empresas by ciudad:', error);
+      return null; 
+  }
+};
+
+
