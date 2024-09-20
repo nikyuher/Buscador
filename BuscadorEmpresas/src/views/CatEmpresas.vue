@@ -8,9 +8,7 @@
     <ul v-if="!error && empresas.length">
       <li v-for="empresa in empresas" :key="empresa.idEmpresa">
         <h2>{{ empresa.nombre }}</h2>
-        <p>Dirección: {{ empresa.direccion }}</p>
-        <p>Teléfono: {{ empresa.telefono }}</p>
-        <p>Email: {{ empresa.email }}</p>
+        <p>ID Empresa: {{ empresa.idEmpresa }}</p>
       </li>
     </ul>
 
@@ -19,53 +17,57 @@
 </template>
 
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { fetchEmpresasByCategoria } from '../stores/Buscador';
 
-export default defineComponent({
-  name: 'CatEmpresas',
-  data() {
-    return {
-      categoriaNombre: '',
-      empresas: [] as { idEmpresa: number; nombre: string; direccion: string; telefono: string; email: string }[],
-      error: false,  // Agregar manejo de error
-    };
-  },
-  async mounted() {
-    const idCategoriaParam = this.$route.params.idCategoria;
+// Declaración de variables reactivas
+const categoriaNombre = ref(''); // Usamos ref para variables reactivas
+const empresas = ref<{ idEmpresa: number; nombre: string }[]>([]); // Datos de empresas
+const error = ref(false); // Manejo de error
 
-    const idCategoria = Array.isArray(idCategoriaParam)
-      ? parseInt(idCategoriaParam[0], 10)
-      : parseInt(idCategoriaParam, 10);
+// Obtenemos la ruta actual para acceder a los parámetros
+const route = useRoute();
 
-    if (isNaN(idCategoria)) {
-      console.error('El idCategoria no es un número válido');
-      this.error = true;
-      return;
+const fetchData = async (idCategoria: number) => {
+  try {
+    const response = await fetchEmpresasByCategoria(idCategoria);
+
+    console.log('Respuesta completa del servidor:', response);
+
+    // Verificar si la respuesta contiene datos de empresas
+    if (response && response.empresas && Array.isArray(response.empresas)) {
+      categoriaNombre.value = response.categoriaNombre || 'Sin categoría';
+      empresas.value = response.empresas;
+    } else {
+      console.error('Respuesta no válida del servidor');
+      error.value = true;
     }
-
-    try {
-      const response = await fetchEmpresasByCategoria(idCategoria);
-
-      // Mostrar toda la respuesta en la consola para depurar
-      console.log('Respuesta completa del servidor:', response);
-
-      // Verificar si `empresas` existe y está en el formato correcto
-      if (response && response.empresas && Array.isArray(response.empresas)) {
-        this.categoriaNombre = response.categoriaNombre || 'Sin categoría';
-        this.empresas = response.empresas;
-      } else {
-        console.error('Respuesta no válida del servidor');
-        this.error = true;
-      }
-    } catch (error) {
-      console.error('Error al obtener los datos:', error);
-      this.error = true;
-    }
+  } catch (err) {
+    console.error('Error al obtener los datos:', err);
+    error.value = true;
   }
+};
+
+// `onMounted` para ejecutar la función cuando el componente se monta
+onMounted(() => {
+  const idCategoriaParam = route.params.idCategoria;
+
+  const idCategoria = Array.isArray(idCategoriaParam)
+    ? parseInt(idCategoriaParam[0], 10)
+    : parseInt(idCategoriaParam, 10);
+
+  if (isNaN(idCategoria)) {
+    console.error('El idCategoria no es un número válido');
+    error.value = true;
+    return;
+  }
+
+  fetchData(idCategoria); // Llamada a la función fetch cuando el componente se monta
 });
 </script>
+
 
 
 <style scoped>
@@ -88,9 +90,11 @@ li {
 h2 {
   margin: 0;
   font-size: 18px;
+  color: black;
 }
 
 p {
   margin: 5px 0;
+  color: black;
 }
 </style>

@@ -58,7 +58,7 @@ export const searchEmpresas = async (keyword: string, city: string): Promise<Emp
   }
 }
 
-export const fetchEmpresasByCategoria = async (idCategoria: number): Promise<{ categoriaNombre: string, empresas: { idEmpresa: number; nombre: string; direccion: string; telefono: string; email: string }[] }> => {
+export const fetchEmpresasByCategoria = async (idCategoria: number): Promise<{ categoriaNombre: string, empresas: { idEmpresa: number; nombre: string }[] }> => {
   try {
     const response = await fetch(`/api/Categoria/${idCategoria}/empresas`);
     if (!response.ok) {
@@ -71,12 +71,9 @@ export const fetchEmpresasByCategoria = async (idCategoria: number): Promise<{ c
     // Mapea los datos según la estructura que esperas
     return {
       categoriaNombre: data.nombre,  // Ajusta el nombre de la categoría
-      empresas: data.empresaCategorias.map((empresa: any) => ({
-        idEmpresa: empresa.idEmpresa,
-        nombre: empresa.nombre,
-        direccion: empresa.direccion || 'No disponible',  // Evitar fallos si no hay dirección
-        telefono: empresa.telefono || 'No disponible',   // Evitar fallos si no hay teléfono
-        email: empresa.email || 'No disponible'          // Evitar fallos si no hay email
+      empresas: data.empresaCategorias.map((empresaCategoria: any) => ({
+        idEmpresa: empresaCategoria.empresa.idEmpresa,
+        nombre: empresaCategoria.empresa.nombre
       }))
     };
   } catch (error) {
@@ -84,4 +81,5 @@ export const fetchEmpresasByCategoria = async (idCategoria: number): Promise<{ c
     return { categoriaNombre: '', empresas: [] }; 
   }
 };
+
 
