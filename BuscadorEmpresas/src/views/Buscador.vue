@@ -1,7 +1,4 @@
 <template>
-  <header>
-    <h1>BuscaNet</h1>
-  </header>
   <div class="search-container">
     <div class="search-box">
       <h2>Busca tu empresa en tu ciudad</h2>
@@ -133,20 +130,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.header {
-  width: 100%;
-  height: 7vh;
-}
-.header ,h1 {
-  text-align: center;
-  height: 10vh;
-}
 .search-container {
   text-align: center;
   background-color: #f3f3f3;
   padding: 20px;
 }
-
+li,a,h2{
+  color: black;
+}
 .categories-container {
   margin-top: 20px;
     text-align: center;
