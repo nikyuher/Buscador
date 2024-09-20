@@ -5,49 +5,41 @@
       <div class="search-inputs">
         <!-- Input de palabras clave para empresas -->
         <div class="keyword-container">
-          <input
-            type="text"
-            v-model="keyword"
-            placeholder="Palabra clave"
-            @input="onKeywordInput"
-          />
+          <input type="text" v-model="keyword" placeholder="Palabra clave" @input="onKeywordInput" />
           <ul v-if="suggestions.length" class="suggestions-list">
-            <li
-              v-for="(suggestion, index) in suggestions"
-              :key="index"
-              @click="selectSuggestion(suggestion)"
-            >
+            <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
               {{ suggestion.nombre }}
             </li>
           </ul>
         </div>
 
         <!-- Botón para buscar empresas -->
-        <button @click="submitSearch">
-          <img src="../assets/search-icon.png" alt="Buscar" />
-        </button>
+        <div v-if="IdEmpresa > 0">
+          <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
+            <button>
+              <img src="../assets/search-icon.png" alt="Buscar" />
+            </button>
+          </RouterLink>
+        </div>
+        <div v-else>
+          <button @click="searchWithoutId">
+            <img src="../assets/search-icon.png" alt="Buscar" />
+          </button>
+        </div>
 
         <!-- Input de ciudades -->
         <div class="city-container">
-          <input
-            type="text"
-            v-model="city"
-            placeholder="Ciudad"
-            @input="onCityInput"
-          />
+          <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
           <ul v-if="citySuggestions.length" class="suggestions-list">
-            <li
-              v-for="(citySuggestion, index) in citySuggestions"
-              :key="index"
-              @click="selectCitySuggestion(citySuggestion)"
-            >
+            <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
+              @click="selectCitySuggestion(citySuggestion)">
               {{ citySuggestion.nombre }}
             </li>
           </ul>
         </div>
 
         <!-- Botón para buscar con ciudad -->
-        <button @click="submitSearch">
+        <button>
           <img src="../assets/search-icon.png" alt="Buscar" />
         </button>
       </div>
@@ -57,12 +49,8 @@
     <div class="categories-container">
       <h3>Categorías</h3>
       <div class="categories-grid">
-        <router-link
-          v-for="(categoria, index) in categorias"
-          :key="index"
-          :to="{ name: 'CatEmpresas', params: { idCategoria: categoria.idCategoria }}"
-          class="category-item"
-        >
+        <router-link v-for="(categoria, index) in categorias" :key="index"
+          :to="{ name: 'CatEmpresas', params: { idCategoria: categoria.idCategoria } }" class="category-item">
           {{ categoria.nombre }}
         </router-link>
       </div>
@@ -70,63 +58,65 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador'; // Importamos las funciones
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
 
-export default defineComponent({
-  name: 'BuscadorEmpresa',
-  data() {
-    return {
-      keyword: '',
-      nombre: '',
-      city: '',
-      suggestions: [] as { idEmpresa: number; nombre: string }[], 
-      citySuggestions: [] as { idCiudad: number; nombre: string }[], 
-      empresas: [] as { nombre: string }[], 
-      categorias: [] as { idCategoria: number; nombre: string }[]
-    };
-  },
-  async mounted() {
-    // CATEGORIAS
-    this.categorias = await fetchCategorias();
-  },
-  methods: {
-    // sugerencias de palabras clave (empresas)
-    async onKeywordInput() {
-      if (this.keyword.length >= 1) {
-        this.suggestions = await fetchSuggestions(this.keyword);
-      } else {
-        this.suggestions = [];
-      }
-    },
-    selectSuggestion(keyword: { idEmpresa: number; nombre: string}) {
-      this.keyword = keyword.nombre;
-      this.suggestions = [];
-    },
+// Definir variables reactivas usando `ref` para el estado
+const keyword = ref(''); // Palabra clave para búsqueda de empresas
+const IdEmpresa = ref(0);
+const city = ref(''); // Ciudad para búsqueda
+const suggestions = ref<{ idEmpresa: number; nombre: string }[]>([]); // Sugerencias de empresas
+const citySuggestions = ref<{ idCiudad: number; nombre: string }[]>([]); // Sugerencias de ciudades
+const categorias = ref<{ idCategoria: number; nombre: string }[]>([]); // Categorías
 
-    // sugerencias de ciudades
-    async onCityInput() {
-      if (this.city.length >= 1) {
-        this.citySuggestions = await fetchCitySuggestions(this.city); // Llamada para sugerencias de ciudad
-      } else {
-        this.citySuggestions = [];
-      }
-    },
-    selectCitySuggestion(city: { idCiudad: number; nombre: string }) {
-      this.city = city.nombre;
-      this.citySuggestions = [];
-    },
+// Obtener el router para la navegación
+const router = useRouter();
 
-    // Buscar empresas
-    async submitSearch() {
-      this.$router.push({
-        name: 'Empresas',
-        query: { keyword: this.keyword, city: this.city }
-      });
-    }
-  }
+// Cargar las categorías al montar el componente
+onMounted(async () => {
+  categorias.value = await fetchCategorias();
 });
+
+// Función para manejar las sugerencias de empresas basadas en la palabra clave
+const onKeywordInput = async () => {
+  if (keyword.value.length >= 1) {
+    suggestions.value = await fetchSuggestions(keyword.value);
+  } else {
+    suggestions.value = [];
+  }
+};
+
+const searchWithoutId = () => {
+  console.log('Esa empresa no existe .');
+};
+
+// Función para seleccionar una sugerencia de empresa
+const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => {
+  keyword.value = suggestion.nombre;
+  IdEmpresa.value = suggestion.idEmpresa;
+  suggestions.value = [];
+  console.log(IdEmpresa.value);
+  
+};
+
+// Función para manejar las sugerencias de ciudades basadas en la ciudad ingresada
+const onCityInput = async () => {
+  if (city.value.length >= 1) {
+    citySuggestions.value = await fetchCitySuggestions(city.value);
+    
+  } else {
+    citySuggestions.value = [];
+  }
+};
+
+// Función para seleccionar una sugerencia de ciudad
+const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string }) => {
+  city.value = citySuggestion.nombre;
+  citySuggestions.value = [];
+};
+
 </script>
 
 <style scoped>
@@ -135,20 +125,25 @@ export default defineComponent({
   background-color: #f3f3f3;
   padding: 20px;
 }
-li,a,h2{
+
+li,
+a,
+h2 {
   color: black;
 }
+
 .categories-container {
   margin-top: 20px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* Ajusta el número de columnas */
+  grid-template-columns: repeat(5, 1fr);
+  /* Ajusta el número de columnas */
   gap: 10px;
   justify-content: center;
   align-items: center;
@@ -218,6 +213,7 @@ img {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
+
 .categories-container {
   margin-top: 20px;
   text-align: center;
