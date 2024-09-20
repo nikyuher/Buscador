@@ -17,9 +17,15 @@
         </div>
 
         <!-- Botón para buscar solo empresas -->
-        <button @click="submitSearchEmpresas">
-          <img src="../assets/search-icon.png" alt="Buscar empresas" />
-        </button>
+
+        <RouterLink
+          to="/empresas"
+        >
+        Palabra para ir 
+      </RouterLink>
+      <button>
+        <img src="../assets/search-icon.png" alt="Buscar empresas" />
+      </button>
 
         <!-- Input de ciudades -->
         <div class="city-container">
@@ -33,7 +39,7 @@
         </div>
 
         <!-- Botón para buscar solo ciudades -->
-        <button @click="submitSearchCiudades">
+        <button>
           <img src="../assets/search-icon.png" alt="Buscar ciudades" />
         </button>
       </div>
@@ -51,85 +57,85 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador'; // Importamos las funciones
 
-export default defineComponent({
-  name: 'BuscadorEmpresa',
-  data() {
-    return {
-      keyword: '',
-      city: '',
-      suggestions: [] as { idEmpresa: number; nombre: string }[],
-      citySuggestions: [] as { idCiudad: number; nombre: string }[],
-      empresas: [] as { nombre: string }[],
-      categorias: [] as { idCategoria: number; nombre: string }[]
-    };
-  },
-  async mounted() {
-    // CATEGORIAS
-    this.categorias = await fetchCategorias();
-  },
-  methods: {
-    // sugerencias de palabras clave (empresas)
-    async onKeywordInput() {
-      if (this.keyword.length >= 1) {
-        this.suggestions = await fetchSuggestions(this.keyword);
-      } else {
-        this.suggestions = [];
-      }
-    },
-    selectSuggestion(keyword: { idEmpresa: number; nombre: string }) {
-      this.keyword = keyword.nombre;
-      this.suggestions = [];
-    },
+// Variables reactivas
+const keyword = ref(''); // Para palabras clave de empresas
+const city = ref(''); // Para la ciudad
+const suggestions = ref<{ idEmpresa: number; nombre: string }[]>([]); // Sugerencias de empresas
+const citySuggestions = ref<{ idCiudad: number; nombre: string }[]>([]); // Sugerencias de ciudades
+const categorias = ref<{ idCategoria: number; nombre: string }[]>([]); // Categorías
 
-    // sugerencias de ciudades
-    async onCityInput() {
-      if (this.city.length >= 1) {
-        this.citySuggestions = await fetchCitySuggestions(this.city);
-      } else {
-        this.citySuggestions = [];
-      }
-    },
-    selectCitySuggestion(city: { idCiudad: number; nombre: string }) {
-      this.city = city.nombre;
-      this.citySuggestions = [];
-    },
+// Router
+const router = useRouter();
 
-    // Buscar solo empresas
-    async submitSearchEmpresas() {
-      // Imprimir en consola los valores de keyword
-      console.log("Palabra clave (empresa):", this.keyword);
+// Función para obtener categorías
+const fetchCategories = async () => {
+  categorias.value = await fetchCategorias();
+};
 
-      // Simular la búsqueda de empresas
-      //this.empresas = await searchEmpresas(this.keyword); // Llamada para empresas
-
-      // Navegar a la página de resultados con las query parameters
-      this.$router.push({
-        name: 'Empresas',
-        query: { keyword: this.keyword }
-      });
-    },
-
-    // Buscar solo ciudades
-    async submitSearchCiudades() {
-      // Imprimir en consola los valores de city
-      console.log("Ciudad:", this.city);
-
-      // Simular la búsqueda de ciudades
-      //this.cities = await searchCities(this.city); // Llamada para ciudades
-
-      // Navegar a la página de resultados con las query parameters
-      this.$router.push({
-        name: 'Ciudades',
-        query: { city: this.city }
-      });
-    }
-  }
+// Llamada a la función fetch al montar el componente
+onMounted(() => {
+  fetchCategories();
 });
+
+// Sugerencias de palabras clave (empresas)
+const onKeywordInput = async () => {
+  if (keyword.value.length >= 1) {
+    suggestions.value = await fetchSuggestions(keyword.value);
+  } else {
+    suggestions.value = [];
+  }
+};
+
+const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => {
+  keyword.value = suggestion.nombre;
+  suggestions.value = [];
+};
+
+// Sugerencias de ciudades
+const onCityInput = async () => {
+  if (city.value.length >= 1) {
+    citySuggestions.value = await fetchCitySuggestions(city.value);
+  } else {
+    citySuggestions.value = [];
+  }
+};
+
+const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string }) => {
+  city.value = citySuggestion.nombre;
+  citySuggestions.value = [];
+};
+
+// // Buscar solo empresas
+// const submitSearchEmpresas = async () => {
+//   console.log('Empresa:', keyword.value);
+//   router.push({
+//     name: 'Empresas',
+//     query: { keyword: keyword.value }
+//   });
+// };
+
+// // Buscar solo ciudades
+// const submitSearchCiudades = async () => {
+//   console.log('Ciudad:', city.value);
+//   router.push({
+//     name: 'Ciudades',
+//     query: { city: city.value }
+//   });
+// };
 </script>
+
+<style scoped>
+/* Estilos se mantienen igual */
+.search-container {
+  padding: 20px;
+}
+</style>
+
 
 
 <style scoped>
