@@ -82,4 +82,25 @@ export const fetchEmpresasByCategoria = async (idCategoria: number): Promise<{ c
   }
 };
 
-
+export const fetchEmpresasById = async (idEmpresa: number) => {
+  try{
+    const response = await fetch(`/api/Empresa/${idEmpresa}`);
+    if (!response.ok) {
+      throw new Error(`Error al obtener el id de las empresas: ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log('Respuesta completa del servidor:', data);
+    return {
+      idEmpresa: data.idEmpresa,
+      nombre: data.nombre,
+      descripcion: data.descripcion,
+      direccion: data.direccion,
+      imagen: data.imagen,
+      //telefono: data.telefono || 'No disponible',
+      //email: data.email || 'No disponible'
+    };
+  } catch (error) {
+    console.error('Error fetching empresa:', error);
+    return null; 
+  }
+};

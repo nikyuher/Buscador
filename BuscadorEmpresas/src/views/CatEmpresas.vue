@@ -6,7 +6,10 @@
 
     <!-- Lista de empresas -->
     <ul v-if="!error && empresas.length">
-      <li v-for="empresa in empresas" :key="empresa.idEmpresa">
+      <li 
+        v-for="empresa in empresas" 
+        :key="empresa.idEmpresa" 
+        @click="verDetallesEmpresa(empresa.idEmpresa)">
         <h2>{{ empresa.nombre }}</h2>
         <p>ID Empresa: {{ empresa.idEmpresa }}</p>
       </li>
@@ -14,29 +17,65 @@
 
     <p v-else-if="!error">No hay empresas para esta categoría.</p>
   </div>
+
+  <div class="empresa-details-container" v-if="empresa">
+    <h1 v-if="!error">Detalles de la Empresa: {{ empresa.nombre }}</h1>
+    <p v-if="error">Hubo un error al cargar los datos.</p>
+
+    <div v-if="empresa">
+      <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img"/>
+      <p><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
+      <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+      <!-- <p><strong>Teléfono:</strong> {{ empresa.telefono }}</p>
+      <p><strong>Email:</strong> {{ empresa.email }}</p> -->
+    </div>
+
+    <p v-else-if="!error">No se encontraron detalles de la empresa.</p>
+  </div>
 </template>
+
 
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { fetchEmpresasByCategoria } from '../stores/Buscador';
+import { fetchEmpresasByCategoria, fetchEmpresasById } from '../stores/Buscador';
 
-// Declaración de variables reactivas
-const categoriaNombre = ref(''); // Usamos ref para variables reactivas
-const empresas = ref<{ idEmpresa: number; nombre: string }[]>([]); // Datos de empresas
-const error = ref(false); // Manejo de error
+// Variables reactivas
+const categoriaNombre = ref(''); 
+const empresas = ref<{ idEmpresa: number; nombre: string }[]>([]);
+const error = ref(false);
 
-// Obtenemos la ruta actual para acceder a los parámetros
-const route = useRoute();
+// Detalles de una empresa seleccionada
+const empresa = ref<{
+  idEmpresa: number;
+  nombre: string;
+  descripcion: string;
+  direccion: string;
+  imagen: string;
+} | null>(null);
 
+// Función para obtener detalles de una empresa por su ID
+const fetchEmpresaData = async (idEmpresa: number) => {
+  try {
+    const data = await fetchEmpresasById(idEmpresa);
+    if (data) {
+      empresa.value = data;
+      console.log(idEmpresa)
+    } else {
+      error.value = true;
+    }
+  } catch (err) {
+    console.error('Error al obtener los datos de la empresa:', err);
+    error.value = true;
+  }
+};
+
+// Función para cargar empresas de una categoría
 const fetchData = async (idCategoria: number) => {
   try {
     const response = await fetchEmpresasByCategoria(idCategoria);
 
-    console.log('Respuesta completa del servidor:', response);
-
-    // Verificar si la respuesta contiene datos de empresas
     if (response && response.empresas && Array.isArray(response.empresas)) {
       categoriaNombre.value = response.categoriaNombre || 'Sin categoría';
       empresas.value = response.empresas;
@@ -45,28 +84,35 @@ const fetchData = async (idCategoria: number) => {
       error.value = true;
     }
   } catch (err) {
-    console.error('Error al obtener los datos:', err);
+    console.error('Error al obtener los datos de empresas:', err);
     error.value = true;
   }
 };
 
-// `onMounted` para ejecutar la función cuando el componente se monta
+// Función para ver los detalles de una empresa específica
+const verDetallesEmpresa = (idEmpresa: number) => {
+  fetchEmpresaData(idEmpresa);  // Llama a la función para obtener los detalles de la empresa
+  console.log(idEmpresa)
+};
+
+// Obtener parámetros de la ruta
+const route = useRoute();
+
 onMounted(() => {
   const idCategoriaParam = route.params.idCategoria;
-
   const idCategoria = Array.isArray(idCategoriaParam)
     ? parseInt(idCategoriaParam[0], 10)
     : parseInt(idCategoriaParam, 10);
 
-  if (isNaN(idCategoria)) {
+  if (!isNaN(idCategoria)) {
+    fetchData(idCategoria); // Cargar las empresas de la categoría al montar el componente
+  } else {
     console.error('El idCategoria no es un número válido');
     error.value = true;
-    return;
   }
-
-  fetchData(idCategoria); // Llamada a la función fetch cuando el componente se monta
 });
 </script>
+
 
 
 
@@ -91,6 +137,15 @@ h2 {
   margin: 0;
   font-size: 18px;
   color: black;
+}
+.empresa-details-container {
+  padding: 20px;
+}
+
+.empresa-img {
+  max-width: 200px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 p {
