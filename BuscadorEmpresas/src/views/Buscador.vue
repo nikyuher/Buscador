@@ -13,20 +13,6 @@
           </ul>
         </div>
 
-        <!-- Botón para buscar empresas -->
-        <div v-if="IdEmpresa > 0">
-          <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
-            <button>
-              <img src="../assets/search-icon.png" alt="Buscar" />
-            </button>
-          </RouterLink>
-        </div>
-        <div v-else>
-          <button @click="searchWithoutId">
-            <img src="../assets/search-icon.png" alt="Buscar" />
-          </button>
-        </div>
-
         <!-- Input de ciudades -->
         <div class="city-container">
           <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
@@ -38,10 +24,33 @@
           </ul>
         </div>
 
-        <!-- Botón para buscar con ciudad -->
-        <button>
-          <img src="../assets/search-icon.png" alt="Buscar" />
-        </button>
+        <!-- Botón para buscar con ciudad  y empresa-->
+        <div v-if="IdEmpresa > 0 && IdCiudad == 0">
+          <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
+            <button>
+              <img src="../assets/search-icon.png" alt="Buscar" />
+            </button>
+          </RouterLink>
+        </div>
+        <div v-else-if="IdEmpresa == 0 && IdCiudad > 0">
+          <RouterLink :to="{ name: 'Ciudad', params: { idCiudad: IdCiudad } }">
+            <button>
+              <img src="../assets/search-icon.png" alt="Buscar" />
+            </button>
+          </RouterLink>
+        </div>
+        <div v-else-if="IdEmpresa > 0 && IdCiudad > 0">
+          <RouterLink :to="{ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad, idEmpresa: IdEmpresa } }">
+            <button>
+              <img src="../assets/search-icon.png" alt="Buscar" />
+            </button>
+          </RouterLink>
+        </div>
+        <div v-else="IdEmpresa == 0 && IdCiudad == 0">
+          <button @click="searchWithoutId">
+            <img src="../assets/search-icon.png" alt="Buscar" />
+          </button>
+        </div>
       </div>
     </div>
 
@@ -66,6 +75,7 @@ import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stor
 // Definir variables reactivas usando `ref` para el estado
 const keyword = ref(''); // Palabra clave para búsqueda de empresas
 const IdEmpresa = ref(0);
+const IdCiudad = ref(0);
 const city = ref(''); // Ciudad para búsqueda
 const suggestions = ref<{ idEmpresa: number; nombre: string }[]>([]); // Sugerencias de empresas
 const citySuggestions = ref<{ idCiudad: number; nombre: string }[]>([]); // Sugerencias de ciudades
@@ -79,6 +89,10 @@ onMounted(async () => {
   categorias.value = await fetchCategorias();
 });
 
+const searchWithoutId = () => {
+  console.log('Esa empresa no existe .');
+};
+
 // Función para manejar las sugerencias de empresas basadas en la palabra clave
 const onKeywordInput = async () => {
   if (keyword.value.length >= 1) {
@@ -88,9 +102,6 @@ const onKeywordInput = async () => {
   }
 };
 
-const searchWithoutId = () => {
-  console.log('Esa empresa no existe .');
-};
 
 // Función para seleccionar una sugerencia de empresa
 const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => {
@@ -99,13 +110,14 @@ const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => 
   suggestions.value = [];
   console.log(IdEmpresa.value);
   
+
 };
 
 // Función para manejar las sugerencias de ciudades basadas en la ciudad ingresada
 const onCityInput = async () => {
   if (city.value.length >= 1) {
     citySuggestions.value = await fetchCitySuggestions(city.value);
-    
+
   } else {
     citySuggestions.value = [];
   }
@@ -113,8 +125,10 @@ const onCityInput = async () => {
 
 // Función para seleccionar una sugerencia de ciudad
 const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string }) => {
+  IdCiudad.value = citySuggestion.idCiudad;
   city.value = citySuggestion.nombre;
   citySuggestions.value = [];
+  console.log(IdCiudad.value);
 };
 
 </script>

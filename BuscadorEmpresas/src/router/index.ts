@@ -20,6 +20,16 @@ const router = createRouter({
       path: '/Empresa/:idEmpresa',
       name: 'Empresa',
       component: () => import('../views/EmpresasView.vue')
+    },
+    {
+      path: '/Ciudad/:idCiudad',
+      name: 'Ciudad',
+      component: () => import('../views/CiudadView.vue')
+    },
+    {
+      path: '/Ciudad/:idCiudad/empresas/:idEmpresa',
+      name: 'CiudadEmpresas',
+      component: () => import('../views/CiudadEmpresasView.vue')
     }
   ]
 })
