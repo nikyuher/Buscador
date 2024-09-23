@@ -1,65 +1,127 @@
+<template>
+    <div v-if="!error">
+      <h1>{{ ciudadNombre }}</h1>
+  
+      <h2>Empresas en {{ ciudadNombre }}:</h2>
+  
+      <ul v-if="empresas.length > 0">
+        <li 
+          v-for="empresa in empresas" 
+          :key="empresa.idEmpresa">
+          <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img"/>
+          <h2>{{ empresa.nombre }}</h2>
+          <p>Descripción: {{ empresa.descripcion }}</p>
+          <p>Dirección: {{ empresa.direccion }}</p>
+        </li>
+      </ul>
+  
+      <p v-else>No hay empresas registradas en esta ciudad.</p>
+    </div>
+  
+    <div v-else-if="error">
+      <p>Error al cargar los datos de la ciudad y sus empresas.</p>
+    </div>
+  
+    <div v-else>
+      <p>Cargando datos...</p>
+    </div>
+  </template>
+
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { fetchEmpresasByCiudad } from '../stores/Buscador'; 
+import { fetchEmpresasByCiudad, fetchEmpresasById } from '../stores/Buscador'; // Importamos ambas funciones
 
 // Definir los estados
-const ciudad = ref<{ idCiudad: number; nombre: string; empresas: { idEmpresa: number; nombre: string }[] } | null>(null);
+const ciudadNombre = ref('');
+const empresas = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; imagen: string }[]>([]);
 const error = ref(false);
-
-const route = useRoute(); 
 
 // Función para obtener los datos de la ciudad y sus empresas
 const fetchCiudadData = async (idCiudad: number) => {
     try {
-        const data = await fetchEmpresasByCiudad(idCiudad); 
-        console.log("Datos obtenidos de la API:", data); 
-        if (data) {
-            ciudad.value = data; 
+        const response = await fetchEmpresasByCiudad(idCiudad); 
+        
+        if (response && response.empresas && Array.isArray(response.empresas)) {
+            ciudadNombre.value = response.nombre || 'Sin nombre';
+
+            // Mapear cada empresa y obtener sus detalles
+            const empresasDetalles = await Promise.all(
+                response.empresas.map(async (empresa) => {
+                    const detalles = await fetchEmpresasById(empresa.idEmpresa); 
+                    return {
+                        idEmpresa: empresa.idEmpresa,
+                        nombre: empresa.nombre,
+                        descripcion: detalles.descripcion,
+                        direccion: detalles.direccion,
+                        imagen: detalles.imagen,
+                    };
+                })
+            );
+
+            empresas.value = empresasDetalles;
         } else {
-            error.value = true; 
+            console.error('Respuesta no válida del servidor');
+            error.value = true;
         }
     } catch (err) {
-        console.error('Error al obtener los datos de la ciudad:', err);
+        console.error('Error al obtener los datos de empresas:', err);
         error.value = true;
     }
 };
 
+// Usar el route para obtener el idCiudad
+const route = useRoute();
 
-// Ejecutar cuando el componente se monte
 onMounted(() => {
-    const idCiudad = parseInt(route.params.idCiudad as string, 10); // Obtener idCiudad de la URL
-    console.log("ID de la ciudad obtenida de la URL:", idCiudad); 
+    const idCiudadParam = route.params.idCiudad;
+    const idCiudad = Array.isArray(idCiudadParam)
+        ? parseInt(idCiudadParam[0], 10)
+        : parseInt(idCiudadParam, 10);
 
-    if (idCiudad) {
+    if (!isNaN(idCiudad)) {
         fetchCiudadData(idCiudad); 
     } else {
+        console.error('El idCiudad no es un número válido');
         error.value = true;
     }
 });
-
 </script>
+  
 
-<template>
-    <div v-if="ciudad">
-        <h1>Ciudad: {{ ciudad.nombre }}</h1>
-        <h2>Empresas en {{ ciudad.nombre }}:</h2>
-        <ul v-if="ciudad.empresas.length > 0">
-            <li v-for="empresa in ciudad.empresas" :key="empresa.idEmpresa">
-                {{ empresa.nombre }} (ID: {{ empresa.idEmpresa }})
-            </li>
-        </ul>
-        <p v-else>No hay empresas registradas en esta ciudad.</p>
-    </div>
+<style scoped>
+.category-enterprises-container {
+  padding: 20px;
+}
 
-    <div v-else-if="error">
-        <p>Error al cargar los datos de la ciudad.</p>
-    </div>
+ul {
+  list-style-type: none;
+  padding: 0;
+}
 
-    <div v-else>
-        <p>Cargando datos...</p>
-    </div>
-</template>
+li {
+  background-color: #f0f0f0;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
 
+h2 {
+  margin: 0;
+  font-size: 18px;
+  color: black;
+}
 
-<style scoped></style>
+.empresa-img {
+    max-width: 500px;
+    height: auto;
+    margin-bottom: 20px;
+    margin-left: 8vh;
+}
+
+p {
+  margin: 5px 0;
+  color: black;
+}
+</style>

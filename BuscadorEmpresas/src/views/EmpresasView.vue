@@ -43,9 +43,10 @@ onMounted(() => {
 
 
 <template>
-    <div v-if="empresa">
+    <div class="empresa" v-if="empresa">
+      
       <h1>{{ empresa.nombre }}</h1>
-      <img :src="empresa.imagen" alt="Imagen de la empresa" />
+      <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img"/>
       <p><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
       <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
     </div>
@@ -60,6 +61,44 @@ onMounted(() => {
   </template>
   
 
-<style scoped>
-
-</style>
+  <style scoped>
+  .category-enterprises-container {
+    padding: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  .empresa{
+    background-color: #f0f0f0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  li {
+    background-color: #f0f0f0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    color: black;
+  }
+  
+  .empresa-img {
+    max-width: 500px;
+      height: auto;
+      margin-bottom: 20px;
+      margin-left: 8vh;
+  }
+  
+  p {
+    margin: 5px 0;
+    color: black;
+  }
+  </style>

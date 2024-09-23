@@ -102,9 +102,10 @@ h2 {
 }
 
 .empresa-img {
-  max-width: 200px;
-  height: auto;
-  margin-bottom: 20px;
+  max-width: 500px;
+    height: auto;
+    margin-bottom: 20px;
+    margin-left: 8vh;
 }
 
 p {
