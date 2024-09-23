@@ -147,4 +147,31 @@ export const fetchEmpresasByCiudad = async (idCiudad: number) => {
   }
 };
 
+// Función para obtener la empresa por ID de ciudad y empresa
+export const fetchEmpresaByCiudad = async (idEmpresa: number, idCiudad: number) => {
+  try {
+    const response = await fetch(`/api/Ciudad/empresa?idEmpresa=${idEmpresa}&idCiudad=${idCiudad}`);
+    if (!response.ok) {
+      const errorData = await response.json(); // Obtener el mensaje de error de la respuesta
+      throw new Error(errorData.message || 'Error desconocido'); // Usa el mensaje de error o un mensaje genérico
+    }
+
+    const data = await response.json();
+    console.log('Respuesta completa del servidor (Empresa por Ciudad):', data);
+
+    return {
+      idCiudad: data.idCiudad,
+      ciudadNombre: data.nombre,
+      empresa: data.empresasCiudades.length > 0
+        ? {
+            idEmpresa: data.empresasCiudades[0].empresa.idEmpresa,
+            nombre: data.empresasCiudades[0].empresa.nombre,
+          }
+        : null // Manejar el caso donde no haya empresas en esa ciudad
+    };
+  } catch (error) {
+    console.error('Error fetching empresa by ciudad:', error);
+    throw error; // Propagar el error para manejarlo en el componente
+  }
+};
 
