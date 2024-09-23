@@ -130,6 +130,8 @@
     citySuggestions.value = [];
     console.log(IdCiudad.value);
   };
+
+  
   
   </script>
   

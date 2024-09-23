@@ -44,9 +44,9 @@ const fetchData = async (idCategoria: number) => {
           return {
             idEmpresa: empresa.idEmpresa,
             nombre: empresa.nombre,
-            descripcion: detalles.descripcion,
-            direccion: detalles.direccion,
-            imagen: detalles.imagen,
+            descripcion: detalles?.descripcion,
+            direccion: detalles?.direccion,
+            imagen: detalles?.imagen,
           };
         })
       );
