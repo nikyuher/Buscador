@@ -96,8 +96,6 @@ export const fetchEmpresasById = async (idEmpresa: number) => {
       descripcion: data.descripcion,
       direccion: data.direccion,
       imagen: data.imagen,
-      //telefono: data.telefono || 'No disponible',
-      //email: data.email || 'No disponible'
     };
   } catch (error) {
     console.error('Error fetching empresa:', error);
