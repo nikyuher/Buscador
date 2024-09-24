@@ -1,4 +1,5 @@
 <template>
+  <h1>Inicio > Categoria > {{ categoriaNombre }}</h1>
   <div class="category-enterprises-container">
     <h1 v-if="!error">{{ categoriaNombre }}</h1>
 

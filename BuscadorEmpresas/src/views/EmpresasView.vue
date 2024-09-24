@@ -43,6 +43,7 @@ onMounted(() => {
 
 
 <template>
+   <h1>Inicio > Empresa > {{ empresa?.nombre }}</h1>
     <div class="empresa" v-if="empresa">
       
       <h1>{{ empresa.nombre }}</h1>
