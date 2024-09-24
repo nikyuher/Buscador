@@ -66,7 +66,6 @@ export const fetchEmpresasByCategoria = async (idCategoria: number): Promise<{ c
     }
     
     const data = await response.json();
-    console.log('Respuesta completa del servidor:', data);
 
     // Mapea los datos según la estructura que esperas
     return {
@@ -89,7 +88,6 @@ export const fetchEmpresasById = async (idEmpresa: number) => {
       throw new Error(`Error al obtener el id de las empresas: ${response.statusText}`);
     }
     const data = await response.json();
-    console.log('Respuesta completa del servidor:', data);
     return {
       idEmpresa: data.idEmpresa,
       nombre: data.nombre,
@@ -110,7 +108,6 @@ export const fetchCiudadById = async (idCiudad: number) => {
       throw new Error(`Error al obtener los detalles de la ciudad: ${response.statusText}`);
     }
     const data = await response.json();
-    console.log('Respuesta completa del servidor (Ciudad):', data);
     return {
       idCiudad: data.idCiudad,
       nombre: data.nombre,
@@ -129,7 +126,6 @@ export const fetchEmpresasByCiudad = async (idCiudad: number) => {
           throw new Error(`Error al obtener empresas por ciudad: ${response.statusText}`);
       }
       const data = await response.json();
-      console.log('Respuesta completa del servidor (Empresas por Ciudad):', data);
       
       return {
           idCiudad: data.idCiudad,
@@ -155,7 +151,6 @@ export const fetchEmpresaByCiudad = async (idEmpresa: number, idCiudad: number) 
     }
 
     const data = await response.json();
-    console.log('Respuesta completa del servidor (Empresa por Ciudad):', data);
 
     return {
       idCiudad: data.idCiudad,

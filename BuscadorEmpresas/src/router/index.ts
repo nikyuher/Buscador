@@ -12,7 +12,7 @@ const router = createRouter({
       component: Buscador
     },
     {
-      path: '/CatEmpresas/:idCategoria',
+      path: '/Categoria/:nombre,:idCategoria',
       name: 'CatEmpresas',
       component: () => import('../views/CatEmpresas.vue')
     },
