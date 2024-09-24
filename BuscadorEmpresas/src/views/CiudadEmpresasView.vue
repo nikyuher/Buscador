@@ -1,37 +1,37 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { fetchEmpresaByCiudad } from '../stores/Buscador'; // Importa la función adecuada
-import { fetchEmpresasById } from '../stores/Buscador';
+import { fetchEmpresaByCiudad, fetchCiudadById, fetchEmpresasById } from '../stores/Buscador'; // Importa la función adecuada
 
 // Definir los estados
 const ciudad = ref<{ idCiudad: number; ciudadNombre: string; empresa: { idEmpresa: number; nombre: string } | null } | null>(null);
 const empresa = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; imagen: string; } | null>(null);
 const error = ref(false);
-const errorMessage = ref('');
+const nombreCiudadError = ref('')
 
 const route = useRoute(); // Obtener los parámetros de la ruta
 
 // Función para obtener los datos de la empresa por ciudad
-const fetchEmpresaData = async (idEmpresa: number, idCiudad: number) => {
+const fetchEmpresaCiudadData = async (idEmpresa: number, idCiudad: number) => {
     try {
         const data = await fetchEmpresaByCiudad(idEmpresa, idCiudad); // Llama a la función para obtener datos de la API
         console.log("Datos obtenidos de la API:", data); // Comprobar los datos recibidos
         if (data) {
             ciudad.value = data; // Asigna los datos de la ciudad y la empresa al estado
+            fetchEmpresaData(idEmpresa);
         } else {
             error.value = true; // Marca error si no hay datos
         }
     } catch (err: any) {
         console.error('Error al obtener los datos de la empresa por ciudad:', err);
-
-        errorMessage.value = err.message || 'Error desconocido';
+        fetchEmpresaData(idEmpresa);
+        fetchCiudadData(idCiudad);
         error.value = true;
     }
 };
 
 // Función para obtener los detalles de la empresa por su ID
-const fetchEmpresasData = async (idEmpresa: number) => {
+const fetchEmpresaData = async (idEmpresa: number) => {
     try {
         const data = await fetchEmpresasById(idEmpresa);
         console.log("Datos de la empresa:", data); // Verificar los datos recibidos
@@ -46,6 +46,21 @@ const fetchEmpresasData = async (idEmpresa: number) => {
     }
 };
 
+const fetchCiudadData = async (idCiudad: number) => {
+    try {
+        const data = await fetchCiudadById(idCiudad);
+        console.log("Datos de la ciudad:", data); 
+        if (data) {
+            nombreCiudadError.value = data.nombre; 
+        } else {
+            error.value = true;
+        }
+    } catch (err) {
+        console.error('Error al obtener los datos de la ciudad:', err);
+        error.value = true;
+    }
+};
+
 // Ejecutar cuando el componente se monte
 onMounted(() => {
     const idCiudad = parseInt(route.params.idCiudad as string, 10); // Obtener idCiudad desde la URL
@@ -54,8 +69,7 @@ onMounted(() => {
     console.log("ID de la ciudad y empresa obtenidas de la URL:", idCiudad, idEmpresa); // Verificar si obtenemos la ID correctamente
 
     if (!isNaN(idCiudad) && !isNaN(idEmpresa)) {
-        fetchEmpresaData(idEmpresa, idCiudad); // Llama a la función para obtener los datos
-        fetchEmpresasData(idEmpresa);
+        fetchEmpresaCiudadData(idEmpresa, idCiudad); // Llama a la función para obtener los datos
     } else {
         error.value = true;
     }
@@ -64,16 +78,15 @@ onMounted(() => {
 
 <template>
     <div class="empresa-container">
-        <div v-if="empresa">
+        <div v-if="ciudad">
             <h1>Ciudad: {{ ciudad?.ciudadNombre }}</h1>
-            <h1>{{ empresa.nombre }}</h1>
-            <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-            <p><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
-            <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+            <h1>{{ empresa?.nombre }}</h1>
+            <img :src="empresa?.imagen" alt="Imagen de la empresa" class="empresa-img" />
+            <p><strong>Descripción:</strong> {{ empresa?.descripcion }}</p>
+            <p><strong>Dirección:</strong> {{ empresa?.direccion }}</p>
         </div>
         <div v-else-if="error">
-            <p>Error al cargar los datos de la empresa o ciudad.</p>
-            <p v-if="errorMessage">{{ errorMessage }}</p> <!-- Mostrar el mensaje de error -->
+            <p>No hay ninguna empresa de {{ empresa?.nombre }} en  {{ nombreCiudadError  }}</p>
         </div>
         <div v-else>
             <p>Cargando datos...</p>
