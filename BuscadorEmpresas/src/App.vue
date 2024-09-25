@@ -1,19 +1,33 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import Buscador from './views/Buscador.vue';
+import Footer from './components/Footer.vue'
 </script>
 
 <template>
+  <body>
   <header>
     <RouterLink to="/"><h1>BuscaNet</h1></RouterLink>
   </header>
   <RouterView></RouterView>
+  <Footer></Footer>
+  </body>
 </template>
 
 <style scoped>
+body{
+  width: 100%;
+  height: 100%;
+  background-image: url(./asserts/fondo2.jpeg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover; 
+}
 header {
   width: 100%;
   height: 10vh;
+  background-color: rgb(23, 6, 51);
+  color: white;
 }
 
 a,h1 {
@@ -21,7 +35,7 @@ a,h1 {
   margin: auto;
   align-items: center;
   text-decoration: none;
-  color: rgb(241, 201, 21);
+  color: white;
 }
 
 .logo {

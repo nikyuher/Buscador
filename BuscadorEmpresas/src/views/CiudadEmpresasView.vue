@@ -113,14 +113,14 @@ ul {
 }
 
 .empresa {
-    background-color: #f0f0f0;
+    background-color: rgb(23 6 51 / 88%);
     margin: 5px 0;
     padding: 10px;
     border-radius: 5px;
 }
 
 li {
-    background-color: #f0f0f0;
+    background-color: rgb(23 6 51 / 88%);
     margin: 5px 0;
     padding: 10px;
     border-radius: 5px;
@@ -130,7 +130,7 @@ h2 {
     margin: 0;
     font-size: 30px;
     margin-bottom: 3vh;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
 .empresa-img {
@@ -143,6 +143,6 @@ h2 {
 p {
     margin: 5px 0;
     font-size: 17px;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 </style>

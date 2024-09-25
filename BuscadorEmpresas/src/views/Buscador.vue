@@ -110,7 +110,8 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
 </script>
 
 <template>
-  <h1>Inicio</h1>
+  <body> 
+  <h1 class="Inicio">Inicio</h1>
   <div class="search-container">
     <div class="search-box">
       <h2>Busca tu empresa en tu ciudad</h2>
@@ -171,7 +172,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
       </div>
     </div>
     <div class="categories-container">
-      <h3>Categorías</h3>
+      <h3 class="Categorias">Categorías</h3>
       <div class="categories-grid">
         <router-link v-for="(categoria, index) in categorias" :key="index"
           :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre,idCategoria: categoria.idCategoria } }" class="category-item">
@@ -180,19 +181,26 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
       </div>
     </div>
   </div>
+</body>
 </template>
 
 <style scoped>
 .search-container {
-  text-align: center;
-  background-color: #f3f3f3;
-  padding: 20px;
+  text-align: center; 
+  
 }
+
 
 li,
 a,
 h2 {
   color: black;
+}
+
+.Inicio{
+  margin-left: 15vh;
+  font-size: 6vh;
+  text-decoration: underline;
 }
 
 .categories-container {
@@ -212,13 +220,21 @@ h2 {
   align-items: center;
 }
 
+.Categorias{
+  margin-bottom: 9vh;
+  font-size: 5vh;
+}
+
 .category-item {
-  background-color: #f0f0f0;
+  background-color: rgb(23 6 51 / 88%);
+  color: white;
+  font-size: 20px;
   padding: 10px;
   text-align: center;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  text-decoration: none;
 }
 
 .category-item:hover {
@@ -226,16 +242,23 @@ h2 {
 }
 
 .search-box {
-  background-color: #e3e3e3;
-  padding: 30px;
+  background-color: rgb(23 6 51 / 88%);
+  color: white;
+  padding: 70px;
   display: inline-block;
-  border-radius: 8px;
+  border-radius: 12px;
+
+}
+
+.search-box h2 {
+  color: white;
 }
 
 .search-inputs {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-top: 10vh;
 }
 
 input[type="text"] {

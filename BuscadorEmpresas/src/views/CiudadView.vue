@@ -100,7 +100,7 @@ ul {
 }
 
 li {
-  background-color: #f0f0f0;
+  background-color: rgb(23 6 51 / 88%);
   margin: 5px 0;
   padding: 10px;
   border-radius: 5px;
@@ -109,7 +109,7 @@ li {
 h2 {
   margin: 0;
   font-size: 18px;
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 .empresa-img {
@@ -121,6 +121,6 @@ h2 {
 
 p {
   margin: 5px 0;
-  color: black;
+  color: rgb(255, 255, 255);
 }
 </style>
