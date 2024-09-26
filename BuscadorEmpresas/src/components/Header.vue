@@ -1,0 +1,155 @@
+<template>
+<div class = "header">
+    <div class = "header-name">
+        <RouterLink to="/"><h1>BuscaNet</h1></RouterLink>
+    </div>
+    <div class="user-actions">
+      <!-- Mostrar si no está logueado -->
+      <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link">Register</RouterLink>
+      <RouterLink v-if="!isLoggedIn" to="/Login" class="nav__link">Login</RouterLink>
+
+      <!-- Mostrar si está logueado -->
+      <div v-if="isLoggedIn" class="logged-in-actions">
+        <span>Bienvenido, {{ userName }}</span>
+        <button @click="handleLogout" class="logout-button">Cerrar sesión</button>
+      </div>
+    </div>
+</div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useLoginStore } from '../stores/Login';
+import { useRouter } from 'vue-router';
+
+// Importar el store
+const loginStore = useLoginStore();
+const router = useRouter(); // Obtener acceso al router
+
+// Computar si el usuario está logueado
+const isLoggedIn = computed(() => loginStore.usuario !== null);
+
+// Obtener el nombre del usuario si está logueado
+const userName = computed(() => loginStore.usuario?.nombre || '');
+
+// Método para cerrar sesión
+const handleLogout = () => {
+  loginStore.logout();
+  router.push('/'); // Redirigir a la página de inicio al cerrar sesión
+};
+</script>
+
+
+<style scoped>
+
+.header {
+  width: 100%;
+  height: 10vh;
+  background-color: rgb(23, 6, 51);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content:center ;
+}
+
+.header-name{
+
+}
+
+a,h1 {
+  text-align: center;
+  margin: auto;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+nav {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+.user-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 10px;
+}
+
+.user-actions button:hover {
+    text-decoration: underline;
+}
+.user-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-left:20vh ;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.logout-button {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #d9363e;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
+}
+</style>

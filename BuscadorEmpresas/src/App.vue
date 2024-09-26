@@ -1,23 +1,25 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { useRoute } from 'vue-router'; 
 import Buscador from './views/Buscador.vue';
 import Footer from './components/Footer.vue'
+import Header from './components/Header.vue'
+const route = useRoute(); 
 </script>
 
 <template>
   <body>
-  <header>
-    <RouterLink to="/"><h1>BuscaNet</h1></RouterLink>
-  </header>
+    <Header v-if="route.name !== 'Login' && route.name !== 'Register'"></Header>
   <RouterView></RouterView>
-  <Footer></Footer>
+  <Footer v-if="route.name !== 'Login' && route.name !== 'Register'"></Footer>
   </body>
 </template>
 
 <style scoped>
-body{
-  width: 100%;
-  height: 100%;
+body,html,#content,#liniaPantalla{
+  margin:0px;  
+   min-height: 100vh; 
+   width:100%;
   background-image: url(./asserts/fondo2.jpeg);
   background-repeat: no-repeat;
   background-attachment: fixed;

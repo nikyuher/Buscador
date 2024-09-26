@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CatEmpresas from '@/views/CatEmpresas.vue'
 import Buscador from '@/views/Buscador.vue'
+import Login from '../views/Login.vue';
+import Register from '../views/Register.vue';
+import { useLoginStore } from '../stores/Login';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +33,9 @@ const router = createRouter({
       path: '/Ciudad/:idCiudad/empresas/:idEmpresa',
       name: 'CiudadEmpresas',
       component: () => import('../views/CiudadEmpresasView.vue')
-    }
+    },
+    { path: '/Login', name: 'Login', component: Login },
+    { path: '/Register', name: 'Register', component: Register }
   ]
 })
 
