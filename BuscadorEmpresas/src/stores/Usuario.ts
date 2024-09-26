@@ -8,15 +8,34 @@ interface Usuario {
   nombre: string
   contrasena: string
   correo: string
-  rol: true
-  peticionesDTO: []
+  rol: boolean
+  peticionesDTO: [PeticionesDTO]
+}
+
+interface PeticionesDTO {
+  idPeticion: number
+  idUsuario: number
+  datosUsuario: null
+  nombreEmpresa: string
+  descripcionEmpresa: string
+  direccionEmpresa: string
+  imagenEmpresaURL: string
+  idCategoriaEmpresa: number
+  idCiudadEmpresa: number
+}
+
+interface infoUsuario {
+  nombre: string
+  correo: string
+  contrasena: string
 }
 
 export const useUsuarioStore = defineStore({
   id: 'usuario',
 
   state: () => ({
-    usuarios: [] as Usuario[]
+    usuarios: [] as Usuario[],
+    usuario: [] as Usuario[]
   }),
 
   actions: {
@@ -46,30 +65,51 @@ export const useUsuarioStore = defineStore({
         throw error
       }
     },
-    async RegistrarUsuario(datosCuenta: any) {
+    async GetUsuarioId(idUsuario: number) {
       try {
         const token = loginApi.token
 
-        const cuenta = {
-          nombre: datosCuenta.nombre,
-          contrasena: datosCuenta.contrasena,
-          correo: datosCuenta.correo
-        }
-
-        const response = await fetch(`api/Usuario/register`, {
-          method: 'POST',
+        const response = await fetch(`api/Usuario/${idUsuario}`, {
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(cuenta)
+          }
         })
 
         if (!response.ok) {
           const errorData = await response.json()
-          throw new Error(errorData.message || 'error al crear la cuenta.')
+          throw new Error(errorData.message || 'error al obtener al usuario.')
         }
 
-        console.log('Cuenta creada correctamente')
+        const data = await response.json()
+
+        this.usuario = data
+
+        console.log('Usuario obtenido correctamente')
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async PutDatosUsuarioId(infoUser: infoUsuario) {
+      try {
+        const token = loginApi.token
+        const idUser = loginApi.usuario?.idUsuario
+
+        const response = await fetch(`api/Usuario/${idUser}`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(infoUser)
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.message || 'error al modificar datos al usuario.')
+        }
+
+        console.log('Usuario modificado correctamente')
       } catch (error) {
         console.log(error)
         throw error
