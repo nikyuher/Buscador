@@ -1,5 +1,6 @@
 <template>
-    <div class="login-container">
+    <div class="cont-form">
+      <div class="login-container">
       <h2>Iniciar Sesión</h2>
       <form @submit.prevent="login">
         <div class="input-group">
@@ -30,6 +31,7 @@
   
         <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       </form>
+    </div>
     </div>
   </template>
   
@@ -70,6 +72,10 @@
   </script>
   
   <style scoped>
+.cont-form{
+  padding: 200px;
+}
+  
   .login-container {
     max-width: 400px;
     margin:  auto;
