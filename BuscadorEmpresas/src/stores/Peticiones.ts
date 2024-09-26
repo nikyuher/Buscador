@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useLoginStore } from '@/stores/Login'
 
-const usuarioApi = useLoginStore()
+const loginApi = useLoginStore()
 
 interface Peticion {
   idPeticion: number
@@ -32,7 +32,7 @@ export const usePeticionesStore = defineStore({
   actions: {
     async GetAllPeticiones() {
       try {
-        const token = usuarioApi.token
+        const token = loginApi.token
 
         const response = await fetch(`api/Peticion`, {
           method: 'GET',
@@ -59,7 +59,7 @@ export const usePeticionesStore = defineStore({
     },
     async AceptarPeticion(idPeticion: number) {
       try {
-        const token = usuarioApi.token
+        const token = loginApi.token
 
         const response = await fetch(`api/Peticion/validar`, {
           method: 'POST',
@@ -83,8 +83,8 @@ export const usePeticionesStore = defineStore({
     },
     async CrearPeticion(datosPeticion: any) {
       try {
-        const token = usuarioApi.token
-        const idUsuario = usuarioApi.usuario?.idUsuario
+        const token = loginApi.token
+        const idUsuario = loginApi.usuario?.idUsuario
 
         const peticion = {
           idUsuario: idUsuario,
@@ -118,8 +118,8 @@ export const usePeticionesStore = defineStore({
     },
     async EliminarPeticion(idPeticion: number) {
       try {
-        const token = usuarioApi.token
-        const idUsuario = usuarioApi.usuario?.idUsuario
+        const token = loginApi.token
+        const idUsuario = loginApi.usuario?.idUsuario
 
         const response = await fetch(`api/Peticion/${idPeticion}?idUsuario=${idUsuario}`, {
           method: 'DELETE',
