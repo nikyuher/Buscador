@@ -5,6 +5,7 @@ import Buscador from '@/views/Buscador.vue'
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import { useLoginStore } from '../stores/Login';
+import PanelAdmin from '@/views/PanelAdmin.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,8 +36,30 @@ const router = createRouter({
       component: () => import('../views/CiudadEmpresasView.vue')
     },
     { path: '/Login', name: 'Login', component: Login },
-    { path: '/Register', name: 'Register', component: Register }
-  ]
+    { path: '/Register', name: 'Register', component: Register },
+    {
+      path: '/PanelAdmin',
+      name: 'PanelAdmin',
+      component: PanelAdmin,
+      beforeEnter: (to, from, next) => {
+        const loginStore = useLoginStore();
+        if (loginStore.rol) {
+          next();
+        } else {
+          next('/Login');
+        }
+      }
+    },
+  ],
+});
+
+router.beforeEach((to, from, next) => {
+  const loginStore = useLoginStore();
+  if (to.path === '/PanelAdmin' && !loginStore.rol) {
+    next('/Login');
+  } else {
+    next();
+  }
 })
 
 export default router
