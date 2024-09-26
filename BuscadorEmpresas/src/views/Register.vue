@@ -87,7 +87,7 @@
   <style scoped>
   .register-container {
     max-width: 400px;
-    margin: 100px auto;
+    margin: auto;
     padding: 20px;
     background-color: #f5f5f5;
     border-radius: 8px;
