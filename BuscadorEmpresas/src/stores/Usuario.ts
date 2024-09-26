@@ -9,7 +9,7 @@ interface Usuario {
   contrasena: string
   correo: string
   rol: boolean
-  peticionesDTO: [PeticionesDTO]
+  peticionesDTO: PeticionesDTO[]
 }
 
 interface PeticionesDTO {
