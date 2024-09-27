@@ -25,7 +25,7 @@ export const useLoginStore = defineStore({
   state: () => ({
     usuario: JSON.parse(localStorage.getItem('usuario') || 'null') as Usuario | null,
     error: null as string | null,
-    token: localStorage.getItem('jwtToken') as string | null,
+    token: localStorage.getItem('jwtToken') as string,
   }),
 
   getters: {
@@ -74,6 +74,7 @@ export const useLoginStore = defineStore({
         return false;
       }
     },
+
     async register(nombre: string, correo: string, contrasena: string): Promise<boolean> {
       try {
         const nuevoUsuario = {
@@ -118,9 +119,10 @@ export const useLoginStore = defineStore({
         return false;
       }
     },
+
     logout() {
       this.usuario = null;
-      this.token = null;
+      this.token = '';
       localStorage.removeItem('usuario'); // Eliminar usuario de localStorage
       localStorage.removeItem('jwtToken'); // Eliminar token de localStorage
       console.log('Sesión cerrada');

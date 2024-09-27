@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { useLoginStore } from '@/stores/Login'
+import { jwtDecode } from 'jwt-decode'
 
-const loginApi = useLoginStore()
+
 
 interface Peticion {
   idPeticion: number
@@ -24,15 +25,14 @@ export const usePeticionesStore = defineStore({
   id: 'peticion',
 
   state: () => ({
-    listPeticiones: [] as Peticion[]
+    peticiones: [] as Peticion[]
   }),
 
   getters: {},
 
   actions: {
-    async GetAllPeticiones() {
+    async GetAllPeticiones(token: string) {
       try {
-        const token = loginApi.token
 
         const response = await fetch(`api/Peticion`, {
           method: 'GET',
@@ -48,7 +48,7 @@ export const usePeticionesStore = defineStore({
 
         const data = await response.json()
 
-        this.listPeticiones = data
+        this.peticiones = data
 
         console.log('Peticiones obtenidas correctamente');
 
@@ -57,16 +57,14 @@ export const usePeticionesStore = defineStore({
         throw error
       }
     },
-    async AceptarPeticion(idPeticion: number) {
+    async AceptarPeticion(idPeticion: number, token: string) {
       try {
-        const token = loginApi.token
 
-        const response = await fetch(`api/Peticion/validar`, {
+        const response = await fetch(`api/Peticion/validar?peticionId=${idPeticion}`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(idPeticion)
+          }
         })
 
         if (!response.ok) {
@@ -81,11 +79,8 @@ export const usePeticionesStore = defineStore({
         throw error
       }
     },
-    async CrearPeticion(datosPeticion: any) {
+    async CrearPeticion(datosPeticion: any, token: string, idUsuario: number) {
       try {
-        const token = loginApi.token
-        const idUsuario = loginApi.usuario?.idUsuario
-
         const peticion = {
           idUsuario: idUsuario,
           nombreEmpresa: datosPeticion.nombreEmpresa,
@@ -110,16 +105,15 @@ export const usePeticionesStore = defineStore({
         }
 
         console.log('Peticion creada correctamente');
-        
+
       } catch (error) {
         console.log(error)
         throw error
       }
     },
-    async EliminarPeticion(idPeticion: number) {
+    async EliminarPeticion(idPeticion: number, token: string, idUsuario: number) {
       try {
-        const token = loginApi.token
-        const idUsuario = loginApi.usuario?.idUsuario
+
 
         const response = await fetch(`api/Peticion/${idPeticion}?idUsuario=${idUsuario}`, {
           method: 'DELETE',
