@@ -74,7 +74,6 @@ export const useLoginStore = defineStore({
         return false;
       }
     },
-
     async register(nombre: string, correo: string, contrasena: string): Promise<boolean> {
       try {
         const nuevoUsuario = {
@@ -119,7 +118,6 @@ export const useLoginStore = defineStore({
         return false;
       }
     },
-
     logout() {
       this.usuario = null;
       this.token = null;
