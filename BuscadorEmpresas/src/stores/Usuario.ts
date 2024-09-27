@@ -34,8 +34,8 @@ export const useUsuarioStore = defineStore({
   id: 'usuario',
 
   state: () => ({
-    usuarios: [] as Usuario[],
-    usuario: [] as Usuario[]
+    ListUsuarios: [] as Usuario[],
+    usuario: null as Usuario | null
   }),
 
   actions: {
@@ -57,7 +57,7 @@ export const useUsuarioStore = defineStore({
 
         const data = await response.json()
 
-        this.usuarios = data
+        this.ListUsuarios = data
 
         console.log('Usuarios obtenidas correctamente')
       } catch (error) {

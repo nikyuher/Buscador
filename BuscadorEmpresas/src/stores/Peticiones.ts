@@ -24,7 +24,7 @@ export const usePeticionesStore = defineStore({
   id: 'peticion',
 
   state: () => ({
-    peticiones: [] as Peticion[]
+    listPeticiones: [] as Peticion[]
   }),
 
   getters: {},
@@ -48,7 +48,7 @@ export const usePeticionesStore = defineStore({
 
         const data = await response.json()
 
-        this.peticiones = data
+        this.listPeticiones = data
 
         console.log('Peticiones obtenidas correctamente');
 
