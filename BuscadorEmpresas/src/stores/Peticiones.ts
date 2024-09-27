@@ -1,8 +1,4 @@
 import { defineStore } from 'pinia'
-import { useLoginStore } from '@/stores/Login'
-import { jwtDecode } from 'jwt-decode'
-
-
 
 interface Peticion {
   idPeticion: number
@@ -27,13 +23,9 @@ export const usePeticionesStore = defineStore({
   state: () => ({
     peticiones: [] as Peticion[]
   }),
-
-  getters: {},
-
   actions: {
     async GetAllPeticiones(token: string) {
       try {
-
         const response = await fetch(`api/Peticion`, {
           method: 'GET',
           headers: {
@@ -50,8 +42,7 @@ export const usePeticionesStore = defineStore({
 
         this.peticiones = data
 
-        console.log('Peticiones obtenidas correctamente');
-
+        console.log('Peticiones obtenidas correctamente')
       } catch (error) {
         console.log(error)
         throw error
@@ -59,7 +50,6 @@ export const usePeticionesStore = defineStore({
     },
     async AceptarPeticion(idPeticion: number, token: string) {
       try {
-
         const response = await fetch(`api/Peticion/validar?peticionId=${idPeticion}`, {
           method: 'POST',
           headers: {
@@ -72,8 +62,7 @@ export const usePeticionesStore = defineStore({
           throw new Error(errorData.message || 'error al validar la peticion.')
         }
 
-        console.log('Peticion aceptada correctamente');
-
+        console.log('Peticion aceptada correctamente')
       } catch (error) {
         console.log(error)
         throw error
@@ -104,8 +93,7 @@ export const usePeticionesStore = defineStore({
           throw new Error(errorData.message || 'error al crear la peticion.')
         }
 
-        console.log('Peticion creada correctamente');
-
+        console.log('Peticion creada correctamente')
       } catch (error) {
         console.log(error)
         throw error
@@ -113,8 +101,6 @@ export const usePeticionesStore = defineStore({
     },
     async EliminarPeticion(idPeticion: number, token: string, idUsuario: number) {
       try {
-
-
         const response = await fetch(`api/Peticion/${idPeticion}?idUsuario=${idUsuario}`, {
           method: 'DELETE',
           headers: {
@@ -127,8 +113,7 @@ export const usePeticionesStore = defineStore({
           throw new Error(errorData.message || 'error al validar la peticion.')
         }
 
-        console.log('Peticion eliminada correctamente');
-
+        console.log('Peticion eliminada correctamente')
       } catch (error) {
         console.log(error)
         throw error

@@ -1,7 +1,4 @@
 import { defineStore } from 'pinia'
-import { useLoginStore } from '@/stores/Login'
-
-const loginApi = useLoginStore()
 
 interface Empresa {
   idEmpresa: number
@@ -94,9 +91,8 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async CreateEmpresa(DatosEmpresa: DatosEmpresa) {
+    async CreateEmpresa(DatosEmpresa: DatosEmpresa, token: string) {
       try {
-        const token = loginApi.token
 
         const objectCrear = {
           idEmpresa: (DatosEmpresa.idEmpresa = 0),
@@ -125,9 +121,8 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async AddCategoriaToEmpresa(idCategoria: number, idEmpresa: number) {
+    async AddCategoriaToEmpresa(idCategoria: number, idEmpresa: number, token: string) {
       try {
-        const token = loginApi.token
 
         const objetoAñadir = {
           idCategoria: idCategoria,
@@ -153,10 +148,8 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async AddCiudadToEmpresa(idCiudad: number, idEmpresa: number) {
+    async AddCiudadToEmpresa(idCiudad: number, idEmpresa: number, token: string) {
       try {
-        const token = loginApi.token
-
         const objetoAñadir = {
           idCiudad: idCiudad,
           idEmpresa: idEmpresa
@@ -181,9 +174,8 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async PutDatosEmpresa(DatosEmpresa: DatosEmpresa) {
+    async PutDatosEmpresa(DatosEmpresa: DatosEmpresa, token: string) {
       try {
-        const token = loginApi.token
 
         const response = await fetch(`api/Empresa/${DatosEmpresa.idEmpresa}`, {
           method: 'PUT',
@@ -204,9 +196,8 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async EliminarEmpresa(idEmpresa: number) {
+    async EliminarEmpresa(idEmpresa: number, token: string) {
       try {
-        const token = loginApi.token
 
         const response = await fetch(`api/Empresa/${idEmpresa}`, {
           method: 'DELETE',
@@ -226,9 +217,8 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async EliminarCategoriaByEmpresa(idCategoria: number, idEmpresa: number) {
+    async EliminarCategoriaByEmpresa(idCategoria: number, idEmpresa: number, token: string) {
       try {
-        const token = loginApi.token
 
         const objetoEliminar = {
           idCategoria: idCategoria,
@@ -254,9 +244,8 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async EliminarCiudadByEmpresa(idCiudad: number, idEmpresa: number) {
+    async EliminarCiudadByEmpresa(idCiudad: number, idEmpresa: number, token: string) {
       try {
-        const token = loginApi.token
 
         const objetoEliminar = {
           idCiudad: idCiudad,
