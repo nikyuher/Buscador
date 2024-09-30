@@ -88,25 +88,26 @@ export const usePeticionesStore = defineStore({
           imagenEmpresaURL: datosPeticion.imagenEmpresaURL,
           idCategoriaEmpresa: datosPeticion.idCategoriaEmpresa,
           idCiudadEmpresa: datosPeticion.idCiudadEmpresa
-        }
-
+        };
+    
         const response = await fetch(`api/Peticion`, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json' // Asegúrate de incluir este encabezado
           },
           body: JSON.stringify(peticion)
-        })
-
+        });
+    
         if (!response.ok) {
-          const errorData = await response.json()
-          throw new Error(errorData.message || 'error al crear la peticion.')
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'error al crear la petición.');
         }
-
-        console.log('Peticion creada correctamente')
+    
+        console.log('Petición creada correctamente');
       } catch (error) {
-        console.log(error)
-        throw error
+        console.log(error);
+        throw error;
       }
     },
     async EliminarPeticion(idPeticion: number) {

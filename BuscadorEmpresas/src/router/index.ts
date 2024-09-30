@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Buscador from '@/views/Buscador.vue'
-import { useLoginStore } from '../stores/Login'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +29,11 @@ const router = createRouter({
       path: '/Ciudad/:idCiudad/empresas/:idEmpresa',
       name: 'CiudadEmpresas',
       component: () => import('../views/CiudadEmpresasView.vue')
+    },
+    {
+      path: '/Solicitudes',
+      name: 'Solicitudes',
+      component: () => import('../views/Solicitudes.vue')
     },
     { path: '/Login', name: 'Login', component: () => import('../views/Login.vue') },
     { path: '/Register', name: 'Register', component: () => import('../views/Register.vue') },

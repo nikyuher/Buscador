@@ -13,6 +13,9 @@
         <span>Bienvenido, {{ userName }}</span>
         <button @click="handleLogout" class="logout-button">Cerrar sesión</button>
       </div>
+      <div v-if="isLoggedIn" class="Solicitudes">
+      <RouterLink  to="/Solicitudes" class="sol">Solicitudes</RouterLink>
+    </div>
     </div>
 </div>
 </template>
@@ -62,6 +65,9 @@ a,h1 {
   align-items: center;
   text-decoration: none;
   color: white;
+}
+.Solicitudes{
+  margin-left: 8vh;
 }
 
 .logo {
