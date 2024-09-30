@@ -35,6 +35,11 @@ const router = createRouter({
       name: 'CiudadEmpresas',
       component: () => import('../views/CiudadEmpresasView.vue')
     },
+    {
+      path: '/Solicitudes',
+      name: 'Solicitudes',
+      component: () => import('../views/Solicitudes.vue')
+    },
     { path: '/Login', name: 'Login', component: Login },
     { path: '/Register', name: 'Register', component: Register },
     {
