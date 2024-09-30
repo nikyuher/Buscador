@@ -1,23 +1,26 @@
 <template>
-<div class = "header">
-    <div class = "header-name">
-        <RouterLink to="/"><h1>BuscaNet</h1></RouterLink>
+  <div class="header">
+    <div class="header-name">
+      <RouterLink to="/">
+        <h1>BuscaNet</h1>
+      </RouterLink>
     </div>
+
     <div class="user-actions">
-      <!-- Mostrar si no está logueado -->
       <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link">Register</RouterLink>
       <RouterLink v-if="!isLoggedIn" to="/Login" class="nav__link">Login</RouterLink>
-
-      <!-- Mostrar si está logueado -->
       <div v-if="isLoggedIn" class="logged-in-actions">
+        <div v-if="isLoggedIn && loginStore.isAdmin">
+          <RouterLink to="/PanelAdmin" class="sol">Panel Admin</RouterLink>
+        </div>
+        <div v-if="isLoggedIn && !loginStore.isAdmin" class="Solicitudes">
+          <RouterLink to="/Solicitudes" class="sol">Solicitudes</RouterLink>
+        </div>
         <span>Bienvenido, {{ userName }}</span>
         <button @click="handleLogout" class="logout-button">Cerrar sesión</button>
       </div>
-      <div v-if="isLoggedIn" class="Solicitudes">
-      <RouterLink  to="/Solicitudes" class="sol">Solicitudes</RouterLink>
     </div>
-    </div>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -44,7 +47,6 @@ const handleLogout = () => {
 
 
 <style scoped>
-
 .header {
   width: 100%;
   height: 10vh;
@@ -52,22 +54,16 @@ const handleLogout = () => {
   color: white;
   display: flex;
   align-items: center;
-  justify-content:center ;
+  justify-content: center;
 }
 
-.header-name{
-
-}
-
-a,h1 {
+a,
+h1 {
   text-align: center;
   margin: auto;
   align-items: center;
   text-decoration: none;
   color: white;
-}
-.Solicitudes{
-  margin-left: 8vh;
 }
 
 .logo {
@@ -99,23 +95,25 @@ nav a {
 nav a:first-of-type {
   border: 0;
 }
+
 .user-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 10px;
 }
 
 .user-actions button:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
+
 .user-actions {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin-left:20vh ;
+  margin-left: 20vh;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -130,6 +128,17 @@ nav a:first-of-type {
 
 .logout-button:hover {
   background-color: #d9363e;
+}
+
+.logged-in-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.sol {
+  margin-right: 20px;
 }
 
 @media (min-width: 1024px) {
