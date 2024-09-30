@@ -227,21 +227,15 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async EliminarCategoriaByEmpresa(idCategoria: number, idEmpresa: number) {
+    async EliminarCategoriaByEmpresa(idCategoriaEmpresa: number) {
       try {
         const token = loginStore.token
 
-        const objetoEliminar = {
-          idCategoria: idCategoria,
-          idEmpresa: idEmpresa
-        }
-
-        const response = await fetch(`api/Empresa/categoria`, {
+        const response = await fetch(`api/Empresa/categoria?IdempresaCategoria=${idCategoriaEmpresa}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(objetoEliminar)
+          }
         })
 
         if (!response.ok) {
@@ -255,21 +249,15 @@ export const useEmpresaStore = defineStore({
         throw error
       }
     },
-    async EliminarCiudadByEmpresa(idCiudad: number, idEmpresa: number) {
+    async EliminarCiudadByEmpresa(idCiudadEmpresa: number) {
       try {
         const token = loginStore.token
 
-        const objetoEliminar = {
-          idCiudad: idCiudad,
-          idEmpresa: idEmpresa
-        }
-
-        const response = await fetch(`api/Empresa/ciudad`, {
+        const response = await fetch(`api/Empresa/ciudad?IdempresaCiudad=${idCiudadEmpresa}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(objetoEliminar)
+          }
         })
 
         if (!response.ok) {

@@ -136,6 +136,29 @@ export const useUsuarioStore = defineStore({
         console.log(error)
         throw error
       }
+    },
+    async EliminarEmpresasByUsuarios(IdEmpresaUsuario: number) {
+      try {
+        const token = loginStore.token
+        const idUsuario = loginStore.usuario?.idUsuario
+
+        const response = await fetch(`api/Usuario/${idUsuario}/empresa?idEmpresaUsuario=${IdEmpresaUsuario}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.message || 'error al eliminar la empresa del usuario.')
+        }
+
+        console.log('Empresa del usuario eliminada correctamente')
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
     }
   }
 })
