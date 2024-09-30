@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
 import { usePeticionesStore } from '../stores/Peticiones'
-import { useRouter } from 'vue-router';
 import { useLoginStore } from '../stores/Login'
 
 // Instanciamos el store de peticiones
@@ -58,10 +57,10 @@ const aceptarPeticion = async (idPeticion: number) => {
         console.log(idPeticion, token);
 
 
-        await peticionesStore.AceptarPeticion(idPeticion, token)
+        await peticionesStore.AceptarPeticion(idPeticion)
         alert('Petición aceptada correctamente')
         // Refrescamos las peticiones después de aceptar una
-        await peticionesStore.GetAllPeticiones(token)
+        await peticionesStore.GetAllPeticiones()
     } catch (error) {
         console.error('Error al aceptar la petición:', error)
         alert('Error al aceptar la petición.')
@@ -72,10 +71,10 @@ const aceptarPeticion = async (idPeticion: number) => {
 const rechazarPeticion = async (idPeticion: number) => {
     try {
         if (idUsuario) {
-            await peticionesStore.EliminarPeticion(idPeticion, token, idUsuario)
+            await peticionesStore.EliminarPeticion(idPeticion)
             alert('Petición rechazada/eliminada correctamente')
             // Refrescamos las peticiones después de rechazar una
-            await peticionesStore.GetAllPeticiones(token)
+            await peticionesStore.GetAllPeticiones()
         }
 
     } catch (error) {
@@ -86,7 +85,7 @@ const rechazarPeticion = async (idPeticion: number) => {
 
 // Obtenemos las peticiones al montar el componente
 onMounted(() => {
-    peticionesStore.GetAllPeticiones(token)
+    peticionesStore.GetAllPeticiones()
     console.log(peticiones);
 
 })

@@ -1,11 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import CatEmpresas from '@/views/CatEmpresas.vue'
+
 import Buscador from '@/views/Buscador.vue'
-import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
-import { useLoginStore } from '../stores/Login';
-import PanelAdmin from '@/views/PanelAdmin.vue';
+import { useLoginStore } from '../stores/Login'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,30 +31,20 @@ const router = createRouter({
       name: 'CiudadEmpresas',
       component: () => import('../views/CiudadEmpresasView.vue')
     },
-    { path: '/Login', name: 'Login', component: Login },
-    { path: '/Register', name: 'Register', component: Register },
+    { path: '/Login', name: 'Login', component: () => import('../views/Login.vue') },
+    { path: '/Register', name: 'Register', component: () => import('../views/Register.vue') },
     {
       path: '/PanelAdmin',
       name: 'PanelAdmin',
-      component: PanelAdmin,
-      beforeEnter: (to, from, next) => {
-        const loginStore = useLoginStore();
-        if (loginStore.rol) {
-          next();
-        } else {
-          next('/Login');
-        }
-      }
-    },
+      component: () => import('../views/PanelAdmin.vue')
+    }
   ],
-});
-
-router.beforeEach((to, from, next) => {
-  const loginStore = useLoginStore();
-  if (to.path === '/PanelAdmin' && !loginStore.rol) {
-    next('/Login');
-  } else {
-    next();
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
   }
 })
 

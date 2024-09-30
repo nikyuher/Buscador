@@ -190,6 +190,9 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
   
 }
 
+input{
+  color: white;
+}
 
 li,
 a,

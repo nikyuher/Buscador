@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia'
+import { useLoginStore } from '../stores/Login'
+
+const loginStore = useLoginStore()
 
 interface Usuario {
   idUsuario: number
@@ -37,8 +40,10 @@ export const useUsuarioStore = defineStore({
   }),
 
   actions: {
-    async GetAllUsuarios(token: string) {
+    async GetAllUsuarios() {
       try {
+        const token = loginStore.token
+
         const response = await fetch(`api/Usuario`, {
           method: 'GET',
           headers: {
@@ -61,8 +66,10 @@ export const useUsuarioStore = defineStore({
         throw error
       }
     },
-    async GetUsuarioId(idUsuario: number, token: string) {
+    async GetUsuarioId(idUsuario: number) {
       try {
+        const token = loginStore.token
+
         const response = await fetch(`api/Usuario/${idUsuario}`, {
           method: 'GET',
           headers: {
@@ -85,8 +92,10 @@ export const useUsuarioStore = defineStore({
         throw error
       }
     },
-    async PutDatosUsuarioId(infoUser: infoUsuario, token: string) {
+    async PutDatosUsuarioId(infoUser: infoUsuario) {
       try {
+        const token = loginStore.token
+
         const response = await fetch(`api/Usuario/${infoUser.idUsuario}`, {
           method: 'PUT',
           headers: {
@@ -106,8 +115,10 @@ export const useUsuarioStore = defineStore({
         throw error
       }
     },
-    async EliminarUsuarios(idUsuario: number, token: string) {
+    async EliminarUsuarios(idUsuario: number) {
       try {
+        const token = loginStore.token
+
         const response = await fetch(`api/Usuario/${idUsuario}`, {
           method: 'DELETE',
           headers: {

@@ -1,4 +1,8 @@
 import { defineStore } from 'pinia'
+import { useLoginStore } from '../stores/Login'
+
+const loginStore = useLoginStore()
+
 
 interface Caterorias {
   idCategoria: number
@@ -94,8 +98,10 @@ export const useCategoriaStore = defineStore({
         throw error
       }
     },
-    async CreateCategoria(nombre: string, token: string) {
+    async CreateCategoria(nombre: string) {
       try {
+        const token = loginStore.token
+
         const nombreObjet = {
           nombre: nombre
         }
@@ -119,8 +125,10 @@ export const useCategoriaStore = defineStore({
         throw error
       }
     },
-    async PutCategoria(infoCategoria: InfoCategoria, token: string) {
+    async PutCategoria(infoCategoria: InfoCategoria) {
       try {
+        const token = loginStore.token
+
         const response = await fetch(`api/Categoria`, {
           method: 'PUT',
           headers: {
@@ -140,8 +148,10 @@ export const useCategoriaStore = defineStore({
         throw error
       }
     },
-    async EliminarCategoria(idCategoria: number, token: string) {
+    async EliminarCategoria(idCategoria: number) {
       try {
+        const token = loginStore.token
+
         const response = await fetch(`api/Categoria/${idCategoria}`, {
           method: 'DELETE',
           headers: {

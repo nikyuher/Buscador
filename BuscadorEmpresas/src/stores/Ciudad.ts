@@ -1,4 +1,8 @@
 import { defineStore } from 'pinia'
+import { useLoginStore } from '../stores/Login'
+
+const loginStore = useLoginStore()
+
 
 interface CiudadeEmpresas {
   idCiudad: number
@@ -147,8 +151,10 @@ export const useCiudadStore = defineStore({
         throw error
       }
     },
-    async CreateCiudad(DatosCiudad: InfoCiudad, token: string) {
+    async CreateCiudad(DatosCiudad: InfoCiudad) {
       try {
+        const token = loginStore.token
+
         const objetoMandar = {
           idCiudad: 0,
           nombre: DatosCiudad.nombre
@@ -173,8 +179,10 @@ export const useCiudadStore = defineStore({
         throw error
       }
     },
-    async ModificarCiudad(DatosCiudad: InfoCiudad, token: string) {
+    async ModificarCiudad(DatosCiudad: InfoCiudad) {
       try {
+        const token = loginStore.token
+
         const objetoMandar = {
           idCiudad: DatosCiudad.idCiudad,
           nombre: DatosCiudad.nombre
@@ -199,8 +207,10 @@ export const useCiudadStore = defineStore({
         throw error
       }
     },
-    async EliminarCiudad(idCategoria: number, token: string) {
+    async EliminarCiudad(idCategoria: number) {
       try {
+        const token = loginStore.token
+
         const response = await fetch(`api/Ciudad/${idCategoria}`, {
           method: 'DELETE',
           headers: {
