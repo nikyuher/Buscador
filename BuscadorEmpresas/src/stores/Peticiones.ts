@@ -83,8 +83,8 @@ export const usePeticionesStore = defineStore({
         const peticion = {
           idUsuario: idUsuario,
           nombreEmpresa: datosPeticion.nombreEmpresa,
-          descripcionEmpres: datosPeticion.descripcionEmpres,
-          direccionEmpres: datosPeticion.direccionEmpres,
+          descripcionEmpresa: datosPeticion.descripcionEmpresa,
+          direccionEmpresa: datosPeticion.direccionEmpresa,
           imagenEmpresaURL: datosPeticion.imagenEmpresaURL,
           idCategoriaEmpresa: datosPeticion.idCategoriaEmpresa,
           idCiudadEmpresa: datosPeticion.idCiudadEmpresa

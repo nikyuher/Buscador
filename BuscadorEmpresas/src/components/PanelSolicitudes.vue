@@ -12,8 +12,6 @@ const direccionEmpresa = ref('');
 const imagenEmpresaURL = ref('');
 const idCategoriaEmpresa = ref(0);
 const idCiudadEmpresa = ref(0);
-const idUsuario = ref(1); // Simulación del ID del usuario autenticado
-const token = ref(''); // Aquí deberías obtener el token del usuario autenticado
 
 // Bandera de éxito y error
 const success = ref(false);
@@ -23,8 +21,8 @@ const errorMessage = ref('');
 const enviarPeticion = async () => {
   const datosPeticion = {
     nombreEmpresa: nombreEmpresa.value,
-    descripcionEmpres: descripcionEmpresa.value,
-    direccionEmpres: direccionEmpresa.value,
+    descripcionEmpresa: descripcionEmpresa.value,
+    direccionEmpresa: direccionEmpresa.value,
     imagenEmpresaURL: imagenEmpresaURL.value,
     idCategoriaEmpresa: idCategoriaEmpresa.value,
     idCiudadEmpresa: idCiudadEmpresa.value,
@@ -75,11 +73,6 @@ const enviarPeticion = async () => {
       <div>
         <label for="idCiudadEmpresa">ID Ciudad de la Empresa:</label>
         <input v-model="idCiudadEmpresa" id="idCiudadEmpresa" type="number" required />
-      </div>
-
-      <div>
-        <label for="token">Token (simulado):</label>
-        <input v-model="token" id="token" type="text" placeholder="Ingresa el token de usuario" required />
       </div>
 
       <button type="submit">Enviar Solicitud</button>

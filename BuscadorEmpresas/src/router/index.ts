@@ -33,7 +33,7 @@ const router = createRouter({
     {
       path: '/Solicitudes',
       name: 'Solicitudes',
-      component: () => import('../views/Solicitudes.vue')
+      component: () => import('../views/SolicitudesView.vue')
     },
     { path: '/Login', name: 'Login', component: () => import('../views/Login.vue') },
     { path: '/Register', name: 'Register', component: () => import('../views/Register.vue') },
