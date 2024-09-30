@@ -24,7 +24,9 @@ export const usePeticionesStore = defineStore({
   id: 'peticion',
 
   state: () => ({
-    peticiones: [] as Peticion[]
+    peticiones: [] as Peticion[],
+    ciudades: [] as any[],
+    categorias: [] as any[],
   }),
   actions: {
     async GetAllPeticiones() {
@@ -73,6 +75,51 @@ export const usePeticionesStore = defineStore({
       } catch (error) {
         console.log(error)
         throw error
+      }
+    },
+    async obtenerCiudades() {
+      try {
+        const token = loginStore.token;  // Asumiendo que el token se obtiene del loginStore.
+        const response = await fetch(`api/Ciudad`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Error al obtener las ciudades.');
+        }
+
+        this.ciudades = await response.json();
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+
+    async obtenerCategorias() {
+      try {
+        const token = loginStore.token;
+        const response = await fetch(`api/Categoria`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Error al obtener las categorías.');
+        }
+
+        this.categorias = await response.json();
+      } catch (error) {
+        console.error(error);
+        throw error;
       }
     },
     async CrearPeticion(datosPeticion: any) {

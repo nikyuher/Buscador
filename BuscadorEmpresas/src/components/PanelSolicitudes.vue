@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { usePeticionesStore } from '../stores/Peticiones'; // Asegúrate de que el nombre del archivo sea correcto
+import { ref, onMounted } from 'vue';
+import { usePeticionesStore } from '../stores/Peticiones';
 
-// Inicializamos el store
 const peticionesStore = usePeticionesStore();
 
-// Variables reactivas para los campos del formulario
+// Variables para los datos del formulario
 const nombreEmpresa = ref('');
 const descripcionEmpresa = ref('');
 const direccionEmpresa = ref('');
 const imagenEmpresaURL = ref('');
-const idCategoriaEmpresa = ref(0);
-const idCiudadEmpresa = ref(0);
+const idCategoriaEmpresa = ref(null); // Usaremos un select para seleccionar la categoría
+const idCiudadEmpresa = ref(null); // Usaremos un select para seleccionar la ciudad
 
 // Bandera de éxito y error
 const success = ref(false);
 const errorMessage = ref('');
+
+// Obtener ciudades y categorías cuando el componente se monte
+onMounted(() => {
+  peticionesStore.obtenerCiudades();
+  peticionesStore.obtenerCategorias();
+});
 
 // Función para enviar la petición
 const enviarPeticion = async () => {
@@ -65,14 +70,24 @@ const enviarPeticion = async () => {
         <input v-model="imagenEmpresaURL" id="imagenEmpresaURL" type="text" required />
       </div>
 
+      <!-- Select para las categorías -->
       <div>
-        <label for="idCategoriaEmpresa">ID Categoría de la Empresa:</label>
-        <input v-model="idCategoriaEmpresa" id="idCategoriaEmpresa" type="number" required />
+        <label for="idCategoriaEmpresa">Categoría de la Empresa:</label>
+        <select v-model="idCategoriaEmpresa" id="idCategoriaEmpresa" required>
+          <option v-for="categoria in peticionesStore.categorias" :key="categoria.idCategoria" :value="categoria.idCategoria">
+            {{ categoria.nombre }}
+          </option>
+        </select>
       </div>
 
+      <!-- Select para las ciudades -->
       <div>
-        <label for="idCiudadEmpresa">ID Ciudad de la Empresa:</label>
-        <input v-model="idCiudadEmpresa" id="idCiudadEmpresa" type="number" required />
+        <label for="idCiudadEmpresa">Ciudad de la Empresa:</label>
+        <select v-model="idCiudadEmpresa" id="idCiudadEmpresa" required>
+          <option v-for="ciudad in peticionesStore.ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+            {{ ciudad.nombre }}
+          </option>
+        </select>
       </div>
 
       <button type="submit">Enviar Solicitud</button>
@@ -94,7 +109,7 @@ label {
   margin-bottom: 5px;
 }
 
-input, textarea {
+input, textarea, select {
   margin-bottom: 10px;
   padding: 5px;
 }
