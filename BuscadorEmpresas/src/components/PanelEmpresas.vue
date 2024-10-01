@@ -11,16 +11,16 @@ interface DatosEmpresa {
 }
 
 const empresaStore = useEmpresaStore();
-const nuevaEmpresa = ref<DatosEmpresa>({
-  idEmpresa: 0,
-  nombre: '',
-  descripcion: '',
-  direccion: '',
-  imagen: ''
-});
-const editMode = ref(false); 
+const nuevaEmpresa = ref<DatosEmpresa>();
+const editMode = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
+
+const idEmpresa = ref(0)
+const nombre = ref('')
+const descripcion = ref('')
+const direccion = ref('')
+const imagen = ref('')
 
 // Cargar las empresas 
 onMounted(() => {
@@ -29,13 +29,12 @@ onMounted(() => {
 
 // limpiar el formulario
 const limpiarFormulario = () => {
-  nuevaEmpresa.value = {
-    idEmpresa: 0,
-    nombre: '',
-    descripcion: '',
-    direccion: '',
-    imagen: ''
-  };
+  idEmpresa.value = 0;
+  nombre.value = ''
+  descripcion.value = ''
+  direccion.value = ''
+  imagen.value = ''
+
   editMode.value = false;
   successMessage.value = '';
   errorMessage.value = '';
@@ -45,24 +44,34 @@ const limpiarFormulario = () => {
 const confirmarEnvio = async () => {
   try {
     // Validar que los campos requeridos no estén vacíos
-    if (!nuevaEmpresa.value.nombre || !nuevaEmpresa.value.descripcion || !nuevaEmpresa.value.direccion || !nuevaEmpresa.value.imagen) {
+    if (!nombre.value || !descripcion.value || !direccion.value || !imagen.value) {
       errorMessage.value = 'Por favor, completa todos los campos.';
       return;
     }
 
-    if (editMode.value && nuevaEmpresa.value.idEmpresa) {
+    nuevaEmpresa.value = <DatosEmpresa>{
+      idEmpresa: idEmpresa.value,
+      nombre: nombre.value,
+      descripcion: descripcion.value,
+      direccion: direccion.value,
+      imagen: imagen.value
+    }
+
+    if (editMode.value && idEmpresa.value) {
       // Editar empresa
+
+
       await empresaStore.PutDatosEmpresa(nuevaEmpresa.value);
       successMessage.value = 'Empresa editada con éxito';
     } else {
       // Añadir nueva empresa
       await empresaStore.CreateEmpresa(nuevaEmpresa.value);
-      
+
       successMessage.value = 'Empresa creada con éxito';
     }
 
-    limpiarFormulario(); 
-    empresaStore.GetAllEmpresas(); 
+    limpiarFormulario();
+    empresaStore.GetAllEmpresas();
   } catch (error) {
     errorMessage.value = 'Hubo un error en el proceso';
     console.error(error);
@@ -71,7 +80,11 @@ const confirmarEnvio = async () => {
 
 // seleccionar una empresa y entrar en modo edición
 const seleccionarEmpresaParaEditar = (empresa: any) => {
-  nuevaEmpresa.value = { ...empresa };
+  idEmpresa.value = empresa.idEmpresa;
+  nombre.value = empresa.nombre
+  descripcion.value = empresa.descripcion
+  direccion.value = empresa.direccion
+  imagen.value = empresa.imagen
   editMode.value = true;
 };
 
@@ -80,7 +93,7 @@ const eliminarEmpresa = async (idEmpresa: number) => {
   try {
     await empresaStore.EliminarEmpresa(idEmpresa);
     successMessage.value = 'Empresa eliminada con éxito';
-    empresaStore.GetAllEmpresas();  // Recargar la lista de empresas
+    empresaStore.GetAllEmpresas();
   } catch (error) {
     errorMessage.value = 'Hubo un error al eliminar la empresa';
     console.error(error);
@@ -90,29 +103,29 @@ const eliminarEmpresa = async (idEmpresa: number) => {
 
 
 <template>
-  <div>
+  <div class="cont-panel-Empresas">
     <h1>Gestión de Empresas</h1>
 
     <!-- Formulario de añadir/editar empresa -->
     <form @submit.prevent="confirmarEnvio">
       <div>
         <label for="nombre">Nombre de la Empresa:</label>
-        <input v-model="nuevaEmpresa.nombre" id="nombre" type="text" required />
+        <input v-model="nombre" id="nombre" type="text" required />
       </div>
 
       <div>
         <label for="descripcion">Descripción:</label>
-        <textarea v-model="nuevaEmpresa.descripcion" id="descripcion" required></textarea>
+        <textarea v-model="descripcion" id="descripcion" required></textarea>
       </div>
 
       <div>
         <label for="direccion">Dirección:</label>
-        <input v-model="nuevaEmpresa.direccion" id="direccion" type="text" required />
+        <input v-model="direccion" id="direccion" type="text" required />
       </div>
 
       <div>
         <label for="imagen">URL de la Imagen:</label>
-        <input v-model="nuevaEmpresa.imagen" id="imagen" type="text" required />
+        <input v-model="imagen" id="imagen" type="text" required />
       </div>
 
       <div>
@@ -153,6 +166,10 @@ const eliminarEmpresa = async (idEmpresa: number) => {
 </template>
 
 <style scoped>
+.cont-panel-Empresas {
+  background-color: white;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -163,7 +180,8 @@ label {
   margin-bottom: 5px;
 }
 
-input, textarea {
+input,
+textarea {
   margin-bottom: 10px;
   padding: 5px;
 }
@@ -199,7 +217,8 @@ table {
   margin-left: 15vh;
 }
 
-th, td {
+th,
+td {
   border: 1px solid black;
   padding: 8px;
 }

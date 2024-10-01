@@ -110,7 +110,8 @@ export const useEmpresaStore = defineStore({
         const response = await fetch(`api/Empresa`, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json' 
           },
           body: JSON.stringify(objectCrear)
         })
@@ -189,7 +190,8 @@ export const useEmpresaStore = defineStore({
         const response = await fetch(`api/Empresa/${DatosEmpresa.idEmpresa}`, {
           method: 'PUT',
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json' 
           },
           body: JSON.stringify(DatosEmpresa)
         })
