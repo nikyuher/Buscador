@@ -5,7 +5,7 @@
         </div>
         <div v-else>
             <div>
-                <p>Parte Usuario</p>
+                <p>No eres administrador</p>
             </div>
         </div>
     </div>
