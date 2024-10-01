@@ -2,6 +2,7 @@
     <div v-if="isAuthenticated">
         <div v-if="isAdmin">
             <AdminComp></AdminComp>
+            <PanelEmpresas></PanelEmpresas>
         </div>
         <div v-else>
             <div>
@@ -16,6 +17,7 @@ import AdminComp from '@/components/AdminComp.vue';
 import { computed, watchEffect } from 'vue';
 import { useLoginStore } from '../stores/Login';
 import { useRouter } from 'vue-router';
+import PanelEmpresas from '@/components/PanelEmpresas.vue';
 
 const router = useRouter();
 const usuario = useLoginStore();
