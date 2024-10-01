@@ -36,7 +36,9 @@ export const useUsuarioStore = defineStore({
 
   state: () => ({
     ListUsuarios: [] as Usuario[],
-    usuario: null as Usuario | null
+    usuario: null as Usuario | null,
+    empresasUsuario: [] as any[],
+    peticionesUsuario: [] as any[],
   }),
 
   actions: {
@@ -87,6 +89,58 @@ export const useUsuarioStore = defineStore({
         this.usuario = data
 
         console.log('Usuario obtenido correctamente')
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async GetPeticionesByUsuario(idUsuario: number) {
+      try {
+        const token = loginStore.token
+
+        const response = await fetch(`api/Usuario/${idUsuario}/peticiones`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.message || 'error al obtener las peticiones delusuario.')
+        }
+
+        const data = await response.json()
+
+        this.peticionesUsuario = data.peticionesDTO
+
+        console.log('Peticiones del usuario obtenido correctamente')
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async GetEmpresasByUsuario(idUsuario: number) {
+      try {
+        const token = loginStore.token
+
+        const response = await fetch(`api/Usuario/${idUsuario}/empresas`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.message || 'error al obtener las empresas del usuario.')
+        }
+
+        const data = await response.json()
+
+        this.empresasUsuario = data.misEmpresas
+
+        console.log('Empresas del usuario obtenido correctamente')
       } catch (error) {
         console.log(error)
         throw error

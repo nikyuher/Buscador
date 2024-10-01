@@ -16,7 +16,7 @@
         <div v-if="isLoggedIn && !loginStore.isAdmin" class="Solicitudes">
           <RouterLink to="/Solicitudes" class="sol">Solicitudes</RouterLink>
         </div>
-        <span>Bienvenido, {{ userName }}</span>
+        <span>Bienvenido, <RouterLink to="/Perfil">{{ userName }}</RouterLink></span>
         <button @click="handleLogout" class="logout-button">Cerrar sesión</button>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { fetchEmpresaByCiudad, fetchCiudadById, fetchEmpresasById } from '../stores/Buscador'; 
+import { fetchEmpresaByCiudad, fetchCiudadById, fetchEmpresasById } from '../stores/Buscador';
 
 // Definir los estados
 const ciudad = ref<{ idCiudad: number; ciudadNombre: string; empresa: { idEmpresa: number; nombre: string } | null } | null>(null);
@@ -9,17 +9,17 @@ const empresa = ref<{ idEmpresa: number; nombre: string; descripcion: string; di
 const error = ref(false);
 const nombreCiudadError = ref('')
 const mensajeError = ref('');
-const route = useRoute(); 
+const route = useRoute();
 
 // Función para obtener los datos de la empresa por ciudad
 const fetchEmpresaCiudadData = async (idEmpresa: number, idCiudad: number) => {
     try {
-        const data = await fetchEmpresaByCiudad(idEmpresa, idCiudad); 
+        const data = await fetchEmpresaByCiudad(idEmpresa, idCiudad);
         if (data) {
-            ciudad.value = data; 
+            ciudad.value = data;
             fetchEmpresaData(idEmpresa);
         } else {
-            error.value = true; 
+            error.value = true;
         }
     } catch (err: any) {
         console.error('Error al obtener los datos de la empresa por ciudad:', err);
@@ -37,7 +37,7 @@ const fetchEmpresaData = async (idEmpresa: number) => {
         if (data) {
             empresa.value = data;
         } else {
-            error.value = true; 
+            error.value = true;
         }
     } catch (err) {
         console.error('Error al obtener los datos de la empresa:', err);
@@ -49,7 +49,7 @@ const fetchCiudadData = async (idCiudad: number) => {
     try {
         const data = await fetchCiudadById(idCiudad);
         if (data) {
-            nombreCiudadError.value = data.nombre; 
+            nombreCiudadError.value = data.nombre;
         } else {
             error.value = true;
         }
@@ -61,10 +61,10 @@ const fetchCiudadData = async (idCiudad: number) => {
 
 // Ejecutar cuando el componente se monte
 onMounted(() => {
-    const idCiudad = parseInt(route.params.idCiudad as string, 10); 
-    const idEmpresa = parseInt(route.params.idEmpresa as string, 10); 
+    const idCiudad = parseInt(route.params.idCiudad as string, 10);
+    const idEmpresa = parseInt(route.params.idEmpresa as string, 10);
 
-    console.log("ID de la ciudad y empresa obtenidas de la URL:", idCiudad, idEmpresa); 
+    console.log("ID de la ciudad y empresa obtenidas de la URL:", idCiudad, idEmpresa);
 
     if (!isNaN(idCiudad) && !isNaN(idEmpresa)) {
         fetchEmpresaCiudadData(idEmpresa, idCiudad);
@@ -78,14 +78,15 @@ onMounted(() => {
     <h1>Inicio > Empresa > {{ empresa?.nombre }}</h1>
     <div class="empresa-container">
         <div v-if="ciudad">
-            <h1>Ciudad: {{ ciudad?.ciudadNombre }}</h1>
-            <h1>{{ empresa?.nombre }}</h1>
             <img :src="empresa?.imagen" alt="Imagen de la empresa" class="empresa-img" />
+            <h2 style="color: rgb(255, 94, 66);">Ciudad: {{ ciudad?.ciudadNombre }}</h2>
+            <h2>{{ empresa?.nombre }}</h2>
             <p><strong>Descripción:</strong> {{ empresa?.descripcion }}</p>
             <p><strong>Dirección:</strong> {{ empresa?.direccion }}</p>
         </div>
         <div v-else-if="mensajeError">
-            <p>No hay ninguna empresa de {{ empresa?.nombre }} en  {{ nombreCiudadError  }}</p>
+            <p style="font-size: 20px; color: white;">No hay ninguna empresa de {{ empresa?.nombre }} en {{
+                nombreCiudadError }}</p>
         </div>
         <div v-else>
             <p>Cargando datos...</p>
@@ -95,7 +96,12 @@ onMounted(() => {
 
 <style scoped>
 .empresa-container {
-    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    color: black;
+    padding: 30px;
+    margin: 30px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .empresa-img {
@@ -130,6 +136,10 @@ h2 {
     margin: 0;
     font-size: 30px;
     margin-bottom: 3vh;
+    color: rgb(235, 160, 48);
+}
+
+h1 {
     color: rgb(255, 255, 255);
 }
 
@@ -143,6 +153,5 @@ h2 {
 p {
     margin: 5px 0;
     font-size: 17px;
-    color: rgb(255, 255, 255);
 }
 </style>

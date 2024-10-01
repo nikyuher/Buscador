@@ -35,12 +35,30 @@ const router = createRouter({
       name: 'Solicitudes',
       component: () => import('../views/SolicitudesView.vue')
     },
-    { path: '/Login', name: 'Login', component: () => import('../views/Login.vue') },
-    { path: '/Register', name: 'Register', component: () => import('../views/Register.vue') },
+    {
+      path: '/Login',
+      name: 'Login',
+      component: () => import('../views/Login.vue')
+    },
+    {
+      path: '/Register',
+      name: 'Register',
+      component: () => import('../views/Register.vue')
+    },
     {
       path: '/PanelAdmin',
       name: 'PanelAdmin',
       component: () => import('../views/PanelAdmin.vue')
+    },
+    {
+      path: '/Perfil',
+      name: 'Perfil',
+      component: () => import('../views/PerfilView.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('../views/ErrorURLView.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {

@@ -25,7 +25,7 @@ onMounted(async () => {
 
 const searchWithoutId = () => {
   if (IdEmpresa.value === 0 && IdCiudad.value === 0) {
-    mensajeAdvertencia.value ='Debe seleccionar una empresa o una ciudad válida.';
+    mensajeAdvertencia.value = 'Debe seleccionar una empresa o una ciudad válida.';
     errorMsg.value = true
   } else if (IdEmpresa.value > 0 && IdCiudad.value === 0 && validarEmpresa.value) {
     mensajeAdvertencia.value = 'Buscando solo por empresa.';
@@ -42,7 +42,11 @@ const searchWithoutId = () => {
 // Función para manejar las sugerencias de empresas basadas en la palabra clave
 const onKeywordInput = async () => {
   if (keyword.value.length >= 1) {
-    suggestions.value = await fetchSuggestions(keyword.value);
+    let filtrarDatos = await fetchSuggestions(keyword.value);
+
+    // Ordenar alfabéticamente las sugerencias de empresa
+    suggestions.value = filtrarDatos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
 
     // Reiniciar la validación hasta que se seleccione una empresa de la lista
     validarEmpresa.value = false;
@@ -78,7 +82,10 @@ const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => 
 // Función para manejar las sugerencias de ciudades basadas en la ciudad ingresada
 const onCityInput = async () => {
   if (city.value.length >= 1) {
-    citySuggestions.value = await fetchCitySuggestions(city.value);
+    let filtrarCiudades = await fetchCitySuggestions(city.value);
+
+    // Ordenar alfabéticamente las sugerencias de ciudad
+    citySuggestions.value = filtrarCiudades.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
     // Reiniciar la validación hasta que se seleccione una ciudad de la lista
     validarCiudad.value = false;
@@ -110,87 +117,89 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
 </script>
 
 <template>
-  <body> 
-  <h1 class="Inicio">Inicio</h1>
-  <div class="search-container">
-    <div class="search-box">
-      <h2>Busca tu empresa en tu ciudad</h2>
-      <div v-if="errorMsg">
-        <p style="color: red;">{{ mensajeAdvertencia }}</p>
+
+  <body>
+    <h1 class="Inicio">Inicio</h1>
+    <div class="search-container">
+      <div class="search-box">
+        <h2>Busca tu empresa en tu ciudad</h2>
+        <div v-if="errorMsg">
+          <p style="color: red;">{{ mensajeAdvertencia }}</p>
+        </div>
+        <div class="search-inputs">
+          <div class="keyword-container">
+            <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput" />
+            <ul v-if="suggestions.length" class="suggestions-list">
+              <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
+                {{ suggestion.nombre }}
+              </li>
+            </ul>
+          </div>
+          <div class="city-container">
+            <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
+            <ul v-if="citySuggestions.length" class="suggestions-list">
+              <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
+                @click="selectCitySuggestion(citySuggestion)">
+                {{ citySuggestion.nombre }}
+              </li>
+            </ul>
+          </div>
+          <!-- Botón para buscar solo con empresa -->
+          <div v-if="IdEmpresa > 0 && validarEmpresa == true && IdCiudad == 0">
+            <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
+              <button>
+                <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
+                  alt="Buscar" />
+              </button>
+            </RouterLink>
+          </div>
+          <!-- Botón para buscar solo con ciudad -->
+          <div v-else-if="IdCiudad > 0 && validarCiudad == true && IdEmpresa == 0">
+            <RouterLink :to="{ name: 'Ciudad', params: { idCiudad: IdCiudad } }">
+              <button>
+                <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
+                  alt="Buscar" />
+              </button>
+            </RouterLink>
+          </div>
+          <!-- Botón para buscar con ambos: empresa y ciudad -->
+          <div v-else-if="validarEmpresa == true && validarCiudad == true">
+            <RouterLink :to="{ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad, idEmpresa: IdEmpresa } }">
+              <button>
+                <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
+                  alt="Buscar" />
+              </button>
+            </RouterLink>
+          </div>
+          <div v-else>
+            <button @click="searchWithoutId">
+              <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
+                alt="Buscar" />
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="search-inputs">
-        <div class="keyword-container">
-          <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput" />
-          <ul v-if="suggestions.length" class="suggestions-list">
-            <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
-              {{ suggestion.nombre }}
-            </li>
-          </ul>
-        </div>
-        <div class="city-container">
-          <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
-          <ul v-if="citySuggestions.length" class="suggestions-list">
-            <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
-              @click="selectCitySuggestion(citySuggestion)">
-              {{ citySuggestion.nombre }}
-            </li>
-          </ul>
-        </div>
-        <!-- Botón para buscar solo con empresa -->
-        <div v-if="IdEmpresa > 0 && validarEmpresa == true && IdCiudad == 0">
-          <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
-            <button>
-              <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-                alt="Buscar" />
-            </button>
-          </RouterLink>
-        </div>
-        <!-- Botón para buscar solo con ciudad -->
-        <div v-else-if="IdCiudad > 0 && validarCiudad == true && IdEmpresa == 0">
-          <RouterLink :to="{ name: 'Ciudad', params: { idCiudad: IdCiudad } }">
-            <button>
-              <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-                alt="Buscar" />
-            </button>
-          </RouterLink>
-        </div>
-        <!-- Botón para buscar con ambos: empresa y ciudad -->
-        <div v-else-if="validarEmpresa == true && validarCiudad == true">
-          <RouterLink :to="{ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad, idEmpresa: IdEmpresa } }">
-            <button>
-              <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-                alt="Buscar" />
-            </button>
-          </RouterLink>
-        </div>
-        <div v-else>
-          <button @click="searchWithoutId">
-            <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-              alt="Buscar" />
-          </button>
+      <div class="categories-container">
+        <h3 class="Categorias">Categorías</h3>
+        <div class="categories-grid">
+          <router-link v-for="(categoria, index) in categorias" :key="index"
+            :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
+            class="category-item">
+            {{ categoria.nombre }}
+          </router-link>
         </div>
       </div>
     </div>
-    <div class="categories-container">
-      <h3 class="Categorias">Categorías</h3>
-      <div class="categories-grid">
-        <router-link v-for="(categoria, index) in categorias" :key="index"
-          :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre,idCategoria: categoria.idCategoria } }" class="category-item">
-          {{ categoria.nombre }}
-        </router-link>
-      </div>
-    </div>
-  </div>
-</body>
+  </body>
 </template>
 
 <style scoped>
 .search-container {
-  text-align: center; 
-  
+  text-align: center;
+
 }
 
-input{
+input {
   color: white;
 }
 
@@ -200,17 +209,19 @@ h2 {
   color: black;
 }
 
-.Inicio{
+.Inicio {
   margin-left: 15vh;
   font-size: 6vh;
-  text-decoration: underline;
+  color: white;
 }
+
 
 .categories-container {
   margin-top: 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
+  color: white;
   align-items: center;
 }
 
@@ -223,7 +234,7 @@ h2 {
   align-items: center;
 }
 
-.Categorias{
+.Categorias {
   margin-bottom: 9vh;
   font-size: 5vh;
 }
@@ -292,6 +303,8 @@ img {
   position: absolute;
   z-index: 10;
   width: 10%;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .suggestions-list li {
