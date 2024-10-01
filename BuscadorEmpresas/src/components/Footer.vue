@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024 Nombre de la Empresa. Todos los derechos reservados.</p>
+      <p>© 2024 BuscaNet. Todos los derechos reservados.</p>
     </div>
   </div>
 
@@ -55,7 +55,6 @@
   background-color: rgb(23, 6, 51);
   max-width: 100%;
   max-height: 100%;
-  margin-top: 80px;
   padding: 30px 0;
 }
 
@@ -65,6 +64,7 @@
 }
 
 .footer-container {
+  background-color: rgb(23, 6, 51);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
