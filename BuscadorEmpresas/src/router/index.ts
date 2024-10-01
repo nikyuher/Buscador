@@ -54,6 +54,11 @@ const router = createRouter({
       path: '/Perfil',
       name: 'Perfil',
       component: () => import('../views/PerfilView.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('../views/ErrorURLView.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {
