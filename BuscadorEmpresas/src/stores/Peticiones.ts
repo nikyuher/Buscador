@@ -141,7 +141,7 @@ export const usePeticionesStore = defineStore({
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json' // Asegúrate de incluir este encabezado
+            'Content-Type': 'application/json' 
           },
           body: JSON.stringify(peticion)
         });

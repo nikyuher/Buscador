@@ -1,6 +1,12 @@
 <template class="footer">
+
+  <div class="cont">
+    <div class="header-name">
+      <RouterLink to="/">
+        <h1>BuscaNet</h1>
+      </RouterLink>
+    </div>
     <div class="footer-container">
-      
       <!-- Enlaces útiles -->
       <div class="footer-section">
         <h3>Enlaces útiles</h3>
@@ -11,7 +17,7 @@
           <li><a href="/soporte">Soporte técnico</a></li>
         </ul>
       </div>
-      
+
       <!-- Redes sociales -->
       <div class="footer-section">
         <h3>Síguenos</h3>
@@ -22,7 +28,7 @@
           <a href="https://instagram.com" target="_blank">Instagram</a>
         </div>
       </div>
-      
+
       <!-- Información de contacto -->
       <div class="footer-section">
         <h3>Contacto</h3>
@@ -30,28 +36,38 @@
         <p>Teléfono: +123 456 7890</p>
       </div>
     </div>
-  
     <div class="footer-bottom">
       <p>© 2024 Nombre de la Empresa. Todos los derechos reservados.</p>
     </div>
-  </template>
+  </div>
 
-  <style scoped> 
+</template>
+
+<style scoped>
+.header-name a {
+  text-decoration: none;
+  color: white;
+  margin: auto;
+  text-align: center;
+}
+
+.cont {
+  background-color: rgb(23, 6, 51);
+  max-width: 100%;
+  max-height: 100%;
+  margin-top: 80px;
+  padding: 30px 0;
+}
 
 .footer {
-  background-color: rgb(63, 25, 124);
   color: white;
   padding: 20px 0;
 }
 
 .footer-container {
-  max-width: 100%;
-  max-height: 100%;
-  margin-top: 15vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  background-color: rgb(23, 6, 51);
   color: white;
 }
 
@@ -94,6 +110,4 @@
   background-color: rgb(23, 6, 51);
   color: white;
 }
-
-    </style>
-  
+</style>
