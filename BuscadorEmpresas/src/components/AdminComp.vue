@@ -1,121 +1,57 @@
-<template>
-    <div>
-        <h1>Panel de Administración - Peticiones</h1>
-
-        <!-- Mostramos el listado de peticiones -->
-        <div v-if="peticiones.length">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID Petición</th>
-                        <th>Nombre Empresa</th>
-                        <th>Descripción</th>
-                        <th>Dirección</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="peticion in peticiones" :key="peticion.idPeticion">
-                        <td>{{ peticion.idPeticion }}</td>
-                        <td>{{ peticion.nombreEmpresa }}</td>
-                        <td>{{ peticion.descripcionEmpresa }}</td>
-                        <td>{{ peticion.direccionEmpresa }}</td>
-                        <td>
-                            <button @click="aceptarPeticion(peticion.idPeticion)">Aceptar</button>
-                            <button @click="rechazarPeticion(peticion.idPeticion)">Rechazar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Si no hay peticiones, mostramos un mensaje -->
-        <div v-else>
-            <p>No hay peticiones pendientes.</p>
-        </div>
-    </div>
-</template>
-
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
-import { usePeticionesStore } from '../stores/Peticiones'
-import { useLoginStore } from '../stores/Login'
+import PanelEmpresas from '@/components/Admin/PanelEmpresas.vue';
+import ListaPeticiones from '@/components/Admin/ListPeticiones.vue';
+import { ref } from 'vue'
 
-// Instanciamos el store de peticiones
-const peticionesStore = usePeticionesStore()
-const LoginStore = useLoginStore()
+const componenteVisible = ref('ListaPeticiones')
 
-const token = LoginStore.token;
-const idUsuario = LoginStore.usuario?.idUsuario;
-
-// Accedemos a las peticiones directamente del store
-const peticiones = computed(() => peticionesStore.peticiones);
-// Método para aceptar una petición
-const aceptarPeticion = async (idPeticion: number) => {
-    try {
-
-        console.log(idPeticion, token);
-
-
-        await peticionesStore.AceptarPeticion(idPeticion)
-        alert('Petición aceptada correctamente')
-        // Refrescamos las peticiones después de aceptar una
-        await peticionesStore.GetAllPeticiones()
-    } catch (error) {
-        console.error('Error al aceptar la petición:', error)
-        alert('Error al aceptar la petición.')
-    }
+const cambiarComponente = (componente: string) => {
+  componenteVisible.value = componente
 }
 
-// Método para rechazar una petición (en este caso eliminamos la petición)
-const rechazarPeticion = async (idPeticion: number) => {
-    try {
-        if (idUsuario) {
-            await peticionesStore.EliminarPeticion(idPeticion)
-            alert('Petición rechazada/eliminada correctamente')
-            // Refrescamos las peticiones después de rechazar una
-            await peticionesStore.GetAllPeticiones()
-        }
 
-    } catch (error) {
-        console.error('Error al rechazar la petición:', error)
-        alert('Error al rechazar la petición.')
-    }
-}
-
-// Obtenemos las peticiones al montar el componente
-onMounted(() => {
-    peticionesStore.GetAllPeticiones()
-    console.log(peticiones);
-
-})
 </script>
 
+<template>
+<div class="cont-perfil">
+    <div class="barra-opciones">
+      <p @click="cambiarComponente('ListaPeticiones')">Lista de Solicitudes </p>
+      <p @click="cambiarComponente('Empresas')">Empresas</p>
+      <p>Eliminar mi cuenta</p>
+    </div>
+    <div class="contenido">
+      <div v-if="componenteVisible === 'ListaPeticiones'">
+        <ListaPeticiones></ListaPeticiones>
+      </div>
+      <div v-if="componenteVisible === 'Empresas'">
+        <PanelEmpresas></PanelEmpresas>
+      </div>
+    </div>
+  </div>
+</template>
+
+
 <style scoped>
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+.barra-opciones {
+  background-color: rgb(131, 81, 177);
+  width: 300px;
+  color: rgb(219, 219, 219);
+  padding: 30px;
+}
+.barra-opciones p:hover {
+  color: rgb(255, 255, 255);
+  cursor: pointer;
 }
 
-table th,
-table td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
+.cont-perfil {
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  min-height: 600px;
 }
 
-button {
-    margin-right: 10px;
-    padding: 6px 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.contenido {
+  flex-grow: 1;
+  padding: 20px;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
 </style>

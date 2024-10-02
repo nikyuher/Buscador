@@ -38,12 +38,20 @@ onMounted(() => {
 <template>
 
     <div>
+        <div class="cont-divisores">
+            <div></div>
+            <div>Nombre</div>
+            <div>Direccion</div>
+            <div>Imagen</div>
+        </div>
         <div v-if="listaEmpresas.length > 0">
-            <div v-for="(empresa, index) in listaEmpresas" :key="index">
+            <div v-for="(empresa, index) in listaEmpresas" :key="index" class="style-form">
                 <div class="cont-data-empresa">
-                    <p>ID Empresa Usuario: {{ empresa.idUsuarioEmpresa }}</p>
-                    <p>ID Empresa: {{ empresa.idEmpresa }}</p>
-                    <p>nombre empresa: {{ empresa.empresa.nombre }}</p>
+                    <p>{{ index+1 }}</p>
+                    <p>{{ empresa.empresa.nombre }}</p>
+                    <p>{{ empresa.empresa.direccion }}</p>
+                    <p>{{ empresa.empresa.imagen }}</p>
+
                 </div>
             </div>
         </div>
@@ -54,12 +62,19 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.cont-data-empresa{
+.cont-divisores {
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-around;
+}
 
-background-color: rgb(226, 232, 255);
-border-radius: 10px;
-margin: 20px;
-padding: 20px;
-box-shadow: 5px 5px 10px black
+.cont-data-empresa {
+    background-color: rgb(226, 232, 255);
+    border-radius: 10px;
+    margin: 20px;
+    padding: 20px;
+    box-shadow: 1px 1px 5px black;
+    justify-content: space-around;
+    display: flex;
 }
 </style>

@@ -92,11 +92,11 @@ const enviarPeticion = async () => {
         </div>
 
         <button type="submit">Enviar Solicitud</button>
-        <v-snackbar v-model="success" color="green" timeout="3000" location="top" absolute>
+        <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
           {{ Message }}
         </v-snackbar>
 
-        <v-snackbar v-model="error" color="red" timeout="3000" location="top" absolute>
+        <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
           {{ Message }}
         </v-snackbar>
       </form>

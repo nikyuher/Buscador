@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useEmpresaStore } from '../stores/Empresa';
+import { useEmpresaStore } from '../../stores/Empresa';
 
 interface DatosEmpresa {
   idEmpresa: number;
