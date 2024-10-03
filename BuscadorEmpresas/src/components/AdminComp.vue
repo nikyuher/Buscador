@@ -17,7 +17,6 @@ const cambiarComponente = (componente: string) => {
     <div class="barra-opciones">
       <p @click="cambiarComponente('ListaPeticiones')">Lista de Solicitudes </p>
       <p @click="cambiarComponente('Empresas')">Empresas</p>
-      <p>Eliminar mi cuenta</p>
     </div>
     <div class="contenido">
       <div v-if="componenteVisible === 'ListaPeticiones'">

@@ -19,7 +19,6 @@ const cambiarComponente = (componente: string) => {
       <p @click="cambiarComponente('DatosUsuario')">Información Usuario</p>
       <p @click="cambiarComponente('ListaPeticiones')">Mis solicitudes</p>
       <p @click="cambiarComponente('ListaEmpresas')">Mis empresas</p>
-      <p>Eliminar mi cuenta</p>
     </div>
     <div class="contenido">
       <!-- Muestra el componente correspondiente según la opción seleccionada -->

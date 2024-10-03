@@ -39,7 +39,7 @@ onMounted(() => {
 
     <div>
         <div class="cont-divisores">
-            <div></div>
+            <div> Nº</div>
             <div>Nombre</div>
             <div>Direccion</div>
             <div>Imagen</div>
@@ -55,7 +55,7 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <div v-else>
+        <div v-else style="text-align: center; margin: 20px;">
             <p>No tienes ninguna empesa creada.</p>
         </div>
     </div>
