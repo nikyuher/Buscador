@@ -29,8 +29,8 @@ import { useLoginStore } from '../stores/Login';
 import { useRouter } from 'vue-router';
 
 
-import { useUsuarioStore } from '@/stores/Usuario';
-const usuarioStore = useUsuarioStore()
+// import { useUsuarioStore } from '@/stores/Usuario';
+// const usuarioStore = useUsuarioStore()
 // Importar el store
 const loginStore = useLoginStore();
 const router = useRouter(); // Obtener acceso al router
@@ -39,26 +39,26 @@ const router = useRouter(); // Obtener acceso al router
 const isLoggedIn = computed(() => loginStore.usuario !== null);
 
 // Obtener el nombre del usuario si está logueado
-const userName = computed(() => usuarioStore.usuario?.nombre || '');
+const userName = computed(() => loginStore.usuario?.nombre || '');
 
-const llamarDatos = async () => {
-  try {
+// const llamarDatos = async () => {
+//   try {
 
-    if (isLoggedIn) {
-      if (loginStore.usuario?.idUsuario) {
-        await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
-      }
-    }
-  } catch (error) {
-    console.log(error);
+//     if (isLoggedIn) {
+//       if (loginStore.usuario?.idUsuario && loginStore.usuario !== null) {
+//         await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error);
 
-  }
-}
+//   }
+// }
 
-// Usar watchEffect para llamar a llamarDatos cuando isLoggedIn cambie
-watchEffect(() => {
-    llamarDatos();
-});
+// // Usar watchEffect para llamar a llamarDatos cuando isLoggedIn cambie
+// watchEffect(() => {
+//     llamarDatos();
+// });
 
 // Método para cerrar sesión
 const handleLogout = () => {
