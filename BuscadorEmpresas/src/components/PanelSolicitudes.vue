@@ -8,8 +8,6 @@ const peticionesStore = usePeticionesStore();
 const loginStore = useLoginStore()
 const usuarioStore = useUsuarioStore()
 
-const errorMessage = ref('');
-
 const nombreEmpresa = ref('');
 const descripcionEmpresa = ref('');
 const direccionEmpresa = ref('');
@@ -56,7 +54,7 @@ const confirmarSesion = async () => {
         }
     } catch (err) {
         error.value = true
-        errorMessage.value = `Su sesión a caducado. Vuelva a iniciar sesión`
+        Message.value = `Su sesión a caducado. Vuelva a iniciar sesión`
     }
 }
 
@@ -111,11 +109,11 @@ onMounted(()=>{
 
         <button type="submit">Enviar Solicitud</button>
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
-          {{ errorMessage }}
+          {{ Message }}
         </v-snackbar>
 
         <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
-          {{ errorMessage }}
+          {{ Message }}
         </v-snackbar>
       </form>
     </div>

@@ -40,11 +40,24 @@ const confirmarSesion = async () => {
     }
 }
 
-const eliminarEmpresa = async () => {
+const eliminarEmpresa = async (idEmpresa: number) => {
     try {
 
-    } catch (err) {
+        await usuarioStore.EliminarEmpresasByUsuarios(idEmpresa)
+        success.value=true
+        error.value=false
+        successMessage.value='Empresa eliminada con exito.'
+        
+        if (loginStore.usuario?.idUsuario) {
+        DatosEmpresasUsuario(loginStore.usuario?.idUsuario)
+    } 
 
+    } catch (err) {
+        success.value=false
+        error.value=true
+        successMessage.value=`${err}`
+        console.log(err);
+        
     }
 }
 
@@ -84,7 +97,7 @@ onMounted(() => {
                         <td>{{ empresa.empresa.direccion }}</td>
                         <td><img :src="empresa.empresa.imagen" alt="Imagen Empresa" width="100" /></td>
                         <td>
-                            <button class="eliminar"><v-icon>mdi-delete</v-icon></button>
+                            <button class="eliminar" @click="eliminarEmpresa(empresa.idUsuarioEmpresa)"><v-icon>mdi-delete</v-icon></button>
                         </td>
                     </tr>
                 </tbody>

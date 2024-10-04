@@ -18,8 +18,8 @@ const nombre = ref('');
 const correo = ref('');
 const contrasena = ref('');
 
-const solicitudNum = computed(() => usuarioStore.peticionesUsuario.length > 0 ? usuarioStore.peticionesUsuario.length : 0)
-const empresasNum = computed(() => usuarioStore.empresasUsuario.length > 0 ? usuarioStore.empresasUsuario.length : 0)
+const solicitudNum = computed(() => usuarioStore.peticionesUsuario.length > 0 && usuarioStore.usuario != null ? usuarioStore.peticionesUsuario.length : 0)
+const empresasNum = computed(() => usuarioStore.empresasUsuario.length > 0 && usuarioStore.usuario != null ? usuarioStore.empresasUsuario.length : 0)
 
 const success = ref(false);
 const error = ref(false);
@@ -39,7 +39,9 @@ const selectDatos = async () => {
         if (loginStore.usuario?.idUsuario) {
 
             await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
-
+            await usuarioStore.GetEmpresasByUsuario(loginStore.usuario?.idUsuario)
+            await usuarioStore.GetPeticionesByUsuario(loginStore.usuario?.idUsuario)
+            
             nombre.value = usuarioStore.usuario ? usuarioStore.usuario?.nombre : ''
             correo.value = usuarioStore.usuario ? usuarioStore.usuario?.correo : ''
             contrasena.value = usuarioStore.usuario ? usuarioStore.usuario?.contrasena : ''
