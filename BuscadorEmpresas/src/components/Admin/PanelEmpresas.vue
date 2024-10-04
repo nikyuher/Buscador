@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import { useEmpresaStore } from '../../stores/Empresa';
 
 interface DatosEmpresa {
@@ -13,6 +13,9 @@ interface DatosEmpresa {
 const empresaStore = useEmpresaStore();
 const nuevaEmpresa = ref<DatosEmpresa>();
 const editMode = ref(false);
+const dialog = ref(false)
+
+const dialogosVisibles = reactive<{ [key: string]: boolean }>({});
 
 const success = ref(false);
 const error = ref(false);
@@ -112,6 +115,15 @@ const subirTop = () => {
     behavior: 'smooth'
   });
 }
+
+const abrirDialogo = (id: string | number) => {
+  dialogosVisibles[id] = true;
+};
+
+const cerrarDialogo = (id: string | number) => {
+  dialogosVisibles[id] = false;
+};
+
 </script>
 
 
@@ -119,36 +131,38 @@ const subirTop = () => {
   <div class="cont-panel-Empresas">
     <h1>Gestión de Empresas</h1>
     <div class="cont-form">
-      <form @submit.prevent="confirmarEnvio">
-        <div>
-          <label for="nombre">Nombre de la Empresa:</label>
-          <input v-model="nombre" id="nombre" type="text" required />
-        </div>
-        <div>
-          <label for="descripcion">Descripción:</label>
-          <textarea v-model="descripcion" id="descripcion" required></textarea>
-        </div>
+      <v-dialog v-model="dialogosVisibles['nuevaEmpresa']" max-width="600">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn class="edit" prepend-icon="mdi-plus" v-bind="activatorProps"
+            @click="abrirDialogo('nuevaEmpresa'); limpiarFormulario()">Añadir Empresa</v-btn>
+        </template>
+        <div style="background-color: white; padding: 30px; border-radius: 10px">
+          <form @submit.prevent="confirmarEnvio">
+            <div>
+              <label for="nombre">Nombre de la Empresa:</label>
+              <input v-model="nombre" id="nombre" type="text" required />
+            </div>
+            <div>
+              <label for="descripcion">Descripción:</label>
+              <textarea v-model="descripcion" id="descripcion" required></textarea>
+            </div>
 
-        <div>
-          <label for="direccion">Dirección:</label>
-          <input v-model="direccion" id="direccion" type="text" required />
+            <div>
+              <label for="direccion">Dirección:</label>
+              <input v-model="direccion" id="direccion" type="text" required />
+            </div>
+            <div>
+              <label for="imagen">URL de la Imagen:</label>
+              <input v-model="imagen" id="imagen" type="text" required />
+            </div>
+            <div>
+              <button class="aceptar" type="submit">Añadir Empresa</button>
+              <button class="denegar" type="button"
+                @click="cerrarDialogo('nuevaEmpresa'); limpiarFormulario()">Cerrar</button>
+            </div>
+          </form>
         </div>
-        <div>
-          <label for="imagen">URL de la Imagen:</label>
-          <input v-model="imagen" id="imagen" type="text" required />
-        </div>
-        <div>
-          <button class="aceptar" type="submit">{{ editMode ? 'Guardar Cambios' : 'Añadir Empresa' }}</button>
-          <button class="denegar" type="button" @click="limpiarFormulario">Cancelar</button>
-        </div>
-        <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
-          {{ successMessage }}
-        </v-snackbar>
-
-        <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
-          {{ errorMessage }}
-        </v-snackbar>
-      </form>
+      </v-dialog>
     </div>
     <table>
       <thead>
@@ -161,14 +175,58 @@ const subirTop = () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="empresa in empresaStore.listaEmpresas" :key="empresa.idEmpresa">
+        <tr v-for=" empresa in empresaStore.listaEmpresas" :key="empresa.idEmpresa">
           <td>{{ empresa.nombre }}</td>
           <td>{{ empresa.descripcion }}</td>
           <td>{{ empresa.direccion }}</td>
           <td><img :src="empresa.imagen" alt="Imagen de la Empresa" width="100" /></td>
           <td>
-            <button class="edit" @click="seleccionarEmpresaParaEditar(empresa)"><v-icon>mdi-pen</v-icon></button>
-            <button class="denegar" @click="eliminarEmpresa(empresa.idEmpresa)"><v-icon>mdi-delete</v-icon></button>
+            <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-editar`]" max-width="600">
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-btn class="edit" prepend-icon="mdi-pen" v-bind="activatorProps"
+                  @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa)"></v-btn>
+              </template>
+              <div style="background-color: white; padding: 30px; border-radius: 10px">
+                <form @submit.prevent="confirmarEnvio">
+                  <div>
+                    <label for="nombre">Nombre de la Empresa:</label>
+                    <input v-model="nombre" id="nombre" type="text" required />
+                  </div>
+                  <div>
+                    <label for="descripcion">Descripción:</label>
+                    <textarea v-model="descripcion" id="descripcion" required></textarea>
+                  </div>
+
+                  <div>
+                    <label for="direccion">Dirección:</label>
+                    <input v-model="direccion" id="direccion" type="text" required />
+                  </div>
+                  <div>
+                    <label for="imagen">URL de la Imagen:</label>
+                    <input v-model="imagen" id="imagen" type="text" required />
+                  </div>
+                  <div>
+                    <button class="aceptar" type="submit">{{ editMode ? 'Guardar Cambios' : 'Añadir Empresa' }}</button>
+                    <button class="denegar" type="button" @click="cerrarDialogo(`${empresa.idEmpresa}-editar`); limpiarFormulario()">Cerrar</button>
+                  </div>
+                </form>
+              </div>
+            </v-dialog>
+            <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-eliminar`]" max-width="600">
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-btn style="margin-top: 20px;" class="denegar" prepend-icon="mdi-delete" v-bind="activatorProps"
+                  @click="abrirDialogo(`${empresa.idEmpresa}-eliminar`);"></v-btn>
+              </template>
+              <div style="background-color: white; padding: 30px; border-radius: 10px">
+                <h2>¿Seguro que quieres Eliminarlo?</h2>
+                <v-btn style="margin-right: 20px;" class="aceptar" @click="eliminarEmpresa(empresa.idEmpresa)">
+                  Si
+                </v-btn>
+                <v-btn class="denegar" style="margin-left: 20px;" @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No</v-btn>
+
+              </div>
+            </v-dialog>
+
           </td>
         </tr>
       </tbody>
@@ -177,6 +235,13 @@ const subirTop = () => {
   <button class="btn-subir-top" @click="subirTop">
     <v-icon>mdi-arrow-up</v-icon>
   </button>
+  <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
+    {{ successMessage }}
+  </v-snackbar>
+
+  <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
+    {{ errorMessage }}
+  </v-snackbar>
 </template>
 
 <style scoped>

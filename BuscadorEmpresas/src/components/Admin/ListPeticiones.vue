@@ -61,43 +61,41 @@ onMounted(() => {
 </script>
 
 <template>
-    <div>
-        <h1>Administración - Peticiones</h1>
-        <div v-if="peticiones.length">
-            <table>
-                <thead>
-                    <tr>
-                        <th> Nº</th>
-                        <th>Nombre Empresa</th>
-                        <th>Descripción</th>
-                        <th>Dirección</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(peticion, index) in peticiones" :key="peticion.idPeticion">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ peticion.nombreEmpresa }}</td>
-                        <td>{{ peticion.descripcionEmpresa }}</td>
-                        <td>{{ peticion.direccionEmpresa }}</td>
-                        <td>
-                            <button class="aceptar" @click="aceptarPeticion(peticion.idPeticion)">Aceptar</button>
-                            <button class="denegar" @click="rechazarPeticion(peticion.idPeticion)">Rechazar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
-                {{ successMessage }}
-            </v-snackbar>
+    <h1>Administración - Peticiones</h1>
+    <div v-if="peticiones.length">
+        <table>
+            <thead>
+                <tr>
+                    <th> Nº</th>
+                    <th>Nombre Empresa</th>
+                    <th>Descripción</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(peticion, index) in peticiones" :key="peticion.idPeticion">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ peticion.nombreEmpresa }}</td>
+                    <td>{{ peticion.descripcionEmpresa }}</td>
+                    <td>{{ peticion.direccionEmpresa }}</td>
+                    <td>
+                        <button class="aceptar" @click="aceptarPeticion(peticion.idPeticion)">Aceptar</button>
+                        <button class="denegar" @click="rechazarPeticion(peticion.idPeticion)">Rechazar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
+            {{ successMessage }}
+        </v-snackbar>
 
-            <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
-                {{ errorMessage }}
-            </v-snackbar>
-        </div>
-        <div v-else>
-            <p>No hay peticiones pendientes.</p>
-        </div>
+        <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
+            {{ errorMessage }}
+        </v-snackbar>
+    </div>
+    <div v-else>
+        <p>No hay peticiones pendientes.</p>
     </div>
 </template>
 
@@ -106,7 +104,7 @@ table {
     width: 80%;
     border-collapse: collapse;
     text-align: center;
-    margin-left: 15vh;
+    margin: auto;
 }
 
 th,
