@@ -133,7 +133,7 @@ const cerrarDialogo = (id: string | number) => {
     <div class="cont-form">
       <v-dialog v-model="dialogosVisibles['nuevaEmpresa']" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
-          <v-btn class="edit" prepend-icon="mdi-plus" v-bind="activatorProps"
+          <v-btn class="edit" style="background-color: green;" prepend-icon="mdi-plus" v-bind="activatorProps"
             @click="abrirDialogo('nuevaEmpresa'); limpiarFormulario()">Añadir Empresa</v-btn>
         </template>
         <div style="background-color: white; padding: 30px; border-radius: 10px">
