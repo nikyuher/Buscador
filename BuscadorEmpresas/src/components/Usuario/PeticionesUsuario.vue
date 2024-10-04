@@ -9,6 +9,11 @@ const usuarioStore = useUsuarioStore()
 
 const ListaPeticiones = ref<any[]>([])
 
+const success = ref(false);
+const error = ref(false);
+const successMessage = ref('');
+const errorMessage = ref('');
+
 const DatosPeticionesUsuario = async (id: number) => {
 
     try {
@@ -23,7 +28,19 @@ const DatosPeticionesUsuario = async (id: number) => {
 
 }
 
+const confirmarSesion = async () => {
+    try {
+        if (loginStore.usuario?.idUsuario) {
+            await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
+        }
+    } catch (err) {
+        error.value = true
+        errorMessage.value = `Su sesión a caducado. Vuelva a iniciar sesión`
+    }
+}
+
 onMounted(() => {
+    confirmarSesion()
     if (loginStore.usuario?.idUsuario) {
         DatosPeticionesUsuario(loginStore.usuario?.idUsuario)
     } else {
@@ -48,7 +65,7 @@ onMounted(() => {
                         <th>Direccion</th>
                         <th>Imagen</th>
                     </tr>
-                    </thead>
+                </thead>
                 <tbody>
                     <tr v-for="(peticion, index) in ListaPeticiones" :key="index">
                         <td>{{ index + 1 }}</td>
@@ -65,6 +82,13 @@ onMounted(() => {
             <p>¡No tienes ninguna solicitud pediente!</p>
         </div>
     </div>
+    <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
+        {{ successMessage }}
+    </v-snackbar>
+
+    <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
+        {{ errorMessage }}
+    </v-snackbar>
 </template>
 
 <style scoped>
@@ -81,7 +105,7 @@ table {
     width: 80%;
     border-collapse: collapse;
     text-align: center;
-   margin: auto;
+    margin: auto;
 }
 
 th,
@@ -91,7 +115,6 @@ td {
 }
 
 img {
-  border-radius: 5px;
+    border-radius: 5px;
 }
-
 </style>

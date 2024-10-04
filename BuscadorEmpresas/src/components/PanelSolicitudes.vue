@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { usePeticionesStore } from '../stores/Peticiones';
+import { useLoginStore } from '@/stores/Login';
+import { useUsuarioStore } from '@/stores/Usuario';
 
 const peticionesStore = usePeticionesStore();
+const loginStore = useLoginStore()
+const usuarioStore = useUsuarioStore()
 
-// Variables para los datos del formulario
+const errorMessage = ref('');
+
 const nombreEmpresa = ref('');
 const descripcionEmpresa = ref('');
 const direccionEmpresa = ref('');
 const imagenEmpresaURL = ref('');
-const idCategoriaEmpresa = ref(null); // Usaremos un select para seleccionar la categoría
-const idCiudadEmpresa = ref(null); // Usaremos un select para seleccionar la ciudad
+const idCategoriaEmpresa = ref(null); 
+const idCiudadEmpresa = ref(null); 
 
-// Bandera de éxito y error
 const success = ref(false);
 const error = ref(false);
 const Message = ref('');
 
-// Obtener ciudades y categorías cuando el componente se monte
 onMounted(() => {
   peticionesStore.obtenerCiudades();
   peticionesStore.obtenerCategorias();
 });
 
-// Función para enviar la petición
 const enviarPeticion = async () => {
   try {
     const datosPeticion = {
@@ -46,6 +48,22 @@ const enviarPeticion = async () => {
     Message.value = `${err}`;
   }
 };
+
+const confirmarSesion = async () => {
+    try {
+        if (loginStore.usuario?.idUsuario) {
+            await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
+        }
+    } catch (err) {
+        error.value = true
+        errorMessage.value = `Su sesión a caducado. Vuelva a iniciar sesión`
+    }
+}
+
+
+onMounted(()=>{
+  confirmarSesion()
+})
 </script>
 
 <template>
@@ -93,11 +111,11 @@ const enviarPeticion = async () => {
 
         <button type="submit">Enviar Solicitud</button>
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
-          {{ Message }}
+          {{ errorMessage }}
         </v-snackbar>
 
         <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
-          {{ Message }}
+          {{ errorMessage }}
         </v-snackbar>
       </form>
     </div>

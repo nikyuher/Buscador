@@ -85,6 +85,26 @@ const EditarDatos = async () => {
 
 }
 
+const confirmarSesion = async (modo:string) => {
+    try {
+        if (loginStore.usuario?.idUsuario ) {
+            await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
+            if (modo == 'edit') {
+                editMode.value = true
+            }
+            if (modo == 'delete') {
+                deleteMode.value = true
+                editMode.value = true
+            }
+        }
+    } catch (err) {
+        error.value = true
+        editMode.value = false
+        deleteMode.value = false
+        errorMessage.value = `Su sesión a caducado. Vuelva a iniciar sesión`
+    }
+}
+
 const eliminarCuenta = async () => {
 
     try {
@@ -125,7 +145,7 @@ const cancelEdicion = async () => {
         <p>Nombre: {{ nombre }}</p>
         <p>Correo: {{ correo }}</p>
         <p>Contraseña: ***********</p>
-        <button class="editar" v-if="!editMode" @click="editMode = true"> <strong>Editar</strong></button>
+        <button class="editar" v-if="!editMode" @click="confirmarSesion('edit')"> <strong>Editar</strong></button>
     </div>
     <div v-if="editMode && !deleteMode">
         <h1>Editar Informacion</h1>
@@ -149,7 +169,7 @@ const cancelEdicion = async () => {
     </div>
     <div class="cont-delete" v-if="!editMode">
         <h2>Eliminar Cuenta</h2>
-        <button class="cancelar" @click="editMode = true; deleteMode = true">Eliminar cuenta</button>
+        <button class="cancelar" @click=" confirmarSesion('delete')">Eliminar cuenta</button>
     </div>
     <div v-if="deleteMode">
         <div class="cont-delete-mode">
