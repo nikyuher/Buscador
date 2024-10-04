@@ -1,29 +1,29 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { usePeticionesStore } from '../stores/Peticiones';
+import { useLoginStore } from '@/stores/Login';
+import { useUsuarioStore } from '@/stores/Usuario';
 
 const peticionesStore = usePeticionesStore();
+const loginStore = useLoginStore()
+const usuarioStore = useUsuarioStore()
 
-// Variables para los datos del formulario
 const nombreEmpresa = ref('');
 const descripcionEmpresa = ref('');
 const direccionEmpresa = ref('');
 const imagenEmpresaURL = ref('');
-const idCategoriaEmpresa = ref(null); // Usaremos un select para seleccionar la categoría
-const idCiudadEmpresa = ref(null); // Usaremos un select para seleccionar la ciudad
+const idCategoriaEmpresa = ref(null);
+const idCiudadEmpresa = ref(null);
 
-// Bandera de éxito y error
 const success = ref(false);
 const error = ref(false);
 const Message = ref('');
 
-// Obtener ciudades y categorías cuando el componente se monte
 onMounted(() => {
   peticionesStore.obtenerCiudades();
   peticionesStore.obtenerCategorias();
 });
 
-// Función para enviar la petición
 const enviarPeticion = async () => {
   try {
     const datosPeticion = {
@@ -40,12 +40,35 @@ const enviarPeticion = async () => {
     error.value = false;
     Message.value = 'Peticion enviada correctamente';
 
+    nombreEmpresa.value=''
+    descripcionEmpresa.value=''
+    direccionEmpresa.value=''
+    imagenEmpresaURL.value=''
+    idCategoriaEmpresa.value=null
+    idCiudadEmpresa.value=null
+
   } catch (err) {
     success.value = false;
     error.value = true;
     Message.value = `${err}`;
   }
 };
+
+const confirmarSesion = async () => {
+  try {
+    if (loginStore.usuario?.idUsuario) {
+      await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
+    }
+  } catch (err) {
+    error.value = true
+    Message.value = `Su sesión a caducado. Vuelva a iniciar sesión`
+  }
+}
+
+
+onMounted(() => {
+  confirmarSesion()
+})
 </script>
 
 <template>
@@ -92,11 +115,11 @@ const enviarPeticion = async () => {
         </div>
 
         <button type="submit">Enviar Solicitud</button>
-        <v-snackbar v-model="success" color="green" timeout="3000" location="top" absolute>
+        <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
           {{ Message }}
         </v-snackbar>
 
-        <v-snackbar v-model="error" color="red" timeout="3000" location="top" absolute>
+        <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
           {{ Message }}
         </v-snackbar>
       </form>
@@ -105,16 +128,17 @@ const enviarPeticion = async () => {
 </template>
 
 <style scoped>
-.titulo-soli{
+.titulo-soli {
   margin-left: 30px;
   color: rgb(255, 255, 255);
   font-size: 20px;
 }
+
 .cont-form-soli {
   background-color: rgb(235, 235, 235);
   padding: 20px;
   width: 400px;
-  margin:50px auto;
+  margin: 50px auto;
   box-shadow: 10px 10px 20px rgb(52, 8, 61);
   border-radius: 10px;
 }
@@ -135,8 +159,8 @@ textarea {
 }
 
 textarea {
-  resize: none; 
-  overflow-y: auto; 
+  resize: none;
+  overflow-y: auto;
   max-height: 150px;
 }
 

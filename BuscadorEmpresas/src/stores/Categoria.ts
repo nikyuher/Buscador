@@ -132,7 +132,8 @@ export const useCategoriaStore = defineStore({
         const response = await fetch(`api/Categoria`, {
           method: 'PUT',
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json' 
           },
           body: JSON.stringify(infoCategoria)
         })

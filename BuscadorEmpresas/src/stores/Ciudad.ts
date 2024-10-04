@@ -163,7 +163,8 @@ export const useCiudadStore = defineStore({
         const response = await fetch(`api/Ciudad`, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(objetoMandar)
         })
@@ -191,7 +192,8 @@ export const useCiudadStore = defineStore({
         const response = await fetch(`api/Ciudad`, {
           method: 'PUT',
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(objetoMandar)
         })

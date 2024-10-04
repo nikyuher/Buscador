@@ -79,7 +79,7 @@ export const usePeticionesStore = defineStore({
     },
     async obtenerCiudades() {
       try {
-        const token = loginStore.token;  // Asumiendo que el token se obtiene del loginStore.
+        const token = loginStore.token;
         const response = await fetch(`api/Ciudad`, {
           method: 'GET',
           headers: {

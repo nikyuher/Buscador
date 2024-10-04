@@ -27,8 +27,8 @@ interface PeticionesDTO {
 interface infoUsuario {
   idUsuario: number
   nombre: string
-  correo: string
   contrasena: string
+  correo: string
 }
 
 export const useUsuarioStore = defineStore({
@@ -150,10 +150,11 @@ export const useUsuarioStore = defineStore({
       try {
         const token = loginStore.token
 
-        const response = await fetch(`api/Usuario/${infoUser.idUsuario}`, {
+        const response = await fetch(`api/Usuario`, {
           method: 'PUT',
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(infoUser)
         })
@@ -162,7 +163,8 @@ export const useUsuarioStore = defineStore({
           const errorData = await response.json()
           throw new Error(errorData.message || 'error al modificar datos al usuario.')
         }
-
+        const data = await response.json();
+        this.usuario = data;
         console.log('Usuario modificado correctamente')
       } catch (error) {
         console.log(error)

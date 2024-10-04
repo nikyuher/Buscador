@@ -9,7 +9,7 @@
       <h2>Iniciar Sesión</h2>
       <form @submit.prevent="login">
         <div class="input-group">
-          <label for="nombre">Nombre de Usuario</label>
+          <label for="nombre">Correo</label>
           <input type="nombre" id="nombre" v-model="nombre" placeholder="Ingrese su Usuario" required />
         </div>
 
