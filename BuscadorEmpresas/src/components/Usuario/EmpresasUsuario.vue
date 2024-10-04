@@ -38,30 +38,56 @@ onMounted(() => {
 <template>
 
     <div>
-        <div class="cont-divisores">
-            <div> Nº</div>
-            <div>Nombre</div>
-            <div>Direccion</div>
-            <div>Imagen</div>
-        </div>
         <div v-if="listaEmpresas.length > 0">
-            <div v-for="(empresa, index) in listaEmpresas" :key="index" class="style-form">
-                <div class="cont-data-empresa">
-                    <p>{{ index+1 }}</p>
-                    <p>{{ empresa.empresa.nombre }}</p>
-                    <p>{{ empresa.empresa.direccion }}</p>
-                    <p>{{ empresa.empresa.imagen }}</p>
-
-                </div>
-            </div>
+            <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th> Nº</th>
+                        <th>Nombre</th>
+                        <th>Direccion</th>
+                        <th>Imagen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(empresa, index) in listaEmpresas" :key="index" class="style-form">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ empresa.empresa.nombre }}</td>
+                        <td>{{ empresa.empresa.direccion }}</td>
+                        <td><img :src="empresa.empresa.imagen" alt="Imagen Empresa" width="100" /></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div v-else style="text-align: center; margin: 20px;">
+            <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
             <p>No tienes ninguna empesa creada.</p>
         </div>
     </div>
 </template>
 
 <style scoped>
+label {
+    margin-bottom: 5px;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    text-align: center;
+    margin: auto;
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+img {
+  border-radius: 5px;
+}
+
 .cont-divisores {
     border: 1px solid black;
     display: flex;

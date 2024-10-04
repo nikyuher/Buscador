@@ -18,13 +18,16 @@ const nombre = ref('');
 const correo = ref('');
 const contrasena = ref('');
 
+const solicitudNum = computed(() => usuarioStore.peticionesUsuario.length > 0 ? usuarioStore.peticionesUsuario.length : 0)
+const empresasNum = computed(() => usuarioStore.empresasUsuario.length > 0 ? usuarioStore.empresasUsuario.length : 0)
+
 const success = ref(false);
 const error = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
 
 const editMode = ref(false)
-
+const deleteMode = ref(false)
 
 onMounted(() => {
     selectDatos()
@@ -82,6 +85,30 @@ const EditarDatos = async () => {
 
 }
 
+const eliminarCuenta = async () => {
+
+    try {
+
+        if (loginStore.usuario?.idUsuario) {
+            await usuarioStore.EliminarUsuarios(loginStore.usuario?.idUsuario)
+            success.value = true
+            successMessage.value = 'Cuenta eliminada con éxito.'
+            error.value = false
+
+            setTimeout(() => {
+                loginStore.logout()
+            }, 2000);
+        }
+
+
+    } catch (err) {
+        success.value = false
+        error.value = true
+        errorMessage.value = `${err}`
+
+    }
+}
+
 const cancelEdicion = async () => {
 
     editMode.value = false
@@ -93,14 +120,14 @@ const cancelEdicion = async () => {
 </script>
 
 <template>
-    <div v-if="!editMode" class="cont-perfil">
+    <div v-if="!editMode && !deleteMode" class="cont-perfil">
         <h1>Informacion Usuario</h1>
         <p>Nombre: {{ nombre }}</p>
         <p>Correo: {{ correo }}</p>
         <p>Contraseña: ***********</p>
         <button class="editar" v-if="!editMode" @click="editMode = true"> <strong>Editar</strong></button>
     </div>
-    <div v-else>
+    <div v-if="editMode && !deleteMode">
         <h1>Editar Informacion</h1>
         <div class="cont-editor">
             <form @submit.prevent="EditarDatos">
@@ -115,6 +142,22 @@ const cancelEdicion = async () => {
             </form>
         </div>
     </div>
+    <div v-if="!editMode && !deleteMode" class="cont-perfil">
+        <h2>Informacion Empresas</h2>
+        <p>Solicitudes pendienetes: <strong style="color: green; font-size: 20px">{{ solicitudNum }}</strong></p>
+        <p>Empresas Aceptadas: <strong style="color: green; font-size: 20px">{{ empresasNum }}</strong></p>
+    </div>
+    <div class="cont-delete" v-if="!editMode">
+        <h2>Eliminar Cuenta</h2>
+        <button class="cancelar" @click="editMode = true; deleteMode = true">Eliminar cuenta</button>
+    </div>
+    <div v-if="deleteMode">
+        <div class="cont-delete-mode">
+            <h2>¿Seguro que quieres eliminar tu cuenta?</h2>
+            <button class="guardar" @click="eliminarCuenta()">Si</button>
+            <button class="cancelar" @click="deleteMode = false; editMode = false">No</button>
+        </div>
+    </div>
     <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
         {{ successMessage }}
     </v-snackbar>
@@ -127,6 +170,20 @@ const cancelEdicion = async () => {
 <style scoped>
 .cont-editor {
     display: flex;
+}
+
+.cont-delete {
+    margin: 40px auto;
+    width: 90%;
+    padding: 0 50px;
+}
+
+.cont-delete-mode h2 {
+    padding: 20px 50px;
+}
+
+.cont-delete-mode button {
+    margin: 0 50px
 }
 
 .cont-editor input {

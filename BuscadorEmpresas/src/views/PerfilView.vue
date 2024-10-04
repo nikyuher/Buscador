@@ -12,7 +12,7 @@ const isAuthenticated = computed(() => loginStore.isAuthenticated);
 
 watchEffect(() => {
     if (!isAuthenticated.value) {
-        router.push('/login');
+        router.push('/');
     }
 });
 

@@ -28,7 +28,7 @@ const isAuthenticated = computed(() => usuario.isAuthenticated);
 const isAdmin = computed(() => usuario.usuario?.rol);
 watchEffect(() => {
     if (!isAuthenticated.value) {
-        router.push('/login');
+        router.push('/');
     }
 });
 </script>

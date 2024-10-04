@@ -38,24 +38,37 @@ onMounted(() => {
 
     <div>
         <div v-if="ListaPeticiones.length > 0">
-            <div v-for="(peticion, index) in ListaPeticiones" :key="index">
-                <div class="cont-data-peticion">
-                    <p>ID Peticion: {{ peticion.idPeticion }}</p>
-                    <p>nombre : {{ peticion.nombreEmpresa }}</p>
-                    <p>descripcion : {{ peticion.descripcionEmpresa }}</p>
-                    <p>direccion : {{ peticion.direccionEmpresa }}</p>
-                    <p>imagen : {{ peticion.imagenEmpresaURL }}</p>
-                </div>
-            </div>
+            <h2 style="margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th> Nº</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Direccion</th>
+                        <th>Imagen</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    <tr v-for="(peticion, index) in ListaPeticiones" :key="index">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ peticion.nombreEmpresa }}</td>
+                        <td>{{ peticion.descripcionEmpresa }}</td>
+                        <td>{{ peticion.direccionEmpresa }}</td>
+                        <td><img :src="peticion.imagenEmpresaURL" alt="Imagen Empresa" width="100" /></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div v-else>
-            <p>¡No tienes ninguna peticion pediente!</p>
+            <h2 style="margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
+            <p>¡No tienes ninguna solicitud pediente!</p>
         </div>
     </div>
 </template>
 
 <style scoped>
-.cont-data-peticion{
+.cont-data-peticion {
 
     background-color: rgb(226, 232, 255);
     border-radius: 10px;
@@ -63,4 +76,22 @@ onMounted(() => {
     padding: 20px;
     box-shadow: 5px 5px 10px black
 }
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    text-align: center;
+   margin: auto;
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+img {
+  border-radius: 5px;
+}
+
 </style>

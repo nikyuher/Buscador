@@ -266,7 +266,7 @@ table {
   width: 80%;
   border-collapse: collapse;
   text-align: center;
-  margin-left: 15vh;
+  margin: auto;
 }
 
 th,
