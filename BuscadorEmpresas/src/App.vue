@@ -16,15 +16,7 @@ const route = useRoute();
 </template>
 
 <style scoped>
-body,html,#content,#liniaPantalla{
-  margin:0px;  
-   min-height: 100vh; 
-   width:100%;
-  background-image: url(./asserts/fondo2.jpeg);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover; 
-}
+
 header {
   width: 100%;
   height: 10vh;

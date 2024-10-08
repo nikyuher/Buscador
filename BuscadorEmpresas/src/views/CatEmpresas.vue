@@ -1,21 +1,21 @@
 <template>
-  <h1>Inicio > Categoria > {{ categoriaNombre }}</h1>
+  <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
   <div class="category-enterprises-container">
 
-    <p v-if="error">Hubo un error al cargar los datos.</p>
+    <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
 
-    <ul v-if="!error && empresas.length">
-      <li v-for="empresa in empresas" :key="empresa.idEmpresa">
-        <div class="Datos">
-          <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+    <div v-if="!error && empresas.length" class="empresa-list">
+      <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
+        <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+        <div class="empresa-details">
           <h2>{{ empresa.nombre }}</h2>
-          <p><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
-          <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+          <p class="empresa-description"><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
+          <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
 
-    <p v-else-if="!error" style="font-size: 20px; color: white;">No hay empresas en esta categoría.</p>
+    <p v-else-if="!error" class="no-data">No hay empresas en esta categoría.</p>
   </div>
 </template>
 
@@ -24,12 +24,11 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { fetchEmpresasByCategoria, fetchEmpresasById } from '../stores/Buscador';
 
-
 const categoriaNombre = ref('');
 const empresas = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; imagen: string }[]>([]);
 const error = ref(false);
 
-//  obtener los detalles de todas las empresas por categoría
+// Obtener los detalles de todas las empresas por categoría
 const fetchData = async (idCategoria: number) => {
   try {
     const response = await fetchEmpresasByCategoria(idCategoria);
@@ -78,6 +77,7 @@ onMounted(() => {
 });
 </script>
 
+
 <style scoped>
 
 .Datos{
@@ -115,14 +115,91 @@ h1{
 }
 
 .empresa-img {
-  max-width: 500px;
-  height: auto;
-  margin-bottom: 20px;
-  margin-left: 8vh;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
 }
+
 
 p {
   margin: 5px 0;
   color: rgb(0, 0, 0);
+}
+
+.breadcrumb {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.category-enterprises-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.error-message,
+.no-data {
+  font-size: 18px;
+  color: #ff4d4f;
+  margin-top: 20px;
+}
+
+.empresa-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.empresa-card {
+  background-color: #682828;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.empresa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.empresa-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.empresa-details {
+  text-align: center;
+}
+
+.empresa-details h2 {
+  font-size: 22px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.empresa-description,
+.empresa-address {
+  font-size: 16px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.empresa-address {
+  font-weight: bold;
+  color: #ffffff;
 }
 </style>

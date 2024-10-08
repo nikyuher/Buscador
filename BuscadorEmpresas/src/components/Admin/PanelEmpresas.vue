@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue';
-import { useEmpresaStore } from '../../stores/Empresa';
-
+import { useEmpresaStore } from '@/stores/Empresa';
+import { usePeticionesStore } from '@/stores/Peticiones';
 interface DatosEmpresa {
   idEmpresa: number;
   nombre: string;
@@ -10,10 +10,12 @@ interface DatosEmpresa {
   imagen: string;
 }
 
+const peticionesStore = usePeticionesStore();
 const empresaStore = useEmpresaStore();
 const nuevaEmpresa = ref<DatosEmpresa>();
 const editMode = ref(false);
-const dialog = ref(false)
+const idCategoriaEmpresa = ref(0)
+const idCiudadEmpresa = ref(0)
 
 const dialogosVisibles = reactive<{ [key: string]: boolean }>({});
 
@@ -30,6 +32,8 @@ const imagen = ref('')
 
 onMounted(() => {
   empresaStore.GetAllEmpresas();
+  peticionesStore.obtenerCiudades();
+  peticionesStore.obtenerCategorias();
 });
 
 const limpiarFormulario = () => {
@@ -65,7 +69,9 @@ const confirmarEnvio = async () => {
       successMessage.value = 'Empresa editada con éxito';
     } else {
       await empresaStore.CreateEmpresa(nuevaEmpresa.value);
+      // if () {
 
+      // }
       success.value = true;
       error.value = false;
       successMessage.value = 'Empresa creada con éxito';
@@ -156,6 +162,23 @@ const cerrarDialogo = (id: string | number) => {
               <input v-model="imagen" id="imagen" type="text" required />
             </div>
             <div>
+              <label for="categoria">Categoria</label>
+              <select v-model="idCategoriaEmpresa" id="idCategoriaEmpresa" required>
+                <option v-for="categoria in peticionesStore.categorias" :key="categoria.idCategoria"
+                  :value="categoria.idCategoria">
+                  {{ categoria.nombre }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label for="idCiudadEmpresa">Ciudad de la Empresa:</label>
+              <select v-model="idCiudadEmpresa" id="idCiudadEmpresa" required>
+                <option v-for="ciudad in peticionesStore.ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+                  {{ ciudad.nombre }}
+                </option>
+              </select>
+            </div>
+            <div>
               <button class="aceptar" type="submit">Añadir Empresa</button>
               <button class="denegar" type="button"
                 @click="cerrarDialogo('nuevaEmpresa'); limpiarFormulario()">Cerrar</button>
@@ -207,7 +230,8 @@ const cerrarDialogo = (id: string | number) => {
                   </div>
                   <div>
                     <button class="aceptar" type="submit">{{ editMode ? 'Guardar Cambios' : 'Añadir Empresa' }}</button>
-                    <button class="denegar" type="button" @click="cerrarDialogo(`${empresa.idEmpresa}-editar`); limpiarFormulario()">Cerrar</button>
+                    <button class="denegar" type="button"
+                      @click="cerrarDialogo(`${empresa.idEmpresa}-editar`); limpiarFormulario()">Cerrar</button>
                   </div>
                 </form>
               </div>
@@ -222,7 +246,8 @@ const cerrarDialogo = (id: string | number) => {
                 <v-btn style="margin-right: 20px;" class="aceptar" @click="eliminarEmpresa(empresa.idEmpresa)">
                   Si
                 </v-btn>
-                <v-btn class="denegar" style="margin-left: 20px;" @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No</v-btn>
+                <v-btn class="denegar" style="margin-left: 20px;"
+                  @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No</v-btn>
 
               </div>
             </v-dialog>
@@ -245,6 +270,14 @@ const cerrarDialogo = (id: string | number) => {
 </template>
 
 <style scoped>
+select {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid black;
+  width: 100%;
+}
+
 .btn-subir-top {
   position: fixed;
   bottom: 20px;

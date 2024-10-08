@@ -52,19 +52,13 @@
 }
 
 .cont {
-  background-color: rgb(23, 6, 51);
+  background-color: #2a2a2a;
   max-width: 100%;
   max-height: 100%;
   padding: 30px 0;
 }
 
-.footer {
-  color: white;
-  padding: 20px 0;
-}
-
 .footer-container {
-  background-color: rgb(23, 6, 51);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -107,7 +101,6 @@
 .footer-bottom {
   text-align: center;
   padding-top: 20px;
-  background-color: rgb(23, 6, 51);
   color: white;
 }
 </style>

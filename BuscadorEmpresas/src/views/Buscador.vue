@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue';
 import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
 
-// Definir variables reactivas usando `ref` para el estado
 const keyword = ref('');
 const IdEmpresa = ref(0);
 const IdCiudad = ref(0);
@@ -18,7 +17,6 @@ const errorMsg = ref(false)
 const mensajeAdvertencia = ref('');
 
 
-// Cargar las categorías al montar el componente
 onMounted(async () => {
   categorias.value = await fetchCategorias();
 });
@@ -39,27 +37,22 @@ const searchWithoutId = () => {
   }
 };
 
-// Función para manejar las sugerencias de empresas basadas en la palabra clave
 const onKeywordInput = async () => {
   if (keyword.value.length >= 1) {
     let filtrarDatos = await fetchSuggestions(keyword.value);
 
-    // Ordenar alfabéticamente las sugerencias de empresa
     suggestions.value = filtrarDatos.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
 
-    // Reiniciar la validación hasta que se seleccione una empresa de la lista
     validarEmpresa.value = false;
     errorMsg.value = false;
 
-    // Si el texto ingresado coincide con una de las sugerencias, marcar como válido
     const empresaSeleccionada = suggestions.value.find(s => s.nombre === keyword.value);
     if (empresaSeleccionada) {
       IdEmpresa.value = empresaSeleccionada.idEmpresa;
       validarEmpresa.value = true;
     }
   } else {
-    // Resetear valores si el input está vacío
     suggestions.value = [];
     validarEmpresa.value = false;
   }
@@ -67,7 +60,6 @@ const onKeywordInput = async () => {
 
 
 
-// Función para seleccionar una sugerencia de empresa
 const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => {
   keyword.value = suggestion.nombre;
   IdEmpresa.value = suggestion.idEmpresa;
@@ -79,32 +71,26 @@ const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => 
 
 };
 
-// Función para manejar las sugerencias de ciudades basadas en la ciudad ingresada
 const onCityInput = async () => {
   if (city.value.length >= 1) {
     let filtrarCiudades = await fetchCitySuggestions(city.value);
 
-    // Ordenar alfabéticamente las sugerencias de ciudad
     citySuggestions.value = filtrarCiudades.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-    // Reiniciar la validación hasta que se seleccione una ciudad de la lista
     validarCiudad.value = false;
 
-    // Si el texto ingresado coincide con una de las sugerencias, marcar como válido
     const ciudadSeleccionada = citySuggestions.value.find(c => c.nombre === city.value);
     if (ciudadSeleccionada) {
       IdCiudad.value = ciudadSeleccionada.idCiudad;
       validarCiudad.value = true;
     }
   } else {
-    // Resetear valores si el input está vacío
     citySuggestions.value = [];
     validarCiudad.value = false;
   }
 };
 
 
-// Función para seleccionar una sugerencia de ciudad
 const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string }) => {
   IdCiudad.value = citySuggestion.idCiudad;
   city.value = citySuggestion.nombre;
@@ -119,10 +105,9 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
 <template>
 
   <body>
-    <h1 class="Inicio">Inicio</h1>
     <div class="search-container">
       <div class="search-box">
-        <h2>Busca tu empresa en tu ciudad</h2>
+        <h2>¿Quieres encontrar tu empresa?</h2>
         <div v-if="errorMsg">
           <p style="color: red;">{{ mensajeAdvertencia }}</p>
         </div>
@@ -144,37 +129,30 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
               </li>
             </ul>
           </div>
-          <!-- Botón para buscar solo con empresa -->
           <div v-if="IdEmpresa > 0 && validarEmpresa == true && IdCiudad == 0">
             <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
               <button>
-                <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-                  alt="Buscar" />
+                <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
-          <!-- Botón para buscar solo con ciudad -->
           <div v-else-if="IdCiudad > 0 && validarCiudad == true && IdEmpresa == 0">
             <RouterLink :to="{ name: 'Ciudad', params: { idCiudad: IdCiudad } }">
               <button>
-                <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-                  alt="Buscar" />
+                <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
-          <!-- Botón para buscar con ambos: empresa y ciudad -->
           <div v-else-if="validarEmpresa == true && validarCiudad == true">
             <RouterLink :to="{ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad, idEmpresa: IdEmpresa } }">
               <button>
-                <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-                  alt="Buscar" />
+                <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
           <div v-else>
             <button @click="searchWithoutId">
-              <img src="https://ik.imagekit.io/Mariocanizares/Empresas/search-icon.png?updatedAt=1726829161232"
-                alt="Buscar" />
+              <v-icon class="lupa">mdi-magnify</v-icon>
             </button>
           </div>
         </div>
@@ -194,6 +172,11 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
 </template>
 
 <style scoped>
+.lupa {
+  color: black;
+  font-size: 30px;
+}
+
 .search-container {
   text-align: center;
 
@@ -209,38 +192,31 @@ h2 {
   color: black;
 }
 
-.Inicio {
-  margin-left: 15vh;
-  font-size: 6vh;
-  color: white;
-}
-
-
 .categories-container {
-  margin-top: 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  color: white;
+  color: #990000;
   align-items: center;
+  background-color: #e4e4e4;
+  padding: 50px;
 }
 
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  /* Ajusta el número de columnas */
   gap: 10px;
   justify-content: center;
   align-items: center;
 }
 
 .Categorias {
-  margin-bottom: 9vh;
   font-size: 5vh;
+  margin: 0 0 30px 0px;
 }
 
 .category-item {
-  background-color: rgb(23 6 51 / 88%);
+  background-color: rgba(223, 42, 42, 0.88);
   color: white;
   font-size: 20px;
   padding: 10px;
@@ -252,40 +228,52 @@ h2 {
 }
 
 .category-item:hover {
-  background-color: #e0e0e0;
+  background-color: #681717;
+  transition: 0.7s;
 }
 
 .search-box {
   background-color: rgb(23 6 51 / 88%);
   color: white;
-  padding: 70px;
+  padding: 100px;
   display: inline-block;
-  border-radius: 12px;
-
+  width: 100%;
+  margin: 40px auto;
+  background-image: url(http://netymedia.com/wp-content/uploads/2017/08/slide_1.png);
+  background-size: cover;
 }
 
 .search-box h2 {
   color: white;
+  font-size: 40px
 }
 
 .search-inputs {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 10vh;
+  margin-top: 30px;
 }
 
 input[type="text"] {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
   border-radius: 5px;
 }
 
 button {
   background-color: white;
   border: none;
+  border-radius: 0 10px 10px 0;
   cursor: pointer;
   padding: 10px;
+  height: 46px;
+}
+
+button:hover{
+  background-color: rgb(105, 105, 105);
+  transition: 1s;
 }
 
 img {
@@ -317,7 +305,6 @@ img {
 }
 
 .categories-container {
-  margin-top: 20px;
   text-align: center;
 }
 

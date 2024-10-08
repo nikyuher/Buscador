@@ -7,8 +7,10 @@
     </div>
 
     <div class="user-actions">
-      <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link">Register</RouterLink>
-      <RouterLink v-if="!isLoggedIn" to="/Login" class="nav__link">Login</RouterLink>
+      <div>
+        <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link" style="margin-right: 20px;">Register</RouterLink>
+        <RouterLink v-if="!isLoggedIn" to="/Login" class="nav__link">Login</RouterLink>
+      </div>
       <div v-if="isLoggedIn" class="logged-in-actions">
         <div v-if="isLoggedIn && loginStore.isAdmin">
           <RouterLink to="/PanelAdmin" class="sol">Panel Admin</RouterLink>
@@ -24,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watchEffect} from 'vue';
+import { computed, onMounted, watchEffect } from 'vue';
 import { useLoginStore } from '../stores/Login';
 import { useRouter } from 'vue-router';
 
@@ -72,7 +74,7 @@ const handleLogout = () => {
 .header {
   width: 100%;
   height: 10vh;
-  background-color: rgb(23, 6, 51);
+  background-color: #990000;
   color: white;
   display: flex;
   align-items: center;
