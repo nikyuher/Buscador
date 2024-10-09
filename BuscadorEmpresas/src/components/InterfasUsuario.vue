@@ -21,7 +21,6 @@ const cambiarComponente = (componente: string) => {
       <p @click="cambiarComponente('ListaEmpresas')">Mis empresas</p>
     </div>
     <div class="contenido">
-      <!-- Muestra el componente correspondiente según la opción seleccionada -->
       <div v-if="componenteVisible === 'DatosUsuario'">
         <DatosUsuario></DatosUsuario>
       </div>
