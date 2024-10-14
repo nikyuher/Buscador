@@ -57,7 +57,7 @@ const login = async () => {
           </div>
         </div>
         <div class="changePassword">
-          <span class="obj2">¿Olvidaste tú contraseña?</span>
+          <span class="obj2"><RouterLink to="/ChangePassword">¿Olvidaste tú contraseña?</RouterLink></span>
         </div>
         <div>
           <button type="submit" :disabled="loading">
@@ -73,13 +73,16 @@ const login = async () => {
 
 <style scoped>
 .changePassword {
-
   display: flex;
   margin-bottom: 10px;
-  color: #0b57d0;
   padding: 5px;
   justify-content:end;
   flex-wrap: wrap;
+}
+
+.changePassword a{
+  text-decoration: none;
+  color: #0b57d0;
 }
 
 .obj1, .obj2{

@@ -4,14 +4,15 @@ import { useRoute } from 'vue-router';
 import Buscador from './views/Buscador.vue';
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
+import router from './router';
 const route = useRoute(); 
 </script>
 
 <template>
   <body>
-    <Header v-if="route.name !== 'Login' && route.name !== 'Register'"></Header>
+    <Header v-if="route.name !== 'Login' && route.name !== 'Register' && route.name !== 'ChangePassword'"></Header>
   <RouterView></RouterView>
-  <Footer v-if="route.name !== 'Login' && route.name !== 'Register'"></Footer>
+  <Footer v-if="route.name !== 'Login' && route.name !== 'Register' && route.name !== 'ChangePassword'"></Footer>
   </body>
 </template>
 

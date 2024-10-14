@@ -24,7 +24,9 @@ export const useLoginStore = defineStore({
   state: () => ({
     usuario: JSON.parse(localStorage.getItem('usuario') || 'null') as Usuario | null,
     error: null as string | null,
-    token: localStorage.getItem('jwtToken') as string
+    token: localStorage.getItem('jwtToken') as string,
+    email: localStorage.getItem('email') as string | null,
+    codigo: localStorage.getItem('codigo') as string | null
   }),
   actions: {
     async login(correo: string, contrasena: string): Promise<boolean> {
@@ -110,11 +112,109 @@ export const useLoginStore = defineStore({
         return false
       }
     },
+    async solicitarRecuperacion(email: string) {
+      try {
+        const obj = {
+          correo: email
+        }
+
+        const response = await fetch('api/Usuario/solicitar-recuperacion', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj)
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          const errorMessage = errorData.errors
+            ? Object.values(errorData.errors).flat().join(', ')
+            : errorData.message || 'Error al reenviar el código.'
+          throw new Error(errorMessage)
+        }
+
+        this.email = email
+        localStorage.setItem('email', email)
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async VerificarCodigo(email: string, codigo: number) {
+      try {
+        const obj = {
+          correo: email,
+          codigo: codigo
+        }
+
+        const response = await fetch('api/Usuario/verficar-codigo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj)
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          const errorMessage = errorData.errors
+            ? Object.values(errorData.errors).flat().join(', ')
+            : errorData.message || 'Error al verificar el código.'
+          throw new Error(errorMessage)
+        }
+
+        this.codigo = codigo.toString()
+        localStorage.setItem('codigo', codigo.toString())
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async RestablecerContrasena(
+      email: string,
+      codigo: string,
+      password1: string,
+      password2: string
+    ) {
+      try {
+        const obj = {
+          correo: email,
+          codigo: codigo,
+          nuevaContrasena: password1,
+          confirmarContrasena: password2
+        }
+
+        const response = await fetch('api/Usuario/restablecer-contrasena', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj)
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          const errorMessage = errorData.errors
+            ? Object.values(errorData.errors).flat().join(', ')
+            : errorData.message || 'Error desconocido al restablecer la contraseña.'
+          throw new Error(errorMessage)
+        }
+
+        localStorage.removeItem('email')
+        localStorage.removeItem('codigo')
+        this.email = null
+        this.codigo = null
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
     logout() {
       this.usuario = null
       this.token = ''
-      localStorage.removeItem('usuario') 
-      localStorage.removeItem('jwtToken') 
+      localStorage.removeItem('usuario')
+      localStorage.removeItem('jwtToken')
       console.log('Sesión cerrada')
     }
   },

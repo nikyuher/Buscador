@@ -56,6 +56,11 @@ const router = createRouter({
       component: () => import('../views/PerfilView.vue')
     },
     {
+      path: '/ChangePassword',
+      name: 'ChangePassword',
+      component: () => import('../views/ChangePasswordView.vue')
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('../views/ErrorUrlView.vue')
