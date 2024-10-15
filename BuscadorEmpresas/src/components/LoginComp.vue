@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useLoginStore } from '../stores/Login';
@@ -37,7 +36,7 @@ const login = async () => {
 
 <template>
   <div class="cont-form">
-    <div class="login-container">
+    <v-card class="py-8 px-6 mx-auto ma-4" elevation="12" max-width="400" width="100%">
       <div class="header-name">
         <RouterLink to="/">
           <h1>BuscaNet</h1>
@@ -57,7 +56,9 @@ const login = async () => {
           </div>
         </div>
         <div class="changePassword">
-          <span class="obj2"><RouterLink to="/ChangePassword">¿Olvidaste tú contraseña?</RouterLink></span>
+          <span class="obj2">
+            <RouterLink to="/ChangePassword">¿Olvidaste tú contraseña?</RouterLink>
+          </span>
         </div>
         <div>
           <button type="submit" :disabled="loading">
@@ -67,7 +68,7 @@ const login = async () => {
 
         <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       </form>
-    </div>
+    </v-card>
   </div>
 </template>
 
@@ -76,21 +77,23 @@ const login = async () => {
   display: flex;
   margin-bottom: 10px;
   padding: 5px;
-  justify-content:end;
+  justify-content: end;
   flex-wrap: wrap;
 }
 
-.changePassword a{
+.changePassword a {
   text-decoration: none;
   color: #0b57d0;
 }
 
-.obj1, .obj2{
+.obj1,
+.obj2 {
   padding: 5px;
   cursor: pointer;
 }
 
-.obj1:hover, .obj2:hover {
+.obj1:hover,
+.obj2:hover {
   border-radius: 10px;
   background-color: rgba(87, 187, 201, 0.205);
 
@@ -112,9 +115,6 @@ const login = async () => {
   max-width: 400px;
   margin: auto;
   padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h2 {

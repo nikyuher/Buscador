@@ -1,12 +1,12 @@
 <template>
     <div class="cont-form">
-        <div class="register-container">
+        <v-card class="py-8 px-6 mx-auto ma-4" elevation="12" max-width="400" width="100%">
             <div class="header-name">
                 <RouterLink to="/">
                     <h1>BuscaNet</h1>
                 </RouterLink>
             </div>
-            <h2>Registro de Usuario</h2>
+            <h2>Registrar Cuenta</h2>
             <form @submit.prevent="register">
                 <div class="input-group">
                     <label for="nombre">Nombre</label>
@@ -31,7 +31,7 @@
                 <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
                 <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
             </form>
-        </div>
+        </v-card>
     </div>
 </template>
 
@@ -76,7 +76,7 @@ const register = async () => {
 
 <style scoped>
 .header-name a {
-    color: rgb(66, 25, 163);
+    color: #990000;
     text-decoration: none;
     text-align: center;
 }

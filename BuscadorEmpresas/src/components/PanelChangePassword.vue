@@ -96,53 +96,74 @@ onMounted(() => {
 
 <template>
     <div class="container">
-        <div v-if="!paso1">
+        <v-card v-if="!paso1" class="py-8 px-6 text-center mx-auto ma-4" elevation="12" max-width="400"
+        width="100%">
             <h1>Recuperar cuenta</h1>
-            <p>Para cambiar tu contraseña debes introducir el correo electronico creado en la pagina de BuscaNet.</p>
+            <p>Introduce tu correo electronico con el cual creaste tu cuenta de BuscaNet.</p>
             <form @submit.prevent="Solicitar">
                 <input v-model="email" type="email" placeholder="ejemplo@gmail.com" required>
-                <button type="submit">Enviar</button>
+                <div style="display: flex; justify-content: space-between;">
+                    <div class="diseño-boton my-4">
+                        <router-link to="/login">
+                            <v-icon @click="retroceder">
+                                mdi-arrow-left
+                            </v-icon>
+                            atras
+                        </router-link>
+                    </div>
+                    <v-btn type="submit" class="my-4" color="purple"  text="Enviar" variant="flat">
+                    </v-btn>
+                </div>
             </form>
-        </div>
-        <div v-if="paso1 && !paso2">
-            <v-icon @click="retroceder"
-                style="background-color: red; color: white; border-radius: 50%; padding: 20px">mdi-arrow-left</v-icon>
-            <v-card class="py-8 px-6 text-center mx-auto ma-4" elevation="12" max-width="400" width="100%">
-                <h3 class="text-h6 mb-4">Verify Your Account</h3>
+        </v-card>
+        <v-card v-if="paso1 && !paso2" class="py-8 px-6 text-center mx-auto ma-4" elevation="12" max-width="400"
+            width="100%">
+            <h3 class="text-h6 mb-4">Verify Your Account</h3>
 
-                <div class="text-body-2">
-                    Enviamos un código de verificación a {{ loginStore.email }} <br>
+            <div class="text-body-2">
+                Enviamos un código de verificación a <strong>{{ loginStore.email }}</strong> <br>
+                Por favor revise su correo electrónico y pegue el código a continuación.
+            </div>
+            <form @submit.prevent="VerificarCodigo">
+                <v-otp-input v-model="codigo" length="5"></v-otp-input>
 
-                    Por favor revise su correo electrónico y pegue el código a continuación.
+                <v-btn type="submit" class="my-4" color="purple" height="40" text="Verificar" variant="flat"
+                    width="70%">
+                </v-btn>
+            </form>
+            <div class="text-caption">
+                ¿No recibes el codigo? <a href="#" @click="Solicitar">Reenviar</a>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <div class="diseño-boton">
+                    <v-icon @click="retroceder">
+                        mdi-arrow-left
+                    </v-icon>
+                    atras
                 </div>
-
-                <form @submit.prevent="VerificarCodigo">
-                    <v-otp-input v-model="codigo" length="5"></v-otp-input>
-
-                    <v-btn type="submit" class="my-4" color="purple" height="40" text="Verificar" variant="flat"
-                        width="70%"></v-btn>
-                </form>
-
-                <div class="text-caption">
-                    ¿No recibes el codigo? <a href="#" @click="Solicitar">Reenviar</a>
-                </div>
-            </v-card>
-        </div>
-        <div v-if="paso1 && paso2">
-            <v-icon @click="retroceder"
-                style="background-color: red; color: white; border-radius: 50%; padding: 20px">mdi-arrow-left</v-icon>
+            </div>
+        </v-card>
+        <v-card v-if="paso1 && paso2" class="py-8 px-6 text-left mx-auto ma-4" elevation="12" max-width="400"
+            width="100%">
             <h1>Restablecer contraseña </h1>
             <h4>Recuerda revisar tu Email para obtener el codio de verificacion</h4>
-
             <form @submit.prevent="RestablecerContraseña">
                 <label>Nueva contraseña</label>
                 <input v-model="password" type="password" required>
                 <label>Confirmar contraseña</label>
                 <input v-model="confirmPassword" type="password" required>
-                <v-btn type="submit" class="my-4" color="purple" height="40" text="Confirmar" variant="flat"
-                    width="70%"></v-btn>
+                <div style="display: flex; justify-content: space-between;">
+                    <div class="diseño-boton my-4" @click="retroceder">
+                        <v-icon>
+                            mdi-arrow-left
+                        </v-icon>
+                        atras
+                    </div>
+                    <v-btn type="submit" class="my-4" color="purple" height="40" text="Confirmar" variant="flat">
+                    </v-btn>
+                </div>
             </form>
-        </div>
+        </v-card>
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
             {{ Message }}
         </v-snackbar>
@@ -154,13 +175,32 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.diseño-boton {
+    display: flex;
+}
+
+.diseño-boton {
+    color: #0b57d0;
+    padding: 7px;
+    align-items: center;
+    height: 30px;
+}
+
+a {
+    text-decoration: none;
+    color: #0b57d0;
+}
+
+.diseño-boton:hover {
+    border-radius: 10px;
+    background-color: rgba(87, 187, 201, 0.205);
+
+}
+
 .container {
     max-width: 400px;
     margin: 200px auto;
     padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgb(83, 83, 83);
 }
 
 input {
