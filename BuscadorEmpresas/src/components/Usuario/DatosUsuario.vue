@@ -7,7 +7,6 @@ import { useUsuarioStore } from '@/stores/Usuario';
 interface infoUsuario {
     idUsuario: number
     nombre: string
-    contrasena: string
     correo: string
 }
 
@@ -44,7 +43,6 @@ const selectDatos = async () => {
             
             nombre.value = usuarioStore.usuario ? usuarioStore.usuario?.nombre : ''
             correo.value = usuarioStore.usuario ? usuarioStore.usuario?.correo : ''
-            contrasena.value = usuarioStore.usuario ? usuarioStore.usuario?.contrasena : ''
         }
 
     } catch (err) {
@@ -62,7 +60,6 @@ const EditarDatos = async () => {
             const datos = <infoUsuario>{
                 idUsuario: loginStore.usuario?.idUsuario,
                 nombre: nombre.value,
-                contrasena: contrasena.value,
                 correo: correo.value
             }
 
@@ -70,7 +67,6 @@ const EditarDatos = async () => {
 
             usuarioStore.usuario!.nombre = datos.nombre;
             usuarioStore.usuario!.correo = datos.correo;
-            usuarioStore.usuario!.contrasena = datos.contrasena;
 
             success.value = true
             successMessage.value = 'Datos actualizados con éxito.'
@@ -113,7 +109,6 @@ const cancelEdicion = async () => {
     editMode.value = false
     nombre.value = usuarioStore.usuario ? usuarioStore.usuario?.nombre : ''
     correo.value = usuarioStore.usuario ? usuarioStore.usuario?.correo : ''
-    contrasena.value = usuarioStore.usuario ? usuarioStore.usuario?.contrasena : ''
 }
 
 </script>
@@ -124,7 +119,8 @@ const cancelEdicion = async () => {
         <p>Nombre: {{ nombre }}</p>
         <p>Correo: {{ correo }}</p>
         <p>Contraseña: ***********</p>
-        <button class="editar" v-if="!editMode" @click="confirmarSesion('edit')"> <strong>Editar</strong></button>
+        <button class="editar" v-if="!editMode" @click="confirmarSesion('edit')" style="margin-right: 10px;"> <strong>Editar datos</strong></button>
+        <button class="editar" v-if="!editMode" @click="confirmarSesion('contraseña')"> <strong>Cambiar contraseña</strong></button>
     </div>
     <div v-if="editMode && !deleteMode">
         <h1>Editar Informacion</h1>
@@ -134,8 +130,6 @@ const cancelEdicion = async () => {
                 <input type="text" v-model="nombre" name="nombre" required>
                 <label for="">Correo</label>
                 <input type="email" v-model="correo" name="correo" required>
-                <label for="">Contraseña</label>
-                <input type="text" v-model="contrasena" name="contrasena" required>
                 <button class="guardar" v-if="editMode" type="submit"> Guardar</button>
                 <button class="cancelar" v-if="editMode" @click="cancelEdicion()"> Cancelar</button>
             </form>
@@ -224,7 +218,7 @@ const cancelEdicion = async () => {
 
 
 .editar:hover {
-    background-color: rgb(185, 133, 36);
+    background-color: rgb(230, 157, 23);
     color: rgb(255, 255, 255);
 }
 

@@ -135,11 +135,10 @@ onMounted(() => {
 }
 
 .cont-form-soli {
-  background-color: rgb(235, 235, 235);
   padding: 20px;
   width: 400px;
   margin: 50px auto;
-  box-shadow: 10px 10px 20px rgb(52, 8, 61);
+  box-shadow: 10px 10px 10px rgb(52, 8, 61);
   border-radius: 10px;
 }
 

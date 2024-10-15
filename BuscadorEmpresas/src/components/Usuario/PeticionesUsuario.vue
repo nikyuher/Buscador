@@ -1,13 +1,24 @@
 <script setup lang="ts">
 import { useLoginStore } from '@/stores/Login';
 import { useUsuarioStore } from '@/stores/Usuario';
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
+import { usePeticionesStore } from '@/stores/Peticiones'
+// Definición de los headers para la tabla
+const headers = ref([
+    { text: 'Nº', value: 'index', align: 'start' },
+    { text: 'Nombre', value: 'nombreEmpresa' },
+    { text: 'Descripción', value: 'descripcionEmpresa' },
+    { text: 'Dirección', value: 'direccionEmpresa' },
+    { text: 'Imagen', value: 'imagenEmpresaURL' }
+]);
 
+const loginStore = useLoginStore();
+const usuarioStore = useUsuarioStore();
+const peticionesStore = usePeticionesStore()
 
-const loginStore = useLoginStore()
-const usuarioStore = useUsuarioStore()
+const idUsuario = loginStore.usuario?.idUsuario;
 
-const ListaPeticiones = ref<any[]>([])
+const ListaPeticiones = ref<any[]>([]);
 
 const success = ref(false);
 const error = ref(false);
@@ -15,40 +26,52 @@ const successMessage = ref('');
 const errorMessage = ref('');
 
 const DatosPeticionesUsuario = async (id: number) => {
-
     try {
-
-        await usuarioStore.GetPeticionesByUsuario(id)
-
-        ListaPeticiones.value = usuarioStore.peticionesUsuario
-
+        await usuarioStore.GetPeticionesByUsuario(id);
+        ListaPeticiones.value = usuarioStore.peticionesUsuario;
     } catch (error) {
-
+        console.error(error);
     }
-
-}
+};
 
 const confirmarSesion = async () => {
     try {
         if (loginStore.usuario?.idUsuario) {
-            await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
+            await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario);
         }
     } catch (err) {
-        error.value = true
-        errorMessage.value = `Su sesión a caducado. Vuelva a iniciar sesión`
+        error.value = true;
+        errorMessage.value = `Su sesión ha caducado. Vuelva a iniciar sesión.`;
+    }
+};
+
+const rechazarPeticion = async (idPeticion: number) => {
+    try {
+        if (idUsuario) {
+            await peticionesStore.EliminarPeticion(idPeticion)
+
+            success.value = true;
+            error.value = false;
+            await usuarioStore.GetPeticionesByUsuario(idUsuario);
+            ListaPeticiones.value = usuarioStore.peticionesUsuario;
+            successMessage.value = 'Petición rechazada correctamente'
+        }
+    } catch (err) {
+        success.value = false;
+        error.value = true;
+
+        errorMessage.value = `${err}`
     }
 }
 
 onMounted(() => {
-    confirmarSesion()
+    confirmarSesion();
     if (loginStore.usuario?.idUsuario) {
-        DatosPeticionesUsuario(loginStore.usuario?.idUsuario)
+        DatosPeticionesUsuario(loginStore.usuario?.idUsuario);
     } else {
         console.log('No hay un usuario registrado');
-
     }
-})
-
+});
 </script>
 
 <template>
@@ -64,6 +87,7 @@ onMounted(() => {
                         <th>Descripcion</th>
                         <th>Direccion</th>
                         <th>Imagen</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +97,7 @@ onMounted(() => {
                         <td>{{ peticion.descripcionEmpresa }}</td>
                         <td>{{ peticion.direccionEmpresa }}</td>
                         <td><img :src="peticion.imagenEmpresaURL" alt="Imagen Empresa" width="100" /></td>
+                        <td><button class="denegar" @click="rechazarPeticion(peticion.idPeticion)">Eliminar</button></td>
                     </tr>
                 </tbody>
             </table>
