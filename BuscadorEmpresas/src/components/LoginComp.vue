@@ -1,33 +1,3 @@
-<template>
-  <div class="cont-form">
-    <div class="login-container">
-      <div class="header-name">
-        <RouterLink to="/">
-          <h1>BuscaNet</h1>
-        </RouterLink>
-      </div>
-      <h2>Iniciar Sesión</h2>
-      <form @submit.prevent="login">
-        <div class="input-group">
-          <label for="nombre">Correo</label>
-          <input type="nombre" id="nombre" v-model="nombre" placeholder="Ingrese su Usuario" required />
-        </div>
-
-        <div class="input-group">
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña" required />
-        </div>
-
-        <button type="submit" :disabled="loading">
-          {{ loading ? "Iniciando sesión..." : "Iniciar Sesión" }}
-        </button>
-
-        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-      </form>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useLoginStore } from '../stores/Login';
@@ -49,9 +19,9 @@ const login = async () => {
 
     if (success) {
       if (loginStore.usuario?.rol) {
-        router.push('/PanelAdmin'); // Redirige a la página de administración si es admin
+        router.push('/PanelAdmin');
       } else {
-        router.push('/'); // Redirige a la página de usuarios normales
+        router.push('/');
       }
     } else {
       errorMessage.value = 'Credenciales incorrectas. Inténtalo nuevamente.';
@@ -64,25 +34,87 @@ const login = async () => {
 };
 </script>
 
-<style scoped>
+<template>
+  <div class="cont-form">
+    <v-card class="py-8 px-6 mx-auto ma-4" elevation="12" max-width="400" width="100%">
+      <div class="header-name">
+        <RouterLink to="/">
+          <h1>BuscaNet</h1>
+        </RouterLink>
+      </div>
+      <h2>Iniciar Sesión</h2>
+      <form @submit.prevent="login">
+        <div>
+          <div class="input-group">
+            <label for="nombre">Correo</label>
+            <input type="nombre" id="nombre" v-model="nombre" placeholder="Ingrese su Usuario" required />
+          </div>
 
-.header-name a{
-  color: rgb(66, 25, 163);
+          <div class="input-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña" required />
+          </div>
+        </div>
+        <div class="changePassword">
+          <span class="obj2">
+            <RouterLink to="/ChangePassword">¿Olvidaste tú contraseña?</RouterLink>
+          </span>
+        </div>
+        <div>
+          <button type="submit" :disabled="loading">
+            {{ loading ? "Iniciando sesión..." : "Iniciar Sesión" }}
+          </button>
+        </div>
+
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+      </form>
+    </v-card>
+  </div>
+</template>
+
+<style scoped>
+.changePassword {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 5px;
+  justify-content: end;
+  flex-wrap: wrap;
+}
+
+.changePassword a {
+  text-decoration: none;
+  color: #0b57d0;
+}
+
+.obj1,
+.obj2 {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.obj1:hover,
+.obj2:hover {
+  border-radius: 10px;
+  background-color: rgba(87, 187, 201, 0.205);
+
+}
+
+
+.header-name a {
+  color: #990000;
   text-decoration: none;
   text-align: center;
 }
 
 .cont-form {
-  padding: 200px;
+  margin: 200px auto;
+
 }
 
 .login-container {
   max-width: 400px;
   margin: auto;
   padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h2 {

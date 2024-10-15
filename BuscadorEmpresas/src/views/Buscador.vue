@@ -256,6 +256,7 @@ h2 {
 }
 
 input[type="text"] {
+  color: black;
   padding: 10px;
   border: 1px solid #ffffff;
   background-color: #ffffff;

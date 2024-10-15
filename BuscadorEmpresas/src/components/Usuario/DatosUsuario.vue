@@ -107,29 +107,6 @@ const confirmarSesion = async (modo:string) => {
     }
 }
 
-const eliminarCuenta = async () => {
-
-    try {
-
-        if (loginStore.usuario?.idUsuario) {
-            await usuarioStore.EliminarUsuarios(loginStore.usuario?.idUsuario)
-            success.value = true
-            successMessage.value = 'Cuenta eliminada con éxito.'
-            error.value = false
-
-            setTimeout(() => {
-                loginStore.logout()
-            }, 2000);
-        }
-
-
-    } catch (err) {
-        success.value = false
-        error.value = true
-        errorMessage.value = `${err}`
-
-    }
-}
 
 const cancelEdicion = async () => {
 
@@ -169,17 +146,7 @@ const cancelEdicion = async () => {
         <p>Solicitudes pendienetes: <strong style="color: green; font-size: 20px">{{ solicitudNum }}</strong></p>
         <p>Empresas Aceptadas: <strong style="color: green; font-size: 20px">{{ empresasNum }}</strong></p>
     </div>
-    <div class="cont-delete" v-if="!editMode">
-        <h2>Eliminar Cuenta</h2>
-        <button class="cancelar" @click=" confirmarSesion('delete')">Eliminar cuenta</button>
-    </div>
-    <div v-if="deleteMode">
-        <div class="cont-delete-mode">
-            <h2>¿Seguro que quieres eliminar tu cuenta?</h2>
-            <button class="guardar" @click="eliminarCuenta()">Si</button>
-            <button class="cancelar" @click="deleteMode = false; editMode = false">No</button>
-        </div>
-    </div>
+
     <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
         {{ successMessage }}
     </v-snackbar>
