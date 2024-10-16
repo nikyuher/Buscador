@@ -13,6 +13,7 @@ const ciudadStore = useCiudadStore()
 
 const categorias = computed(() => categoriaStore.listaCategorias);
 const ciudades = computed(() => ciudadStore.listaCiudades)
+const peticiones = computed(() => peticionesStore.peticiones);
 
 const idUsuario = LoginStore.usuario?.idUsuario;
 
@@ -21,8 +22,18 @@ const error = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
 
-const peticiones = computed(() => peticionesStore.peticiones);
+const selectedCategoria = ref(0); 
+const selectedCiudad = ref(0); 
 
+const filteredPeticiones = computed(() => {
+    return peticiones.value.filter(peticion => {
+        const matchesCategoria = selectedCategoria.value === 0 || peticion.idCategoriaEmpresa === selectedCategoria.value;
+        
+        const matchesCiudad = selectedCiudad.value === 0 || peticion.idCiudadEmpresa === selectedCiudad.value;
+
+        return matchesCategoria && matchesCiudad;
+    });
+});
 const aceptarPeticion = async (idPeticion: number) => {
     try {
 
@@ -77,9 +88,34 @@ onMounted(async () => {
 </script>
 
 <template>
-    <h1>Administración - Peticiones</h1>
-    <div v-if="peticiones.length">
-        <table>
+    <div class="container">
+        <h1 class="text-center">Administración - Peticiones</h1>
+
+        <!-- Filtros para Categoría y Ciudad -->
+        <div class="filters">
+            <div class="filter">
+                <label for="categoria">Filtrar por Categoría:</label>
+                <select v-model="selectedCategoria" id="categoria">
+                    <option value="0">Todas las Categorías</option>
+                    <option v-for="categoria in categorias" :key="categoria.idCategoria" :value="categoria.idCategoria">
+                        {{ categoria.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter">
+                <label for="ciudad">Filtrar por Ciudad:</label>
+                <select v-model="selectedCiudad" id="ciudad">
+                    <option value="0">Todas las Ciudades</option>
+                    <option v-for="ciudad in ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+                        {{ ciudad.nombre }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tabla de Peticiones -->
+        <table class="styled-table">
             <thead>
                 <tr>
                     <th> Nº</th>
@@ -92,57 +128,99 @@ onMounted(async () => {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(peticion, index) in peticiones" :key="peticion.idPeticion">
+                <tr v-for="(peticion, index) in filteredPeticiones" :key="peticion.idPeticion">
                     <td>{{ index + 1 }}</td>
                     <td>{{ peticion.nombreEmpresa }}</td>
                     <td>{{ peticion.descripcionEmpresa }}</td>
                     <td>{{ peticion.direccionEmpresa }}</td>
-                    <td> {{ obtenerNombreCategoria(peticion.idCategoriaEmpresa) }}</td>
+                    <td>{{ obtenerNombreCategoria(peticion.idCategoriaEmpresa) }}</td>
                     <td>{{ obtenerNombreCiudades(peticion.idCiudadEmpresa) }}</td>
                     <td>
-                        <button class="aceptar" @click="aceptarPeticion(peticion.idPeticion)">Aceptar</button>
-                        <button class="denegar" @click="rechazarPeticion(peticion.idPeticion)">Rechazar</button>
+                        <button class="btn aceptar" @click="aceptarPeticion(peticion.idPeticion)">Aceptar</button>
+                        <button class="btn denegar" @click="rechazarPeticion(peticion.idPeticion)">Rechazar</button>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
-            {{ successMessage }}
-        </v-snackbar>
 
-        <v-snackbar v-model="error" color="red" timeout="2000" location="top" absolute>
-            {{ errorMessage }}
-        </v-snackbar>
-    </div>
-    <div v-else>
-        <p>No hay peticiones pendientes.</p>
+        <!-- Notificaciones -->
+        <div class="notification success" v-if="success">{{ successMessage }}</div>
+        <div class="notification error" v-if="error">{{ errorMessage }}</div>
     </div>
 </template>
 
 <style scoped>
-table {
+.container {
     width: 80%;
-    border-collapse: collapse;
-    text-align: center;
     margin: auto;
+    padding: 20px;
 }
 
-th,
-td {
-    border: 1px solid black;
-    padding: 8px;
+.text-center {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+select {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.styled-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
 }
 
 .aceptar {
-    padding: 10px;
-    background-color: #49bd44;
-    color: white;
+    background-color: #4CAF50;
 }
 
 .denegar {
-    padding: 10px;
-    background-color: #ff3535;
-    color: white;
+    background-color: #f44336;
 }
 
 .aceptar:hover {
@@ -150,6 +228,23 @@ td {
 }
 
 .denegar:hover {
-    background-color: #861010;
+    background-color: #d32f2f;
+}
+
+.notification {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.error {
+    background-color: #f44336;
+    color: white;
 }
 </style>
