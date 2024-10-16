@@ -2,6 +2,7 @@
 import { ref, onMounted, reactive } from 'vue';
 import { useEmpresaStore } from '@/stores/Empresa';
 import { usePeticionesStore } from '@/stores/Peticiones';
+
 interface DatosEmpresa {
   idEmpresa: number;
   nombre: string;

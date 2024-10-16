@@ -97,7 +97,7 @@ onMounted(() => {
                         <td>{{ peticion.descripcionEmpresa }}</td>
                         <td>{{ peticion.direccionEmpresa }}</td>
                         <td><img :src="peticion.imagenEmpresaURL" alt="Imagen Empresa" width="100" /></td>
-                        <td><button class="denegar" @click="rechazarPeticion(peticion.idPeticion)">Eliminar</button></td>
+                        <td><button class="elimar" @click="rechazarPeticion(peticion.idPeticion)">Eliminar</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -141,5 +141,11 @@ td {
 
 img {
     border-radius: 5px;
+}
+.elimar{
+    background-color: red;
+    color:white;
+    padding: 07px;
+    border-radius: 10px;;
 }
 </style>

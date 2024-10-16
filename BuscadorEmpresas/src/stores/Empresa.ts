@@ -3,7 +3,6 @@ import { useLoginStore } from '../stores/Login'
 
 const loginStore = useLoginStore()
 
-
 interface Empresa {
   idEmpresa: number
   nombre: string
@@ -111,7 +110,7 @@ export const useEmpresaStore = defineStore({
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(objectCrear)
         })
@@ -186,14 +185,23 @@ export const useEmpresaStore = defineStore({
     async PutDatosEmpresa(DatosEmpresa: DatosEmpresa) {
       try {
         const token = loginStore.token
+        const idUsuario = loginStore.usuario?.idUsuario
 
+        const newObj = {
+          idEmpresa: DatosEmpresa.idEmpresa,
+          idUsuario: idUsuario,
+          nombre: DatosEmpresa.nombre,
+          descripcion: DatosEmpresa.descripcion,
+          direccion: DatosEmpresa.direccion,
+          imagen: DatosEmpresa.imagen
+        }
         const response = await fetch(`api/Empresa/${DatosEmpresa.idEmpresa}`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(DatosEmpresa)
+          body: JSON.stringify(newObj)
         })
 
         if (!response.ok) {
@@ -210,8 +218,9 @@ export const useEmpresaStore = defineStore({
     async EliminarEmpresa(idEmpresa: number) {
       try {
         const token = loginStore.token
+        const idUsuario = loginStore.usuario?.idUsuario
 
-        const response = await fetch(`api/Empresa/${idEmpresa}`, {
+        const response = await fetch(`api/Empresa/${idEmpresa}/user?idUsuario=${idUsuario}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`
@@ -233,12 +242,15 @@ export const useEmpresaStore = defineStore({
       try {
         const token = loginStore.token
 
-        const response = await fetch(`api/Empresa/categoria?IdempresaCategoria=${idCategoriaEmpresa}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await fetch(
+          `api/Empresa/categoria?IdempresaCategoria=${idCategoriaEmpresa}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        })
+        )
 
         if (!response.ok) {
           const errorData = await response.json()
