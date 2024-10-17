@@ -7,7 +7,6 @@ import { useUsuarioStore } from '@/stores/Usuario';
 interface infoUsuario {
     idUsuario: number
     nombre: string
-    contrasena: string
     correo: string
 }
 
@@ -16,7 +15,8 @@ const usuarioStore = useUsuarioStore()
 
 const nombre = ref('');
 const correo = ref('');
-const contrasena = ref('');
+const passWord = ref('');
+const confirmPassWord = ref('');
 
 const solicitudNum = computed(() => usuarioStore.peticionesUsuario.length > 0 && usuarioStore.usuario != null ? usuarioStore.peticionesUsuario.length : 0)
 const empresasNum = computed(() => usuarioStore.empresasUsuario.length > 0 && usuarioStore.usuario != null ? usuarioStore.empresasUsuario.length : 0)
@@ -27,7 +27,7 @@ const successMessage = ref('');
 const errorMessage = ref('');
 
 const editMode = ref(false)
-const deleteMode = ref(false)
+const changePassWord = ref(false)
 
 onMounted(() => {
     selectDatos()
@@ -41,10 +41,9 @@ const selectDatos = async () => {
             await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
             await usuarioStore.GetEmpresasByUsuario(loginStore.usuario?.idUsuario)
             await usuarioStore.GetPeticionesByUsuario(loginStore.usuario?.idUsuario)
-            
+
             nombre.value = usuarioStore.usuario ? usuarioStore.usuario?.nombre : ''
             correo.value = usuarioStore.usuario ? usuarioStore.usuario?.correo : ''
-            contrasena.value = usuarioStore.usuario ? usuarioStore.usuario?.contrasena : ''
         }
 
     } catch (err) {
@@ -53,6 +52,7 @@ const selectDatos = async () => {
     }
 
 }
+
 const EditarDatos = async () => {
 
     try {
@@ -62,7 +62,6 @@ const EditarDatos = async () => {
             const datos = <infoUsuario>{
                 idUsuario: loginStore.usuario?.idUsuario,
                 nombre: nombre.value,
-                contrasena: contrasena.value,
                 correo: correo.value
             }
 
@@ -70,12 +69,12 @@ const EditarDatos = async () => {
 
             usuarioStore.usuario!.nombre = datos.nombre;
             usuarioStore.usuario!.correo = datos.correo;
-            usuarioStore.usuario!.contrasena = datos.contrasena;
 
             success.value = true
             successMessage.value = 'Datos actualizados con éxito.'
             error.value = false
             editMode.value = false
+            changePassWord.value = false
         }
 
     } catch (err) {
@@ -87,61 +86,105 @@ const EditarDatos = async () => {
 
 }
 
-const confirmarSesion = async (modo:string) => {
+const CambiarContraseña = async () => {
+
     try {
-        if (loginStore.usuario?.idUsuario ) {
+
+        if (loginStore.usuario?.idUsuario) {
+
+
+            await loginStore.CambiarContraseña(passWord.value, confirmPassWord.value)
+
+            success.value = true
+            successMessage.value = 'Contraseña actualizada con éxito.'
+            error.value = false
+            editMode.value = false
+            changePassWord.value = false
+
+            loginStore.logout()
+        }
+
+    } catch (err) {
+        success.value = false
+        error.value = true
+        errorMessage.value = `${err}`
+
+    }
+
+}
+
+const confirmarSesion = async (modo: string) => {
+    try {
+        if (loginStore.usuario?.idUsuario) {
             await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
             if (modo == 'edit') {
                 editMode.value = true
             }
-            if (modo == 'delete') {
-                deleteMode.value = true
+            if (modo == 'password') {
+                changePassWord.value = true
                 editMode.value = true
             }
         }
     } catch (err) {
         error.value = true
         editMode.value = false
-        deleteMode.value = false
+        changePassWord.value = false
         errorMessage.value = `Su sesión a caducado. Vuelva a iniciar sesión`
     }
 }
 
-
 const cancelEdicion = async () => {
 
     editMode.value = false
+    changePassWord.value = false
     nombre.value = usuarioStore.usuario ? usuarioStore.usuario?.nombre : ''
     correo.value = usuarioStore.usuario ? usuarioStore.usuario?.correo : ''
-    contrasena.value = usuarioStore.usuario ? usuarioStore.usuario?.contrasena : ''
+    passWord.value = '';
+    confirmPassWord.value = '';
 }
 
 </script>
 
 <template>
-    <div v-if="!editMode && !deleteMode" class="cont-perfil">
+    <div v-if="!editMode && !changePassWord" class="cont-perfil">
         <h1>Informacion Usuario</h1>
         <p>Nombre: {{ nombre }}</p>
         <p>Correo: {{ correo }}</p>
         <p>Contraseña: ***********</p>
-        <button class="editar" v-if="!editMode" @click="confirmarSesion('edit')"> <strong>Editar</strong></button>
+        <button class="editar" v-if="!editMode" @click="confirmarSesion('edit')" style="margin-right: 10px;">
+            <strong>Editar datos</strong>
+        </button>
+        <button class="editar" v-if="!editMode" @click="confirmarSesion('password')">
+            <strong>Cambiar contraseña</strong>
+        </button>
     </div>
-    <div v-if="editMode && !deleteMode">
+    <div v-if="editMode && !changePassWord">
         <h1>Editar Informacion</h1>
         <div class="cont-editor">
-            <form @submit.prevent="EditarDatos">
-                <label for="">Nombre</label>
+            <form @submit.prevent="EditarDatos()">
+                <label>Nombre</label>
                 <input type="text" v-model="nombre" name="nombre" required>
                 <label for="">Correo</label>
                 <input type="email" v-model="correo" name="correo" required>
-                <label for="">Contraseña</label>
-                <input type="text" v-model="contrasena" name="contrasena" required>
                 <button class="guardar" v-if="editMode" type="submit"> Guardar</button>
                 <button class="cancelar" v-if="editMode" @click="cancelEdicion()"> Cancelar</button>
             </form>
         </div>
     </div>
-    <div v-if="!editMode && !deleteMode" class="cont-perfil">
+    <div v-if="editMode && changePassWord">
+        <h1>Cambiar Contraseña</h1>
+        <div class="cont-editor">
+            <form @submit.prevent="CambiarContraseña()">
+                <label>Nueva contrseña</label>
+                <input type="password" v-model="passWord" required>
+                <label>Confirmar contraseña</label>
+                <input type="password" v-model="confirmPassWord" required>
+                <button class="guardar" v-if="editMode" type="submit"> Guardar</button>
+                <button class="cancelar" v-if="editMode" @click="cancelEdicion()"> Cancelar</button>
+            </form>
+        </div>
+    </div>
+    <div v-if="!editMode && !changePassWord" class="cont-perfil">
         <h2>Informacion Empresas</h2>
         <p>Solicitudes pendienetes: <strong style="color: green; font-size: 20px">{{ solicitudNum }}</strong></p>
         <p>Empresas Aceptadas: <strong style="color: green; font-size: 20px">{{ empresasNum }}</strong></p>
@@ -224,7 +267,7 @@ const cancelEdicion = async () => {
 
 
 .editar:hover {
-    background-color: rgb(185, 133, 36);
+    background-color: rgb(230, 157, 23);
     color: rgb(255, 255, 255);
 }
 

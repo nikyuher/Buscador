@@ -6,7 +6,6 @@ const loginStore = useLoginStore()
 interface Usuario {
   idUsuario: number
   nombre: string
-  contrasena: string
   correo: string
   rol: boolean
   peticionesDTO: PeticionesDTO[]
@@ -27,7 +26,6 @@ interface PeticionesDTO {
 interface infoUsuario {
   idUsuario: number
   nombre: string
-  contrasena: string
   correo: string
 }
 
@@ -38,7 +36,7 @@ export const useUsuarioStore = defineStore({
     ListUsuarios: [] as Usuario[],
     usuario: null as Usuario | null,
     empresasUsuario: [] as any[],
-    peticionesUsuario: [] as any[],
+    peticionesUsuario: [] as any[]
   }),
 
   actions: {
@@ -163,8 +161,12 @@ export const useUsuarioStore = defineStore({
           const errorData = await response.json()
           throw new Error(errorData.message || 'error al modificar datos al usuario.')
         }
-        const data = await response.json();
-        this.usuario = data;
+
+        const data = await response.json()
+        this.usuario = data
+
+        loginStore.usuario = { ...loginStore.usuario, ...data };
+
         console.log('Usuario modificado correctamente')
       } catch (error) {
         console.log(error)
@@ -198,12 +200,15 @@ export const useUsuarioStore = defineStore({
         const token = loginStore.token
         const idUsuario = loginStore.usuario?.idUsuario
 
-        const response = await fetch(`api/Usuario/${idUsuario}/empresa?idEmpresaUsuario=${IdEmpresaUsuario}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await fetch(
+          `api/Usuario/${idUsuario}/empresa?idEmpresaUsuario=${IdEmpresaUsuario}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        })
+        )
 
         if (!response.ok) {
           const errorData = await response.json()

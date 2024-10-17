@@ -49,14 +49,13 @@ export const useLoginStore = defineStore({
         this.token = data.token
         localStorage.setItem('jwtToken', data.token)
 
-        // Decodificar el token para obtener los detalles del usuario
         const decodedToken = jwtDecode<JwtPayload>(data.token)
 
         this.usuario = {
           idUsuario: parseInt(decodedToken.nameid),
           nombre: decodedToken.unique_name,
           correo: decodedToken.email,
-          rol: decodedToken.role === 'Admin' // Ejemplo de manejo de rol
+          rol: decodedToken.role === 'Admin'
         }
 
         localStorage.setItem('usuario', JSON.stringify(this.usuario))
@@ -93,14 +92,13 @@ export const useLoginStore = defineStore({
         this.token = data.token
         localStorage.setItem('jwtToken', data.token)
 
-        // Decodificar el token para obtener los detalles del usuario
         const decodedToken = jwtDecode<JwtPayload>(data.token)
 
         this.usuario = {
           idUsuario: parseInt(decodedToken.nameid),
           nombre: decodedToken.unique_name,
           correo: decodedToken.email,
-          rol: decodedToken.role === 'Admin' // Ejemplo de manejo de rol
+          rol: decodedToken.role === 'Admin'
         }
 
         localStorage.setItem('usuario', JSON.stringify(this.usuario))
@@ -205,6 +203,35 @@ export const useLoginStore = defineStore({
         localStorage.removeItem('codigo')
         this.email = null
         this.codigo = null
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async CambiarContraseña(password: string, passwordConfirm: string) {
+      try {
+        const obj = {
+          nuevaContrasena: password,
+          confirmarContrasena: passwordConfirm
+        }
+
+        const idUsuario = this.usuario?.idUsuario
+
+        const response = await fetch(`api/Usuario/cambiar-contrasena?idUsuario=${idUsuario}`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj)
+        })
+        if (!response.ok) {
+          const errorData = await response.json()
+          const errorMessage = errorData.errors
+            ? Object.values(errorData.errors).flat().join(', ')
+            : errorData.message || 'Error al cambiar la contraseña.'
+          throw new Error(errorMessage)
+        }
       } catch (error) {
         console.log(error)
         throw error
