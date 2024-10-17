@@ -22,18 +22,20 @@ const error = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
 
-const selectedCategoria = ref(0); 
-const selectedCiudad = ref(0); 
+const selectedCategoria = ref(0);
+const selectedCiudad = ref(0);
+const searchQuery = ref('');
 
 const filteredPeticiones = computed(() => {
     return peticiones.value.filter(peticion => {
-        const matchesCategoria = selectedCategoria.value === 0 || peticion.idCategoriaEmpresa === selectedCategoria.value;
-        
-        const matchesCiudad = selectedCiudad.value === 0 || peticion.idCiudadEmpresa === selectedCiudad.value;
+        const matchesCategoria = selectedCategoria.value == 0 || peticion.idCategoriaEmpresa == selectedCategoria.value;
+        const matchesCiudad = selectedCiudad.value == 0 || peticion.idCiudadEmpresa == selectedCiudad.value;
+        const matchesNombre = peticion.nombreEmpresa.toLowerCase().includes(searchQuery.value.toLowerCase()); 
 
-        return matchesCategoria && matchesCiudad;
+        return matchesCategoria && matchesCiudad && matchesNombre;
     });
 });
+
 const aceptarPeticion = async (idPeticion: number) => {
     try {
 
@@ -90,8 +92,6 @@ onMounted(async () => {
 <template>
     <div class="container">
         <h1 class="text-center">Administración - Peticiones</h1>
-
-        <!-- Filtros para Categoría y Ciudad -->
         <div class="filters">
             <div class="filter">
                 <label for="categoria">Filtrar por Categoría:</label>
@@ -102,7 +102,6 @@ onMounted(async () => {
                     </option>
                 </select>
             </div>
-
             <div class="filter">
                 <label for="ciudad">Filtrar por Ciudad:</label>
                 <select v-model="selectedCiudad" id="ciudad">
@@ -112,9 +111,11 @@ onMounted(async () => {
                     </option>
                 </select>
             </div>
+            <div class="filter">
+                <label for="search">Buscar por nombre:</label>
+                <input v-model="searchQuery" id="search" type="text" placeholder="Buscar empresa...">
+            </div>
         </div>
-
-        <!-- Tabla de Peticiones -->
         <table class="styled-table">
             <thead>
                 <tr>
@@ -142,8 +143,6 @@ onMounted(async () => {
                 </tr>
             </tbody>
         </table>
-
-        <!-- Notificaciones -->
         <div class="notification success" v-if="success">{{ successMessage }}</div>
         <div class="notification error" v-if="error">{{ errorMessage }}</div>
     </div>
@@ -151,7 +150,7 @@ onMounted(async () => {
 
 <style scoped>
 .container {
-    width: 80%;
+    width: 90%;
     margin: auto;
     padding: 20px;
 }
@@ -171,6 +170,17 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     width: 45%;
+}
+
+input {
+    border: 1px solid gray;
+    border-radius: 5px;
+    height:100% ;
+    padding: 10px
+}
+
+#categoria, #ciudad, #search{
+    width: 70%;
 }
 
 label {

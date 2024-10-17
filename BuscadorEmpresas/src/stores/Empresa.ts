@@ -9,10 +9,19 @@ interface Empresa {
   descripcion: string
   direccion: string
   imagen: string
-  empresaCategorias: null
-  empresasCiudades: null
+  empresaCategorias: EmpresaCategoria[]
+  empresasCiudades: EmpresasCiudades[]
 }
 
+interface EmpresaCategoria {
+  idEmpresaCategoria: number
+  idCategoria: number
+}
+
+interface EmpresasCiudades {
+  idEmpresaCiudad: number
+  idCiudad: number
+}
 interface DatosEmpresa {
   idEmpresa: number
   nombre: string

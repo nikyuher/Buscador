@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, computed } from 'vue';
+
 import { useEmpresaStore } from '@/stores/Empresa';
 import { usePeticionesStore } from '@/stores/Peticiones';
+import { useCategoriaStore } from '@/stores/Categoria';
+import { useCiudadStore } from '@/stores/Ciudad';
 
 interface DatosEmpresa {
   idEmpresa: number;
@@ -13,10 +16,16 @@ interface DatosEmpresa {
 
 const peticionesStore = usePeticionesStore();
 const empresaStore = useEmpresaStore();
+const categoriaStore = useCategoriaStore()
+const ciudadStore = useCiudadStore()
+
 const nuevaEmpresa = ref<DatosEmpresa>();
 const editMode = ref(false);
+
 const idCategoriaEmpresa = ref(0)
 const idCiudadEmpresa = ref(0)
+const categorias = computed(() => categoriaStore.listaCategorias);
+const ciudades = computed(() => ciudadStore.listaCiudades)
 
 const dialogosVisibles = reactive<{ [key: string]: boolean }>({});
 
@@ -47,6 +56,17 @@ const limpiarFormulario = () => {
   editMode.value = false;
 };
 
+const seleccionarEmpresaParaEditar = (empresa: any) => {
+  idEmpresa.value = empresa.idEmpresa;
+  nombre.value = empresa.nombre
+  descripcion.value = empresa.descripcion
+  direccion.value = empresa.direccion
+  imagen.value = empresa.imagen
+  editMode.value = true;
+
+  subirTop();
+};
+
 const confirmarEnvio = async () => {
   try {
     if (!nombre.value || !descripcion.value || !direccion.value || !imagen.value) {
@@ -70,9 +90,6 @@ const confirmarEnvio = async () => {
       successMessage.value = 'Empresa editada con éxito';
     } else {
       await empresaStore.CreateEmpresa(nuevaEmpresa.value);
-      // if () {
-
-      // }
       success.value = true;
       error.value = false;
       successMessage.value = 'Empresa creada con éxito';
@@ -89,17 +106,6 @@ const confirmarEnvio = async () => {
   }
 };
 
-const seleccionarEmpresaParaEditar = (empresa: any) => {
-  idEmpresa.value = empresa.idEmpresa;
-  nombre.value = empresa.nombre
-  descripcion.value = empresa.descripcion
-  direccion.value = empresa.direccion
-  imagen.value = empresa.imagen
-  editMode.value = true;
-
-  subirTop();
-
-};
 
 const eliminarEmpresa = async (idEmpresa: number) => {
   try {
@@ -130,6 +136,17 @@ const abrirDialogo = (id: string | number) => {
 const cerrarDialogo = (id: string | number) => {
   dialogosVisibles[id] = false;
 };
+
+const obtenerNombreCategoria = (idCategoria: number) => {
+  const categoria = categorias.value.find(c => c.idCategoria === idCategoria);
+  return categoria?.nombre || 'Sin categoría';
+}
+
+const obtenerNombreCiudades = (idCiudad: number) => {
+  const ciudad = ciudades.value.find(c => c.idCiudad === idCiudad);
+  return ciudad?.nombre || 'Sin Ciudad';
+}
+
 
 </script>
 
@@ -188,12 +205,14 @@ const cerrarDialogo = (id: string | number) => {
         </div>
       </v-dialog>
     </div>
-    <table>
+    <table class="styled-table">
       <thead>
         <tr>
           <th>Nombre</th>
           <th>Descripción</th>
           <th>Dirección</th>
+          <th>Categoria</th>
+          <th>Ciudad</th>
           <th>Imagen</th>
           <th>Acciones</th>
         </tr>
@@ -203,6 +222,16 @@ const cerrarDialogo = (id: string | number) => {
           <td>{{ empresa.nombre }}</td>
           <td>{{ empresa.descripcion }}</td>
           <td>{{ empresa.direccion }}</td>
+          <td>
+            <div v-for="(categoria, index) in empresa.empresaCategorias.map(m => m.idCategoria)" :key="index">
+              <p class="categoria-p">{{ obtenerNombreCategoria(categoria) }}</p>
+            </div>
+          </td>
+          <td>
+            <div v-for="(ciudad, index) in empresa.empresasCiudades.map(m => m.idCiudad)" :key="index">
+              <p class="ciudades-p">{{ obtenerNombreCiudades(ciudad) }}</p>
+            </div>
+          </td>
           <td><img :src="empresa.imagen" alt="Imagen de la Empresa" width="100" /></td>
           <td>
             <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-editar`]" max-width="600">
@@ -271,6 +300,42 @@ const cerrarDialogo = (id: string | number) => {
 </template>
 
 <style scoped>
+.categoria-p{
+  background-color: rgba(255, 175, 55, 0.699);
+  border-radius: 5px;
+  padding: 2px 5px;
+}
+
+.ciudades-p{
+  background-color: rgba(138, 232, 255, 0.699);
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 2px 5px;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.styled-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
 select {
   margin-bottom: 10px;
   padding: 5px;
