@@ -70,42 +70,43 @@ onMounted(() => {
   confirmarSesion()
 })
 </script>
-
 <template>
-  <div>
+  <div class="solicitud-wrapper">
     <div class="titulo-soli">
-      <h1>Crear Nueva Solicitud de Empresa</h1>
+      <h1>Envia tu Solicitud de Empresa</h1>
     </div>
     <div class="cont-form-soli">
       <form @submit.prevent="enviarPeticion">
-        <div>
+        <div class="form-group">
           <label for="nombreEmpresa">Nombre de la Empresa:</label>
           <input v-model="nombreEmpresa" id="nombreEmpresa" type="text" required />
         </div>
 
-        <div>
+        <div class="form-group">
           <label for="descripcionEmpresa">Descripción de la Empresa:</label>
           <textarea v-model="descripcionEmpresa" id="descripcionEmpresa" required></textarea>
         </div>
-        <div>
+
+        <div class="form-group">
           <label for="direccionEmpresa">Dirección de la Empresa:</label>
           <input v-model="direccionEmpresa" id="direccionEmpresa" type="text" required />
         </div>
 
-        <div>
+        <div class="form-group">
           <label for="imagenEmpresaURL">URL de la Imagen de la Empresa:</label>
           <input v-model="imagenEmpresaURL" id="imagenEmpresaURL" type="text" required />
         </div>
-        <div>
+
+        <div class="form-group">
           <label for="idCategoriaEmpresa">Categoría de la Empresa:</label>
           <select v-model="idCategoriaEmpresa" id="idCategoriaEmpresa" required>
-            <option v-for="categoria in peticionesStore.categorias" :key="categoria.idCategoria"
-              :value="categoria.idCategoria">
+            <option v-for="categoria in peticionesStore.categorias" :key="categoria.idCategoria" :value="categoria.idCategoria">
               {{ categoria.nombre }}
             </option>
           </select>
         </div>
-        <div>
+
+        <div class="form-group">
           <label for="idCiudadEmpresa">Ciudad de la Empresa:</label>
           <select v-model="idCiudadEmpresa" id="idCiudadEmpresa" required>
             <option v-for="ciudad in peticionesStore.ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
@@ -114,7 +115,8 @@ onMounted(() => {
           </select>
         </div>
 
-        <button type="submit">Enviar Solicitud</button>
+        <button type="submit" class="submit-btn">Enviar Solicitud</button>
+
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
           {{ Message }}
         </v-snackbar>
@@ -128,65 +130,74 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.solicitud-wrapper {
+  background-image: url('../asserts/DALL.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .titulo-soli {
-  margin-left: 30px;
-  color: rgb(255, 255, 255);
-  font-size: 20px;
+  color: #4153b4;
+  text-align: center;
+  font-size: 25px;
+  padding: 20px;
+  margin: 30px;
+  box-shadow: 5px 5px 15px 5px black;
+  font-family: 'Montserrat', sans-serif;
+  backdrop-filter: blur(20px);
+  border-radius: 15px; 
 }
 
 .cont-form-soli {
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 400px;
-  margin: 50px auto;
-  box-shadow: 10px 10px 10px rgb(52, 8, 61);
-  border-radius: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
 }
 
 label {
-  margin-bottom: 5px;
-  font-size: 17px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
 }
 
-input,
-textarea {
-  margin-bottom: 10px;
+input, textarea, select {
   width: 100%;
-  padding: 5px;
-  border: 1px solid black;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 textarea {
-  resize: none;
-  overflow-y: auto;
-  max-height: 150px;
+  resize: vertical;
+  min-height: 80px;
 }
 
-select {
-  margin-bottom: 10px;
-  padding: 5px;
-  border-radius: 10px;
-  border: 1px solid black
-}
-
-button {
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
+button.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: #007BFF;
+  color: #fff;
+  font-size: 16px;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #45a049;
-}
-
-.success-message {
-  color: green;
-}
-
-.error-message {
-  color: red;
+button.submit-btn:hover {
+  background-color: #0056b3;
 }
 </style>

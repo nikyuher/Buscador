@@ -73,7 +73,6 @@ const eliminarEmpresa = async (idEmpresa: number) => {
     }
 }
 
-
 onMounted(() => {
     confirmarSesion()
 
@@ -81,7 +80,6 @@ onMounted(() => {
         DatosEmpresasUsuario(loginStore.usuario?.idUsuario)
     } else {
         console.log('No hay un usuario registrado');
-
     }
 })
 
@@ -110,7 +108,6 @@ const seleccionarEmpresaParaEditar = (empresa: any) => {
     editMode.value = true;
 
     subirTop();
-
 };
 
 const subirTop = () => {
@@ -127,7 +124,6 @@ const abrirDialogo = (id: string | number) => {
 const cerrarDialogo = (id: string | number) => {
     dialogosVisibles[id] = false;
 };
-
 
 const confirmarEnvio = async () => {
     try {
@@ -163,7 +159,6 @@ const confirmarEnvio = async () => {
 
             limpiarFormulario();
             DatosEmpresasUsuario(loginStore.usuario?.idUsuario)
-
         }
     } catch (err) {
 
@@ -173,22 +168,20 @@ const confirmarEnvio = async () => {
         console.error(err);
     }
 };
-
 </script>
 
 <template>
-
     <div>
         <div v-if="listaEmpresas.length > 0">
             <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
-            <table>
+            <table class="styled-table">
                 <thead>
                     <tr>
                         <th> Nº</th>
                         <th>Nombre</th>
                         <th>Direccion</th>
                         <th>Imagen</th>
-                        <th></th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -199,8 +192,9 @@ const confirmarEnvio = async () => {
                         <td><img :src="empresa.empresa.imagen" alt="Imagen Empresa" width="100" /></td>
                         <td>
                             <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-editar`]" max-width="600">
-                                <template  v-slot:activator="{ props: activatorProps }">
-                                    <v-btn class="edit" style="margin-right: 20px;" prepend-icon="mdi-pen" v-bind="activatorProps"
+                                <template v-slot:activator="{ props: activatorProps }">
+                                    <v-btn class="edit" style="margin-right: 20px;" prepend-icon="mdi-pen"
+                                        v-bind="activatorProps"
                                         @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa.empresa)"></v-btn>
                                 </template>
                                 <div style="background-color: white; padding: 30px; border-radius: 10px">
@@ -233,8 +227,7 @@ const confirmarEnvio = async () => {
                             </v-dialog>
                             <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-eliminar`]" max-width="600">
                                 <template v-slot:activator="{ props: activatorProps }">
-                                    <v-btn  class="denegar" prepend-icon="mdi-delete"
-                                        v-bind="activatorProps"
+                                    <v-btn class="denegar" prepend-icon="mdi-delete" v-bind="activatorProps"
                                         @click="abrirDialogo(`${empresa.idEmpresa}-eliminar`);"></v-btn>
                                 </template>
                                 <div style="background-color: white; padding: 30px; border-radius: 10px">
@@ -248,9 +241,7 @@ const confirmarEnvio = async () => {
 
                                 </div>
                             </v-dialog>
-
                         </td>
-
                     </tr>
                 </tbody>
             </table>
@@ -274,20 +265,28 @@ label {
     margin-bottom: 5px;
 }
 
-table {
-    width: 80%;
+.styled-table {
+    width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
     text-align: center;
-    margin: auto;
 }
 
-
-th,
-td {
-    border: 1px solid black;
-    padding: 8px;
-    
+.styled-table th,
+.styled-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
 }
+
+.styled-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
 
 img {
     border-radius: 5px;
@@ -408,6 +407,4 @@ h1 {
 .denegar:hover {
     background-color: #861010;
 }
-
-
 </style>

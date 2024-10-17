@@ -30,7 +30,7 @@ const filteredPeticiones = computed(() => {
     return peticiones.value.filter(peticion => {
         const matchesCategoria = selectedCategoria.value == 0 || peticion.idCategoriaEmpresa == selectedCategoria.value;
         const matchesCiudad = selectedCiudad.value == 0 || peticion.idCiudadEmpresa == selectedCiudad.value;
-        const matchesNombre = peticion.nombreEmpresa.toLowerCase().includes(searchQuery.value.toLowerCase()); 
+        const matchesNombre = peticion.nombreEmpresa.toLowerCase().includes(searchQuery.value.toLowerCase());
 
         return matchesCategoria && matchesCiudad && matchesNombre;
     });
@@ -94,6 +94,10 @@ onMounted(async () => {
         <h1 class="text-center">Administración - Peticiones</h1>
         <div class="filters">
             <div class="filter">
+                <label for="search">Buscar por nombre:</label>
+                <input v-model="searchQuery" id="search" type="text" placeholder="Buscar empresa...">
+            </div>
+            <div class="filter">
                 <label for="categoria">Filtrar por Categoría:</label>
                 <select v-model="selectedCategoria" id="categoria">
                     <option value="0">Todas las Categorías</option>
@@ -110,10 +114,6 @@ onMounted(async () => {
                         {{ ciudad.nombre }}
                     </option>
                 </select>
-            </div>
-            <div class="filter">
-                <label for="search">Buscar por nombre:</label>
-                <input v-model="searchQuery" id="search" type="text" placeholder="Buscar empresa...">
             </div>
         </div>
         <table class="styled-table">
@@ -134,8 +134,12 @@ onMounted(async () => {
                     <td>{{ peticion.nombreEmpresa }}</td>
                     <td>{{ peticion.descripcionEmpresa }}</td>
                     <td>{{ peticion.direccionEmpresa }}</td>
-                    <td>{{ obtenerNombreCategoria(peticion.idCategoriaEmpresa) }}</td>
-                    <td>{{ obtenerNombreCiudades(peticion.idCiudadEmpresa) }}</td>
+                    <td>
+                        <p class="categoria-p">{{ obtenerNombreCategoria(peticion.idCategoriaEmpresa) }}</p>
+                    </td>
+                    <td>
+                        <p class="ciudades-p">{{ obtenerNombreCiudades(peticion.idCiudadEmpresa) }}</p>
+                    </td>
                     <td>
                         <button class="btn aceptar" @click="aceptarPeticion(peticion.idPeticion)">Aceptar</button>
                         <button class="btn denegar" @click="rechazarPeticion(peticion.idPeticion)">Rechazar</button>
@@ -149,6 +153,19 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.categoria-p {
+    background-color: rgba(255, 175, 55, 0.699);
+    border-radius: 5px;
+    padding: 2px 5px;
+}
+
+.ciudades-p {
+    background-color: rgba(138, 232, 255, 0.699);
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 2px 5px;
+}
+
 .container {
     width: 90%;
     margin: auto;
@@ -175,11 +192,13 @@ onMounted(async () => {
 input {
     border: 1px solid gray;
     border-radius: 5px;
-    height:100% ;
+    height: 100%;
     padding: 10px
 }
 
-#categoria, #ciudad, #search{
+#categoria,
+#ciudad,
+#search {
     width: 70%;
 }
 

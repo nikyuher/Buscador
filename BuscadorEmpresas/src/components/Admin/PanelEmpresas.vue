@@ -19,14 +19,15 @@ const empresaStore = useEmpresaStore();
 const categoriaStore = useCategoriaStore()
 const ciudadStore = useCiudadStore()
 
-const nuevaEmpresa = ref<DatosEmpresa>();
-const editMode = ref(false);
-
-const idCategoriaEmpresa = ref(0)
-const idCiudadEmpresa = ref(0)
+const listaEmpresas = computed(() => empresaStore.listaEmpresas);
 const categorias = computed(() => categoriaStore.listaCategorias);
 const ciudades = computed(() => ciudadStore.listaCiudades)
 
+const idCategoriaEmpresa = ref(0)
+const idCiudadEmpresa = ref(0)
+
+const nuevaEmpresa = ref<DatosEmpresa>();
+const editMode = ref(false);
 const dialogosVisibles = reactive<{ [key: string]: boolean }>({});
 
 const success = ref(false);
@@ -39,6 +40,20 @@ const nombre = ref('')
 const descripcion = ref('')
 const direccion = ref('')
 const imagen = ref('')
+
+const filtroNombre = ref('');
+const filtroCategoria = ref(0);
+const filtroCiudad = ref(0);
+
+const empresasFiltradas = computed(() => {
+  return listaEmpresas.value.filter((empresa) => {
+    const coincideNombre = empresa.nombre.toLowerCase().includes(filtroNombre.value.toLowerCase());
+    const coincideCategoria = filtroCategoria.value == 0 || empresa.empresaCategorias.some(c => c.idCategoria === filtroCategoria.value);
+    const coincideCiudad = filtroCiudad.value == 0 || empresa.empresasCiudades.some(c => c.idCiudad === filtroCiudad.value);
+
+    return coincideNombre && coincideCategoria && coincideCiudad;
+  });
+});
 
 onMounted(() => {
   empresaStore.GetAllEmpresas();
@@ -106,7 +121,6 @@ const confirmarEnvio = async () => {
   }
 };
 
-
 const eliminarEmpresa = async (idEmpresa: number) => {
   try {
     await empresaStore.EliminarEmpresa(idEmpresa);
@@ -146,10 +160,7 @@ const obtenerNombreCiudades = (idCiudad: number) => {
   const ciudad = ciudades.value.find(c => c.idCiudad === idCiudad);
   return ciudad?.nombre || 'Sin Ciudad';
 }
-
-
 </script>
-
 
 <template>
   <div class="cont-panel-Empresas">
@@ -205,6 +216,33 @@ const obtenerNombreCiudades = (idCiudad: number) => {
         </div>
       </v-dialog>
     </div>
+
+    <div class="filtros">
+  <div class="filtro">
+    <label for="filtroNombre">Nombre de Empresa</label>
+    <input v-model="filtroNombre" id="filtroNombre" type="text" placeholder="Buscar por nombre" />
+  </div>
+  <div class="filtro">
+    <label for="filtroCategoria">Categoría</label>
+    <select v-model="filtroCategoria" id="filtroCategoria">
+      <option value="0">Todas las categorías</option>
+      <option v-for="categoria in categorias" :key="categoria.idCategoria" :value="categoria.idCategoria">
+        {{ categoria.nombre }}
+      </option>
+    </select>
+  </div>
+  <div class="filtro">
+    <label for="filtroCiudad">Ciudad</label>
+    <select v-model="filtroCiudad" id="filtroCiudad">
+      <option value="0">Todas las ciudades</option>
+      <option v-for="ciudad in ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+        {{ ciudad.nombre }}
+      </option>
+    </select>
+  </div>
+</div>
+
+
     <table class="styled-table">
       <thead>
         <tr>
@@ -218,9 +256,9 @@ const obtenerNombreCiudades = (idCiudad: number) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for=" empresa in empresaStore.listaEmpresas" :key="empresa.idEmpresa">
+        <tr v-for=" empresa in empresasFiltradas" :key="empresa.idEmpresa">
           <td>{{ empresa.nombre }}</td>
-          <td>{{ empresa.descripcion }}</td>
+          <td style="display: flex; max-width: 400px; border: none;text-align: justify">{{ empresa.descripcion }}</td>
           <td>{{ empresa.direccion }}</td>
           <td>
             <div v-for="(categoria, index) in empresa.empresaCategorias.map(m => m.idCategoria)" :key="index">
@@ -278,7 +316,6 @@ const obtenerNombreCiudades = (idCiudad: number) => {
                 </v-btn>
                 <v-btn class="denegar" style="margin-left: 20px;"
                   @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No</v-btn>
-
               </div>
             </v-dialog>
 
@@ -300,13 +337,56 @@ const obtenerNombreCiudades = (idCiudad: number) => {
 </template>
 
 <style scoped>
-.categoria-p{
+
+.filtros {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.filtro {
+  display: flex;
+  flex-direction: column;
+  width: 32%;
+}
+
+input, select {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  width: 100%;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.filtro input {
+  margin-top: 0;
+  padding: 10px;
+}
+
+.filtro select {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+.categoria-p {
   background-color: rgba(255, 175, 55, 0.699);
   border-radius: 5px;
   padding: 2px 5px;
 }
 
-.ciudades-p{
+.ciudades-p {
   background-color: rgba(138, 232, 255, 0.699);
   border-radius: 5px;
   margin-bottom: 5px;
@@ -314,25 +394,25 @@ const obtenerNombreCiudades = (idCiudad: number) => {
 }
 
 .styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    text-align: center;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .styled-table th,
 .styled-table td {
-    padding: 12px;
-    border: 1px solid #ddd;
+  padding: 12px;
+  border: 1px solid #ddd;
 }
 
 .styled-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
+  background-color: #f4f4f4;
+  font-weight: bold;
 }
 
 .styled-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
 
@@ -362,9 +442,7 @@ select {
   background-color: #45a049;
 }
 
-
 .cont-form {
-  border-bottom: 1px solid rgb(134, 134, 134);
   display: flex;
   padding: 20px;
   align-items: center;
@@ -388,7 +466,6 @@ textarea {
   margin: 10px;
   width: 100%;
   border: 1px solid black;
-
 }
 
 h1 {
@@ -424,7 +501,6 @@ h1 {
 .denegar:hover {
   background-color: #861010;
 }
-
 
 table {
   width: 80%;

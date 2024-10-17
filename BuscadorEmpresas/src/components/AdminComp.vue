@@ -32,7 +32,7 @@ const cambiarComponente = (componente: string) => {
 
 <style scoped>
 .barra-opciones {
-  background-color: rgb(131, 81, 177);
+  background-color: rgb(177, 81, 81);
   width: 300px;
   color: rgb(219, 219, 219);
   padding: 30px;

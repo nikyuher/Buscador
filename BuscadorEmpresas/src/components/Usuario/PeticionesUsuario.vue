@@ -75,11 +75,10 @@ onMounted(() => {
 </script>
 
 <template>
-
     <div>
         <div v-if="ListaPeticiones.length > 0">
             <h2 style="margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
-            <table>
+            <table class="styled-table">
                 <thead>
                     <tr>
                         <th> Nº</th>
@@ -87,7 +86,7 @@ onMounted(() => {
                         <th>Descripcion</th>
                         <th>Direccion</th>
                         <th>Imagen</th>
-                        <th></th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -126,18 +125,29 @@ onMounted(() => {
     box-shadow: 5px 5px 10px black
 }
 
-table {
-    width: 80%;
+
+.styled-table {
+    width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
     text-align: center;
-    margin: auto;
 }
 
-th,
-td {
-    border: 1px solid black;
-    padding: 8px;
+.styled-table th,
+.styled-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
 }
+
+.styled-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
 
 img {
     border-radius: 5px;
@@ -146,6 +156,6 @@ img {
     background-color: red;
     color:white;
     padding: 07px;
-    border-radius: 10px;;
+    border-radius: 5px;
 }
 </style>
