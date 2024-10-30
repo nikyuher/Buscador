@@ -11,6 +11,9 @@ const usuarioStore = useUsuarioStore()
 const nombreEmpresa = ref('');
 const descripcionEmpresa = ref('');
 const direccionEmpresa = ref('');
+const telefonoEmpresa = ref(null)
+const correoEmpresa = ref('')
+const sitioWebEmpresa = ref('')
 const imagenEmpresaURL = ref('');
 const idCategoriaEmpresa = ref(null);
 const idCiudadEmpresa = ref(null);
@@ -30,6 +33,9 @@ const enviarPeticion = async () => {
       nombreEmpresa: nombreEmpresa.value,
       descripcionEmpresa: descripcionEmpresa.value,
       direccionEmpresa: direccionEmpresa.value,
+      telefonoEmpresa: telefonoEmpresa.value,
+      correoEmpresa: correoEmpresa.value,
+      sitioWebEmpresa: sitioWebEmpresa.value,
       imagenEmpresaURL: imagenEmpresaURL.value,
       idCategoriaEmpresa: idCategoriaEmpresa.value,
       idCiudadEmpresa: idCiudadEmpresa.value,
@@ -40,12 +46,15 @@ const enviarPeticion = async () => {
     error.value = false;
     Message.value = 'Peticion enviada correctamente';
 
-    nombreEmpresa.value=''
-    descripcionEmpresa.value=''
-    direccionEmpresa.value=''
-    imagenEmpresaURL.value=''
-    idCategoriaEmpresa.value=null
-    idCiudadEmpresa.value=null
+    nombreEmpresa.value = ''
+    descripcionEmpresa.value = ''
+    direccionEmpresa.value = ''
+    telefonoEmpresa.value = null
+    correoEmpresa.value = ""
+    sitioWebEmpresa.value = ""
+    imagenEmpresaURL.value = ''
+    idCategoriaEmpresa.value = null
+    idCiudadEmpresa.value = null
 
   } catch (err) {
     success.value = false;
@@ -78,45 +87,58 @@ onMounted(() => {
     <div class="cont-form-soli">
       <form @submit.prevent="enviarPeticion">
         <div class="form-group">
-          <label for="nombreEmpresa">Nombre de la Empresa:</label>
-          <input v-model="nombreEmpresa" id="nombreEmpresa" type="text" required />
+          <label for="nombreEmpresa">Nombre:</label>
+          <input v-model="nombreEmpresa" id="nombreEmpresa" placeholder="Empresa" type="text" required />
         </div>
-
         <div class="form-group">
-          <label for="descripcionEmpresa">Descripción de la Empresa:</label>
-          <textarea v-model="descripcionEmpresa" id="descripcionEmpresa" required></textarea>
+          <label for="descripcionEmpresa">Descripción:</label>
+          <textarea v-model="descripcionEmpresa" id="descripcionEmpresa" placeholder="Descripcion de la empresa"
+            required></textarea>
         </div>
-
         <div class="form-group">
-          <label for="direccionEmpresa">Dirección de la Empresa:</label>
-          <input v-model="direccionEmpresa" id="direccionEmpresa" type="text" required />
+          <label for="direccionEmpresa">Dirección:</label>
+          <input v-model="direccionEmpresa" id="direccionEmpresa" placeholder="c/ ejemplo" type="text" required />
         </div>
-
         <div class="form-group">
-          <label for="imagenEmpresaURL">URL de la Imagen de la Empresa:</label>
-          <input v-model="imagenEmpresaURL" id="imagenEmpresaURL" type="text" required />
+          <label for="telefonoEmpresa">Telefono de la Empresa:</label>
+          <input v-model="telefonoEmpresa" id="telefonoEmpresa" placeholder="123456789" type="number" required />
         </div>
-
         <div class="form-group">
-          <label for="idCategoriaEmpresa">Categoría de la Empresa:</label>
+          <label for="correoEmpresa">Correo de la Empresa:</label>
+          <input v-model="correoEmpresa" id="correoEmpresa" placeholder="ejemplo@gmail.com" type="text" required />
+        </div>
+        <div class="form-group">
+          <label for="sitioWebEmpresa">Sitio Web:</label>
+          <input v-model="sitioWebEmpresa" id="sitioWebEmpresa" placeholder="http://MiSitioWeb.com" type="text"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="imagenEmpresaURL">URL de la Imagen:</label>
+          <input v-model="imagenEmpresaURL" id="imagenEmpresaURL" placeholder="http://ImagenEmpresa.com" type="text"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="idCategoriaEmpresa">Categoría:</label>
           <select v-model="idCategoriaEmpresa" id="idCategoriaEmpresa" required>
-            <option v-for="categoria in peticionesStore.categorias" :key="categoria.idCategoria" :value="categoria.idCategoria">
+            <option v-for="categoria in peticionesStore.categorias" :key="categoria.idCategoria"
+              :value="categoria.idCategoria">
               {{ categoria.nombre }}
             </option>
           </select>
+          <v-icon>mdi-menu-down</v-icon>
         </div>
-
         <div class="form-group">
-          <label for="idCiudadEmpresa">Ciudad de la Empresa:</label>
-          <select v-model="idCiudadEmpresa" id="idCiudadEmpresa" required>
-            <option v-for="ciudad in peticionesStore.ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
-              {{ ciudad.nombre }}
-            </option>
-          </select>
+          <label for="idCiudadEmpresa">Ciudad:</label>
+          <div>
+            <select v-model="idCiudadEmpresa" id="idCiudadEmpresa" required>
+              <option v-for="ciudad in peticionesStore.ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+                {{ ciudad.nombre }}
+              </option>
+            </select>
+            <v-icon>mdi-menu-down</v-icon>
+          </div>
         </div>
-
         <button type="submit" class="submit-btn">Enviar Solicitud</button>
-
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
           {{ Message }}
         </v-snackbar>
@@ -149,7 +171,7 @@ onMounted(() => {
   box-shadow: 5px 5px 15px 5px black;
   font-family: 'Montserrat', sans-serif;
   backdrop-filter: blur(20px);
-  border-radius: 15px; 
+  border-radius: 15px;
 }
 
 .cont-form-soli {
@@ -171,8 +193,10 @@ label {
   display: block;
 }
 
-input, textarea, select {
-  width: 100%;
+input,
+textarea,
+select {
+  width: 90%;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;

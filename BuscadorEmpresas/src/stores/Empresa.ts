@@ -3,11 +3,14 @@ import { useLoginStore } from '../stores/Login'
 
 const loginStore = useLoginStore()
 
-interface Empresa {
+export interface Empresa {
   idEmpresa: number
   nombre: string
   descripcion: string
   direccion: string
+  telefono: number
+  correoEmpresa: string
+  sitioWeb: string
   imagen: string
   empresaCategorias: EmpresaCategoria[]
   empresasCiudades: EmpresasCiudades[]
@@ -27,6 +30,9 @@ interface DatosEmpresa {
   nombre: string
   descripcion: string
   direccion: string
+  telefono: number
+  correoEmpresa: string
+  sitioWeb: string
   imagen: string
 }
 
@@ -63,7 +69,7 @@ export const useEmpresaStore = defineStore({
     },
     async GetEmpresaId(idEmpresa: number) {
       try {
-        const response = await fetch(`api/Empresa/${idEmpresa}`, {
+        const response = await fetch(`/api/Empresa/${idEmpresa}`, {
           method: 'GET'
         })
 
@@ -112,6 +118,9 @@ export const useEmpresaStore = defineStore({
           nombre: DatosEmpresa.nombre,
           descripcion: DatosEmpresa.descripcion,
           direccion: DatosEmpresa.direccion,
+          teledono: DatosEmpresa.telefono,
+          correoEmpresa: DatosEmpresa.correoEmpresa,
+          sitioWeb: DatosEmpresa.sitioWeb,
           imagen: DatosEmpresa.imagen
         }
 
@@ -202,6 +211,9 @@ export const useEmpresaStore = defineStore({
           nombre: DatosEmpresa.nombre,
           descripcion: DatosEmpresa.descripcion,
           direccion: DatosEmpresa.direccion,
+          teledono: DatosEmpresa.telefono,
+          correoEmpresa: DatosEmpresa.correoEmpresa,
+          sitioWeb: DatosEmpresa.sitioWeb,
           imagen: DatosEmpresa.imagen
         }
         const response = await fetch(`api/Empresa/${DatosEmpresa.idEmpresa}`, {

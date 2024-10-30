@@ -10,6 +10,9 @@ interface Peticion {
   datosUsuario: DatosUsuario
   descripcionEmpresa: string
   direccionEmpresa: string
+  telefonoEmpresa: number
+  correoEmpresa: string
+  sitioWebEmpresa: string
   imagenEmpresaURL: string
   idCategoriaEmpresa: number
   idCiudadEmpresa: number
@@ -132,6 +135,9 @@ export const usePeticionesStore = defineStore({
           nombreEmpresa: datosPeticion.nombreEmpresa,
           descripcionEmpresa: datosPeticion.descripcionEmpresa,
           direccionEmpresa: datosPeticion.direccionEmpresa,
+          telefonoEmpresa: datosPeticion.telefonoEmpresa,
+          correoEmpresa: datosPeticion.correoEmpresa,
+          sitioWebEmpresa: datosPeticion.sitioWebEmpresa,
           imagenEmpresaURL: datosPeticion.imagenEmpresaURL,
           idCategoriaEmpresa: datosPeticion.idCategoriaEmpresa,
           idCiudadEmpresa: datosPeticion.idCiudadEmpresa

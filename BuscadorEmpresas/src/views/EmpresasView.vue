@@ -1,26 +1,23 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router'; // Importa useRoute para acceder a los parámetros de la URL
-import { fetchEmpresasById } from '../stores/Buscador';
+import { useEmpresaStore } from '../stores/Empresa';
+import type { Empresa } from '@/stores/Empresa';
 
-const empresa = ref<{
-  idEmpresa: number;
-  nombre: string;
-  descripcion: string;
-  direccion: string;
-  imagen: string;
-} | null>(null);
+const empresa = ref<Empresa>()
+
+const storeEmpresa = useEmpresaStore();
 
 const error = ref(false);
 
-const route = useRoute(); // Accede a la ruta actual para obtener los parámetros
+const route = useRoute();
 
-// Función para obtener detalles de una empresa por su ID
 const fetchEmpresaData = async (idEmpresa: number) => {
   try {
-    const data = await fetchEmpresasById(idEmpresa);
-    if (data) {
-      empresa.value = data;
+    await storeEmpresa.GetEmpresaId(idEmpresa);
+
+    if (storeEmpresa.empresa) {
+      empresa.value = storeEmpresa.empresa;
     } else {
       error.value = true;
     }
@@ -31,8 +28,8 @@ const fetchEmpresaData = async (idEmpresa: number) => {
 };
 
 // Ejecutar cuando el componente se monte
-onMounted(() => {
-  const idEmpresa = parseInt(route.params.idEmpresa as string, 10);
+onMounted(async () => {
+  const idEmpresa = parseInt(route.params.idEmpresa as string);
   if (idEmpresa) {
     fetchEmpresaData(idEmpresa);
   } else {
@@ -45,12 +42,23 @@ onMounted(() => {
 <template>
   <h1>Inicio > Empresa > {{ empresa?.nombre }}</h1>
   <div class="empresa" v-if="empresa">
-    <div  class="cont">
-      <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img"/>
-      <h2>{{ empresa.nombre }}</h2>
-      <p><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
-      <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+    <div>
+      <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
     </div>
+    <div class="cont">
+      <div class="cont-empresa">
+        <h2>{{ empresa.nombre }}</h2>
+        <p><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
+        <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+        <p><strong>Telefono:</strong> {{ empresa.telefono }}</p>
+        <p><strong>Correo:</strong> {{ empresa.correoEmpresa }}</p>
+        <p><strong>Sitio Web:</strong> {{ empresa.sitioWeb }}</p>
+      </div>
+      <div class="cont-publicidad">
+        <p>Publicidad</p>
+      </div>
+    </div>
+
   </div>
 
   <div v-else-if="error">
@@ -64,16 +72,24 @@ onMounted(() => {
 
 
 <style scoped>
-h1{
-  color: rgb(255, 255, 255);
+h1 {
+  color: rgb(27, 19, 19);
+  font-size: 17px;
 }
 
-.cont{
-  background-color: white;
+.cont {
   border-radius: 10px;
   color: black;
-  padding: 40px 40px;
+  padding: 10px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.cont-empresa,
+.cont-publicidad {
+  margin: 10px;
+  background-color: white;
 }
 
 .category-enterprises-container {
@@ -86,11 +102,9 @@ ul {
 }
 
 .empresa {
-  background-color: rgb(23 6 51 / 88%);
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 40px 0;
+  background-color: rgba(186, 147, 250, 0.88);
+  margin: auto;
+  max-width: 1140px;
 }
 
 li {
@@ -107,10 +121,8 @@ h2 {
 }
 
 .empresa-img {
-  max-width: 500px;
-  height: auto;
-  margin-bottom: 20px;
-  margin-left: 8vh;
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
 }
-
 </style>
