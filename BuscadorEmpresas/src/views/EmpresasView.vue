@@ -1,23 +1,25 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router'; // Importa useRoute para acceder a los parámetros de la URL
+import { useRoute } from 'vue-router';
 import { useEmpresaStore } from '../stores/Empresa';
+import L from 'leaflet';
 import type { Empresa } from '@/stores/Empresa';
+import axios from 'axios';
+import 'leaflet/dist/leaflet.css';
 
-const empresa = ref<Empresa>()
-
+const empresa = ref<Empresa>();
 const storeEmpresa = useEmpresaStore();
-
 const error = ref(false);
-
 const route = useRoute();
+let map: L.Map;
+const loadingMap = ref(false);
 
 const fetchEmpresaData = async (idEmpresa: number) => {
   try {
     await storeEmpresa.GetEmpresaId(idEmpresa);
-
     if (storeEmpresa.empresa) {
       empresa.value = storeEmpresa.empresa;
+      await fetchCoordinates(empresa.value.direccion);
     } else {
       error.value = true;
     }
@@ -27,18 +29,69 @@ const fetchEmpresaData = async (idEmpresa: number) => {
   }
 };
 
+const fetchCoordinates = async (address: string) => {
+  try {
+    const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+      params: {
+        q: address,
+        format: 'json',
+        limit: 1,
+      },
+    });
+
+    if (response.data.length > 0) {
+      const { lat, lon } = response.data[0];
+      initMap(parseFloat(lat), parseFloat(lon));
+    } else {
+      console.error('No se encontraron coordenadas para la dirección proporcionada.');
+      error.value = true;
+    }
+  } catch (err) {
+    console.error('Error al obtener las coordenadas:', err);
+    error.value = true;
+  }
+};
+
+const initMap = (lat: number, lon: number) => {
+  if (map) {
+    map.off();
+    map.remove();
+  }
+
+  map = L.map('map').setView([lat, lon], 15);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  })
+    .on('tileerror', (error) => {
+      console.error('Error cargando el tile:', error);
+    })
+    .addTo(map);
+    if (empresa.value) {
+      L.marker([lat, lon])
+      .addTo(map)
+      .bindPopup(empresa.value.nombre)
+      .openPopup();
+    }
+    map.invalidateSize();
+    loadingMap.value = true;
+};
+
 // Ejecutar cuando el componente se monte
 onMounted(async () => {
   const idEmpresa = parseInt(route.params.idEmpresa as string);
   if (idEmpresa) {
-    fetchEmpresaData(idEmpresa);
+    await fetchEmpresaData(idEmpresa);
   } else {
     error.value = true;
   }
+  setTimeout(() => {
+    if (map) {
+      map.invalidateSize();
+    }
+  }, 500);
 });
 </script>
-
-
 <template>
   <h1>Inicio > Empresa > {{ empresa?.nombre }}</h1>
   <div class="empresa" v-if="empresa">
@@ -65,6 +118,11 @@ onMounted(async () => {
             <p>{{ empresa.direccion }}</p>
           </div>
         </div>
+        <div id="map" v-if="loadingMap"></div>
+        <div v-else="!loadingMap"
+          style="height: 400px;width: 100%;align-items: center;text-align: center;padding-top: 30%;">
+          <v-progress-circular indeterminate color="primary" style="margin: 20px auto;" />
+        </div>
         <div class="box">
           <p>Descripción</p>
         </div>
@@ -88,12 +146,20 @@ onMounted(async () => {
 
 
 <style scoped>
-.cont-datos{
+#map {
+  height: 400px;
+  width: 100%;
+  background-color: #e0e0e0;
+}
+
+.cont-datos {
   display: flex;
 }
-.div-1{
+
+.div-1 {
   width: 160px;
 }
+
 .box {
   width: 120px;
   text-align: center;

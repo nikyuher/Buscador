@@ -97,7 +97,7 @@ onMounted(() => {
         </div>
         <div class="form-group">
           <label for="direccionEmpresa">Dirección:</label>
-          <input v-model="direccionEmpresa" id="direccionEmpresa" placeholder="c/ ejemplo" type="text" required />
+          <input v-model="direccionEmpresa" id="direccionEmpresa" placeholder="Calle ejemplo, 25, 28008, Ciudad, Pais" type="text" required />
         </div>
         <div class="form-group">
           <label for="telefonoEmpresa">Telefono de la Empresa:</label>
