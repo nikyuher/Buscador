@@ -48,11 +48,27 @@ onMounted(async () => {
     <div class="cont">
       <div class="cont-empresa">
         <h2>{{ empresa.nombre }}</h2>
-        <p><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
-        <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-        <p><strong>Telefono:</strong> {{ empresa.telefono }}</p>
-        <p><strong>Correo:</strong> {{ empresa.correoEmpresa }}</p>
-        <p><strong>Sitio Web:</strong> {{ empresa.sitioWeb }}</p>
+        <p>Categoria: Categoria</p>
+
+        <p>Datos de contacto de {{ empresa.nombre }}</p>
+        <div class="cont-datos">
+          <div class="div-1">
+            <p>Teléfono:</p>
+            <p>Email:</p>
+            <p>Sitio Web:</p>
+            <p>Dirección</p>
+          </div>
+          <div>
+            <p>{{ empresa.telefono }}</p>
+            <p>{{ empresa.correoEmpresa }}</p>
+            <a :href="empresa.sitioWeb" target="_blank">{{ empresa.sitioWeb }}</a>
+            <p>{{ empresa.direccion }}</p>
+          </div>
+        </div>
+        <div class="box">
+          <p>Descripción</p>
+        </div>
+        <p>{{ empresa.descripcion }}</p>
       </div>
       <div class="cont-publicidad">
         <p>Publicidad</p>
@@ -72,6 +88,19 @@ onMounted(async () => {
 
 
 <style scoped>
+.cont-datos{
+  display: flex;
+}
+.div-1{
+  width: 160px;
+}
+.box {
+  width: 120px;
+  text-align: center;
+  color: rgb(0, 0, 0);
+  background-color: rgb(215, 216, 205);
+}
+
 h1 {
   color: rgb(27, 19, 19);
   font-size: 17px;
@@ -80,7 +109,6 @@ h1 {
 .cont {
   border-radius: 10px;
   color: black;
-  padding: 10px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -88,8 +116,10 @@ h1 {
 
 .cont-empresa,
 .cont-publicidad {
-  margin: 10px;
   background-color: white;
+  padding: 10px;
+  width: 98%;
+  margin-top: 20px;
 }
 
 .category-enterprises-container {
@@ -102,7 +132,7 @@ ul {
 }
 
 .empresa {
-  background-color: rgba(186, 147, 250, 0.88);
+  background-color: rgba(240, 240, 240, 0.88);
   margin: auto;
   max-width: 1140px;
 }
