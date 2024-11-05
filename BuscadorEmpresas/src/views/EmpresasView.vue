@@ -41,7 +41,8 @@ const fetchCoordinates = async (address: string) => {
 
     if (response.data.length > 0) {
       const { lat, lon } = response.data[0];
-      initMap(parseFloat(lat), parseFloat(lon));
+      loadingMap.value=true
+      setTimeout(() => initMap(parseFloat(lat), parseFloat(lon)), 100);
     } else {
       console.error('No se encontraron coordenadas para la dirección proporcionada.');
       error.value = true;
@@ -67,14 +68,13 @@ const initMap = (lat: number, lon: number) => {
       console.error('Error cargando el tile:', error);
     })
     .addTo(map);
-    if (empresa.value) {
-      L.marker([lat, lon])
+  if (empresa.value) {
+    L.marker([lat, lon])
       .addTo(map)
       .bindPopup(empresa.value.nombre)
       .openPopup();
-    }
-    map.invalidateSize();
-    loadingMap.value = true;
+  }
+  map.invalidateSize();
 };
 
 // Ejecutar cuando el componente se monte
@@ -119,9 +119,9 @@ onMounted(async () => {
           </div>
         </div>
         <div id="map" v-if="loadingMap"></div>
-        <div v-else="!loadingMap"
-          style="height: 400px;width: 100%;align-items: center;text-align: center;padding-top: 30%;">
+        <div v-else style="height: 400px;width: 100%;align-items: center;text-align: center;padding-top: 30%;">
           <v-progress-circular indeterminate color="primary" style="margin: 20px auto;" />
+          <p>Cargando...</p>
         </div>
         <div class="box">
           <p>Descripción</p>
@@ -150,6 +150,7 @@ onMounted(async () => {
   height: 400px;
   width: 100%;
   background-color: #e0e0e0;
+  margin: 20px auto;
 }
 
 .cont-datos {
