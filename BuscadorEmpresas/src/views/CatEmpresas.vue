@@ -6,12 +6,14 @@
 
     <div v-if="!error && empresas.length" class="empresa-list">
       <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
-        <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-        <div class="empresa-details">
-          <h2>{{ empresa.nombre }}</h2>
-          <p class="empresa-description"><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
-          <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-        </div>
+        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }">
+          <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+          <div class="empresa-details">
+            <h2>{{ empresa.nombre }}</h2>
+            <p class="empresa-description"><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
+            <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+          </div>
+        </RouterLink>
       </div>
     </div>
 
@@ -80,7 +82,10 @@ onMounted(() => {
 
 <style scoped>
 
-.Datos{
+a{
+  text-decoration: none;
+}
+.Datos {
   background-color: white;
   border-radius: 10px;
   padding: 40px 40px;
@@ -91,9 +96,10 @@ onMounted(() => {
   font-size: 17px;
 }
 
-.Datos h2{
+.Datos h2 {
   color: rgb(235, 160, 48);
 }
+
 .category-enterprises-container {
   padding: 20px;
 }
@@ -110,7 +116,7 @@ li {
   border-radius: 10px;
 }
 
-h1{
+h1 {
   color: rgb(255, 255, 255);
 }
 

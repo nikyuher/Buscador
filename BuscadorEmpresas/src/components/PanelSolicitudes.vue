@@ -43,45 +43,54 @@ const errores = ref({
   idCiudadEmpresa: '',
 });
 
+const limitarNombre = () => {
+  if (nombreEmpresa.value.length > 60) {
+    nombreEmpresa.value = nombreEmpresa.value.slice(0, 60);
+  }
+};
+
+const limitarDescripcion = () => {
+  if (descripcionEmpresa.value.length > 1000) {
+    descripcionEmpresa.value = descripcionEmpresa.value.slice(0, 1000);
+  }
+};
+
+const subirTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
 const ValidarFormulario = async () => {
+
   const direccionRegex = /^(.+?),\s*\d{1,5},\s*\d{5},\s*[^,]+$/;
   const correoRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
   const sitioWebRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
   const urlImgenRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+
   // Validación nombre
   errores.value.nombreEmpresa =
-    caracteresNombre.value < 3 ? 'El nombre no debe exceder los 3 caracteres.' : '';
-
+    caracteresNombre.value < 3 ? 'El nombre debe tener más de 3 caracteres.' : '';
   // Validación descripción
   errores.value.descripcionEmpresa =
-    caracteresDescripcion.value < 500 ? 'La descripción debe exceder los 500 caracteres.' : '';
-
+    caracteresDescripcion.value < 500 ? 'La descripción debe ser mayor de 500 caracteres.' : '';
   // Validación dirección
   errores.value.direccionEmpresa = !direccionRegex.test(direccionEmpresa.value)
-    ? 'La dirección debe seguir el formato: Calle, Número, Código Postal, Ciudad, País.'
-    : '';
-
+    ? 'La dirección debe seguir el formato: Calle, Número, Código Postal, Ciudad.' : '';
   // Validación teléfono
   errores.value.telefonoEmpresa =
     telefonoLength.value !== 9 ? 'El teléfono debe tener exactamente 9 dígitos.' : '';
-
   // Validación correo
   errores.value.correoEmpresa = !correoRegex.test(correoEmpresa.value)
-    ? 'El correo debe ser un Gmail válido (ejemplo@gmail.com).'
-    : '';
-
+    ? 'El correo debe ser un Gmail válido (ejemplo@gmail.com).' : '';
   // Validación SitioWeb
-
   errores.value.sitioWebEmpresa = !sitioWebRegex.test(sitioWebEmpresa.value)
-    ? 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).'
-    : '';
-
+    ? 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).' : '';
   // Validación SitioWeb
-
   errores.value.imagenEmpresaURL = !urlImgenRegex.test(imagenEmpresaURL.value)
-    ? 'La URL de la imagen debe ser válido (http://ImagenWeb.com o https://ImagenWeb.com).'
-    : '';
-
+    ? 'La URL de la imagen debe ser válido (http://ImagenWeb.com o https://ImagenWeb.com).' : '';
   // Validación categoría y ciudad
   errores.value.idCategoriaEmpresa = idCategoriaEmpresa.value === null ? 'Selecciona una categoría.' : '';
   errores.value.idCiudadEmpresa = idCiudadEmpresa.value === null ? 'Selecciona una ciudad.' : '';
@@ -91,9 +100,7 @@ const ValidarFormulario = async () => {
   botonEstilo.value = validarForm.value ? {} : { opacity: 0.5, cursor: 'not-allowed' };
 };
 
-
 const enviarPeticion = async () => {
-
 
   try {
     const datosPeticion = {
@@ -112,6 +119,7 @@ const enviarPeticion = async () => {
     success.value = true;
     error.value = false;
     Message.value = 'Peticion enviada correctamente';
+    subirTop()
 
     nombreEmpresa.value = ''
     descripcionEmpresa.value = ''
@@ -146,18 +154,6 @@ watch(
   ],
   ValidarFormulario
 );
-
-const limitarNombre = () => {
-  if (nombreEmpresa.value.length > 60) {
-    nombreEmpresa.value = nombreEmpresa.value.slice(0, 60);
-  }
-};
-
-const limitarDescripcion = () => {
-  if (descripcionEmpresa.value.length > 1000) {
-    descripcionEmpresa.value = descripcionEmpresa.value.slice(0, 1000);
-  }
-};
 
 const confirmarSesion = async () => {
   try {
