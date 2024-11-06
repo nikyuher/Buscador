@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
+import Categoria from '@/components/InterfazCatMenu.vue'
 
 const keyword = ref('');
 const IdEmpresa = ref(0);
@@ -15,7 +16,6 @@ const validarCiudad = ref(false);
 const errorMsg = ref(false)
 
 const mensajeAdvertencia = ref('');
-
 
 onMounted(async () => {
   categorias.value = await fetchCategorias();
@@ -43,7 +43,6 @@ const onKeywordInput = async () => {
 
     suggestions.value = filtrarDatos.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-
     validarEmpresa.value = false;
     errorMsg.value = false;
 
@@ -57,8 +56,6 @@ const onKeywordInput = async () => {
     validarEmpresa.value = false;
   }
 };
-
-
 
 const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => {
   keyword.value = suggestion.nombre;
@@ -89,7 +86,6 @@ const onCityInput = async () => {
     validarCiudad.value = false;
   }
 };
-
 
 const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string }) => {
   IdCiudad.value = citySuggestion.idCiudad;
@@ -158,14 +154,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
         </div>
       </div>
       <div class="categories-container">
-        <h3 class="Categorias">Categorías</h3>
-        <div class="categories-grid">
-          <router-link v-for="(categoria, index) in categorias" :key="index"
-            :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
-            class="category-item">
-            {{ categoria.nombre }}
-          </router-link>
-        </div>
+        <Categoria></Categoria>
       </div>
     </div>
   </body>
@@ -195,6 +184,7 @@ h2 {
 .categories-container {
   text-align: center;
   display: flex;
+
   flex-direction: column;
   color: #990000;
   align-items: center;
@@ -233,13 +223,13 @@ h2 {
 }
 
 .search-box {
-  background-color: rgb(23 6 51 / 88%);
   color: white;
   padding: 100px;
   display: inline-block;
   width: 100%;
+  min-height: 700px;
   margin: 40px auto;
-  background-image: url(http://netymedia.com/wp-content/uploads/2017/08/slide_1.png);
+  background-image: url(https://treeburealtygroup.com/wp-content/uploads/2024/02/Portada-Corasol.jpg);
   background-size: cover;
 }
 
@@ -272,7 +262,7 @@ button {
   height: 46px;
 }
 
-button:hover{
+button:hover {
   background-color: rgb(105, 105, 105);
   transition: 1s;
 }
@@ -307,6 +297,8 @@ img {
 
 .categories-container {
   text-align: center;
+  width: 80%;
+  margin: auto;
 }
 
 .categories-list {
