@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useCategoriaStore } from '@/stores/Categoria'
 
 const storeCategoria = useCategoriaStore()
@@ -9,67 +9,81 @@ const numEmpresCat = ref<Record<number, number>>({})
 const numEmpresas = async (id: number) => {
     try {
         await storeCategoria.GetNumEmpresasByCategoria(id)
-
         numEmpresCat.value[id] = storeCategoria.numEmpresas
-
     } catch (error) {
-        console.log(error);
-
+        console.log(error)
     }
 }
 
 onMounted(async () => {
     await storeCategoria.GetAllCategorias()
     categorias.value = storeCategoria.listaCategorias
-
     await Promise.all(categorias.value.map((categoria) => numEmpresas(categoria.idCategoria)))
 })
-
 </script>
 
 <template>
     <div>
-        <h3 class="Categorias">Categorías</h3>
-        <div class="categories-grid">
-            <router-link v-for="(categoria, index) in categorias" :key="index"
-                :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
-                class="category-item">
-                <p>{{ categoria.nombre }} ({{ numEmpresCat[categoria.idCategoria] || 0 }})</p>
-            </router-link>
+        <h3 class="Categorias" style="font-size: 40px;">Categorías</h3>
+        <div class="categories-list">
+            <ul>
+                <li v-for="(categoria, index) in categorias" :key="index" :class="{ extraRow: index >= 5 }">
+                    <router-link
+                        :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
+                        class="category-item">
+                        <span class="bullet"></span>
+                        <span>{{ categoria.nombre }} ({{ numEmpresCat[categoria.idCategoria] || 0 }})</span>
+                    </router-link>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <style scoped>
-.categories-grid {
+.categories-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
 }
 
-.Categorias {
-    font-size: 5vh;
-    margin: 0 0 30px 0px;
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 50vh;
 }
 
-p {
-    font-family: monospace;
+li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 8px 30px;
 }
+
+
 
 .category-item {
-    background-color: rgba(223, 42, 42, 0.88);
-    color: white;
-    font-size: 20px;
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    color: #333;
     text-decoration: none;
+    transition: color 0.3s;
+    flex-wrap: wrap;
+    font-size: 18px;
 }
 
 .category-item:hover {
-    background-color: #681717;
-    transition: 0.7s;
+    color: #b006ff;
+}
+
+.bullet {
+    width: 8px;
+    height: 8px;
+    background-color: #91763c;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 </style>

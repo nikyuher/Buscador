@@ -95,6 +95,7 @@ export const fetchEmpresasById = async (idEmpresa: number) => {
       nombre: data.nombre,
       descripcion: data.descripcion,
       direccion: data.direccion,
+      telefono: data.telefono,
       imagen: data.imagen
     }
   } catch (error) {

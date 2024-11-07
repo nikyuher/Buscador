@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
 import Categoria from '@/components/InterfazCatMenu.vue'
 
@@ -16,6 +16,9 @@ const validarCiudad = ref(false);
 const errorMsg = ref(false)
 
 const mensajeAdvertencia = ref('');
+
+const ordenCitySuggestions = computed(() => { return [...citySuggestions.value].sort((a, b) => a.nombre.localeCompare(b.nombre)) })
+const ordenSuggestions = computed(() => { return [...suggestions.value].sort((a, b) => a.nombre.localeCompare(b.nombre)) })
 
 onMounted(async () => {
   categorias.value = await fetchCategorias();
@@ -110,16 +113,16 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
         <div class="search-inputs">
           <div class="keyword-container">
             <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput" />
-            <ul v-if="suggestions.length" class="suggestions-list">
-              <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
+            <ul v-if="ordenSuggestions.length" class="suggestions-list">
+              <li v-for="(suggestion, index) in ordenSuggestions" :key="index" @click="selectSuggestion(suggestion)">
                 {{ suggestion.nombre }}
               </li>
             </ul>
           </div>
           <div class="city-container">
             <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
-            <ul v-if="citySuggestions.length" class="suggestions-list">
-              <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
+            <ul v-if="ordenCitySuggestions.length" class="suggestions-list">
+              <li v-for="(citySuggestion, index) in ordenCitySuggestions" :key="index"
                 @click="selectCitySuggestion(citySuggestion)">
                 {{ citySuggestion.nombre }}
               </li>
@@ -224,7 +227,7 @@ h2 {
 
 .search-box {
   color: white;
-  padding: 100px;
+  padding-top: 100px;
   display: inline-block;
   width: 100%;
   min-height: 700px;
@@ -234,15 +237,20 @@ h2 {
 }
 
 .search-box h2 {
-  color: white;
-  font-size: 40px
+  color: rgb(242, 255, 54);
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  font-size: 50px;
+  font-weight:900;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .search-inputs {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 30px;
+  margin-top: 100px;
 }
 
 input[type="text"] {
@@ -251,6 +259,15 @@ input[type="text"] {
   border: 1px solid #ffffff;
   background-color: #ffffff;
   border-radius: 5px;
+  box-shadow: 5px 5px 10px black;
+  outline: none;
+}
+
+input:hover{
+  transform: scale(1.1); /* Amplía el input en un 10% */
+  box-shadow: 5px 5px 10px rgb(0, 0, 0); /* Sombra para dar más efecto */
+  outline: none; /* Elimina el borde azul de enfoque */
+  margin: auto 10px
 }
 
 button {
@@ -263,7 +280,7 @@ button {
 }
 
 button:hover {
-  background-color: rgb(105, 105, 105);
+  background-color: rgba(52, 238, 114, 0.89);
   transition: 1s;
 }
 

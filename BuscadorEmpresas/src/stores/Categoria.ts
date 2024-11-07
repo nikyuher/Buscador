@@ -66,6 +66,7 @@ export const useCategoriaStore = defineStore({
         }
 
         const data = await response.json()
+        console.log(data)
 
         this.categoriaInfo = data
 

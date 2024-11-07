@@ -24,7 +24,6 @@ const telefonoLength = computed(() => {
   return telefonoEmpresa.value !== null ? telefonoEmpresa.value.toString().length : 0;
 });
 
-
 const validarForm = ref(false)
 const success = ref(false);
 const error = ref(false);
@@ -54,6 +53,14 @@ const limitarDescripcion = () => {
     descripcionEmpresa.value = descripcionEmpresa.value.slice(0, 1000);
   }
 };
+
+const categoriasOrdenadas = computed(() => {
+  return [...peticionesStore.categorias].sort((a, b) => a.nombre.localeCompare(b.nombre));
+});
+
+const ciudadesOrdenadas = computed(() => {
+  return [...peticionesStore.ciudades].sort((a, b) => a.nombre.localeCompare(b.nombre));
+});
 
 const subirTop = () => {
   window.scrollTo({
@@ -231,7 +238,7 @@ onMounted(async () => {
         <div class="form-group">
           <label for="idCategoriaEmpresa">Categoría:</label>
           <select v-model="idCategoriaEmpresa" id="idCategoriaEmpresa" required>
-            <option v-for="categoria in peticionesStore.categorias" :key="categoria.idCategoria"
+            <option v-for="categoria in categoriasOrdenadas " :key="categoria.idCategoria"
               :value="categoria.idCategoria">
               {{ categoria.nombre }}
             </option>
@@ -242,7 +249,7 @@ onMounted(async () => {
         <div class="form-group">
           <label for="idCiudadEmpresa">Ciudad:</label>
           <select v-model="idCiudadEmpresa" id="idCiudadEmpresa" required>
-            <option v-for="ciudad in peticionesStore.ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+            <option v-for="ciudad in ciudadesOrdenadas " :key="ciudad.idCiudad" :value="ciudad.idCiudad">
               {{ ciudad.nombre }}
             </option>
           </select>
