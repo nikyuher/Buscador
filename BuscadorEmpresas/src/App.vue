@@ -1,23 +1,21 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { useRoute } from 'vue-router'; 
-import Buscador from './views/Buscador.vue';
+import { RouterView } from 'vue-router'
+import { useRoute } from 'vue-router';
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
-import router from './router';
 const route = useRoute(); 
 </script>
 
 <template>
+
   <body>
     <Header v-if="route.name !== 'Login' && route.name !== 'Register' && route.name !== 'ChangePassword'"></Header>
-  <RouterView></RouterView>
-  <Footer v-if="route.name !== 'Login' && route.name !== 'Register' && route.name !== 'ChangePassword'"></Footer>
+    <RouterView></RouterView>
+    <Footer v-if="route.name !== 'Login' && route.name !== 'Register' && route.name !== 'ChangePassword'"></Footer>
   </body>
 </template>
 
 <style scoped>
-
 header {
   width: 100%;
   height: 10vh;
@@ -25,7 +23,8 @@ header {
   color: white;
 }
 
-a,h1 {
+a,
+h1 {
   text-align: center;
   margin: auto;
   align-items: center;

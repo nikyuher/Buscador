@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
+import Categoria from '@/components/InterfazCatMenu.vue'
+import Ciudades from '@/components/InterfazCiudades.vue'
 
 const keyword = ref('');
 const IdEmpresa = ref(0);
@@ -43,7 +45,6 @@ const onKeywordInput = async () => {
 
     suggestions.value = filtrarDatos.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-
     validarEmpresa.value = false;
     errorMsg.value = false;
 
@@ -57,8 +58,6 @@ const onKeywordInput = async () => {
     validarEmpresa.value = false;
   }
 };
-
-
 
 const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => {
   keyword.value = suggestion.nombre;
@@ -90,7 +89,6 @@ const onCityInput = async () => {
   }
 };
 
-
 const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string }) => {
   IdCiudad.value = citySuggestion.idCiudad;
   city.value = citySuggestion.nombre;
@@ -101,7 +99,6 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
 };
 
 </script>
-
 <template>
 
   <body>
@@ -131,155 +128,149 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
           </div>
           <div v-if="IdEmpresa > 0 && validarEmpresa == true && IdCiudad == 0">
             <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
-              <button>
+              <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
           <div v-else-if="IdCiudad > 0 && validarCiudad == true && IdEmpresa == 0">
             <RouterLink :to="{ name: 'Ciudad', params: { idCiudad: IdCiudad } }">
-              <button>
+              <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
           <div v-else-if="validarEmpresa == true && validarCiudad == true">
             <RouterLink :to="{ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad, idEmpresa: IdEmpresa } }">
-              <button>
+              <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
           <div v-else>
-            <button @click="searchWithoutId">
+            <button @click="searchWithoutId" class="search-button">
               <v-icon class="lupa">mdi-magnify</v-icon>
             </button>
           </div>
         </div>
       </div>
       <div class="categories-container">
-        <h3 class="Categorias">Categorías</h3>
-        <div class="categories-grid">
-          <router-link v-for="(categoria, index) in categorias" :key="index"
-            :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
-            class="category-item">
-            {{ categoria.nombre }}
-          </router-link>
-        </div>
+        <Categoria></Categoria>
+        <Ciudades></Ciudades>
       </div>
     </div>
   </body>
 </template>
 
 <style scoped>
-.lupa {
-  color: black;
-  font-size: 30px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .search-container {
   text-align: center;
-
-}
-
-input {
-  color: white;
-}
-
-li,
-a,
-h2 {
-  color: black;
-}
-
-.categories-container {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  color: #990000;
-  align-items: center;
-  background-color: #e4e4e4;
-  padding: 50px;
-}
-
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-}
-
-.Categorias {
-  font-size: 5vh;
-  margin: 0 0 30px 0px;
-}
-
-.category-item {
-  background-color: rgba(223, 42, 42, 0.88);
-  color: white;
-  font-size: 20px;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
-}
-
-.category-item:hover {
-  background-color: #681717;
-  transition: 0.7s;
+  animation: fadeIn 1s ease-in;
 }
 
 .search-box {
-  background-color: rgb(23 6 51 / 88%);
   color: white;
-  padding: 100px;
+  padding-top: 100px;
   display: inline-block;
   width: 100%;
+  min-height: 700px;
   margin: 40px auto;
-  background-image: url(http://netymedia.com/wp-content/uploads/2017/08/slide_1.png);
+  background-image: url(https://treeburealtygroup.com/wp-content/uploads/2024/02/Portada-Corasol.jpg);
   background-size: cover;
 }
 
 .search-box h2 {
-  color: white;
-  font-size: 40px
+  color: rgb(242, 255, 54);
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 30px 0;
+  font-size: 50px;
+  font-weight: 900;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  animation: bounceIn 1s ease;
 }
 
 .search-inputs {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 30px;
+  margin-top: 100px;
 }
 
 input[type="text"] {
   color: black;
   padding: 10px;
-  border: 1px solid #ffffff;
-  background-color: #ffffff;
+  border: 1px solid #fff;
+  background-color: #fff;
   border-radius: 5px;
+  box-shadow: 5px 5px 10px black;
+  outline: none;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-button {
+input:hover,
+input:focus {
+  transform: scale(1.05);
+  box-shadow: 5px 5px 15px rgb(0, 0, 0);
+}
+
+.search-button {
+  color: black;
   background-color: white;
   border: none;
   border-radius: 0 10px 10px 0;
   cursor: pointer;
   padding: 10px;
   height: 46px;
+  transition: background-color 0.5s, transform 0.3s;
 }
 
-button:hover{
-  background-color: rgb(105, 105, 105);
-  transition: 1s;
+.lupa {
+  font-size: 30px;
 }
 
-img {
-  width: 16px;
-  height: 16px;
+.search-button:hover {
+  background-color: rgba(52, 238, 114, 0.89);
+  transform: scale(1.1);
 }
 
 .suggestions-list {
@@ -294,24 +285,49 @@ img {
   width: 10%;
   max-height: 200px;
   overflow-y: auto;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .suggestions-list li {
   padding: 8px;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .suggestions-list li:hover {
   background-color: #f0f0f0;
+  transform: scale(1.05);
 }
 
 .categories-container {
   text-align: center;
+  width: 80%;
+  margin: auto;
+  animation: slideUp 1s ease;
 }
 
+.category-item {
+  background-color: rgba(223, 42, 42, 0.88);
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.5s;
+}
+
+.category-item:hover {
+  background-color: #681717;
+  transform: scale(1.1);
+}
+
+ul,
 .categories-list {
   list-style: none;
   padding: 0;
+  margin: 0;
+  color: black;
 }
 
 .categories-list li {

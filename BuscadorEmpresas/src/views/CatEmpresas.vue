@@ -1,32 +1,15 @@
-<template>
-  <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
-  <div class="category-enterprises-container">
-
-    <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
-
-    <div v-if="!error && empresas.length" class="empresa-list">
-      <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
-        <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-        <div class="empresa-details">
-          <h2>{{ empresa.nombre }}</h2>
-          <p class="empresa-description"><strong>Descripción:</strong> {{ empresa.descripcion }}</p>
-          <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-        </div>
-      </div>
-    </div>
-
-    <p v-else-if="!error" class="no-data">No hay empresas en esta categoría.</p>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { fetchEmpresasByCategoria, fetchEmpresasById } from '../stores/Buscador';
 
 const categoriaNombre = ref('');
-const empresas = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; imagen: string }[]>([]);
+const empresas = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; telefono: string; imagen: string }[]>([]);
 const error = ref(false);
+
+const recortarTexto = (texto: string, maxLongitud: number) => {
+  return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
+};
 
 // Obtener los detalles de todas las empresas por categoría
 const fetchData = async (idCategoria: number) => {
@@ -45,6 +28,7 @@ const fetchData = async (idCategoria: number) => {
             nombre: detalles?.nombre,
             descripcion: detalles?.descripcion,
             direccion: detalles?.direccion,
+            telefono: detalles?.telefono,
             imagen: detalles?.imagen,
           };
         })
@@ -62,7 +46,7 @@ const fetchData = async (idCategoria: number) => {
 };
 const route = useRoute();
 
-onMounted(() => {
+onMounted(async () => {
   const idCategoriaParam = route.params.idCategoria;
   const idCategoria = Array.isArray(idCategoriaParam)
     ? parseInt(idCategoriaParam[0], 10)
@@ -77,11 +61,60 @@ onMounted(() => {
 });
 </script>
 
+<template>
+  <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
+  <div class="category-enterprises-container">
+
+    <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
+
+    <div v-if="!error && empresas.length" class="empresa-list">
+      <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
+        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="decorador">
+          <div class="cont-img-tef">
+            <div style="display: flex; align-items: center; color: black;">
+              <v-icon>mdi-phone</v-icon>
+              <p>{{ empresa.telefono }}</p>
+            </div>
+            <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+          </div>
+          <div class="empresa-details">
+            <h3>{{ empresa.nombre }}</h3>
+            <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+            <p class="empresa-description"><strong>Descripción:</strong> {{ recortarTexto(empresa.descripcion, 167) }}</p>
+          </div>
+        </RouterLink>
+      </div>
+    </div>
+
+    <p v-else-if="!error" class="no-data">No hay empresas en esta categoría.</p>
+  </div>
+</template>
 
 <style scoped>
+.decorador {
+  display: flex;
+}
 
-.Datos{
-  background-color: white;
+.cont-img-tef {
+  width: 190px;
+  text-align: center;
+}
+
+.empresa-card {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+a {
+  text-decoration: none;
+}
+
+.Datos {
+  background-color: rgb(0, 0, 0);
   border-radius: 10px;
   padding: 40px 40px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -91,11 +124,15 @@ onMounted(() => {
   font-size: 17px;
 }
 
-.Datos h2{
+.Datos h2 {
   color: rgb(235, 160, 48);
 }
+
 .category-enterprises-container {
   padding: 20px;
+  background-color: rgb(209, 209, 209);
+  width: 60%;
+  margin: auto;
 }
 
 ul {
@@ -110,16 +147,8 @@ li {
   border-radius: 10px;
 }
 
-h1{
+h1 {
   color: rgb(255, 255, 255);
-}
-
-.empresa-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 15px;
 }
 
 
@@ -129,9 +158,9 @@ p {
 }
 
 .breadcrumb {
-  font-size: 24px;
+  font-size: 17px;
   font-weight: 600;
-  color: #ffffff;
+  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -150,24 +179,9 @@ p {
 }
 
 .empresa-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
   width: 100%;
-  max-width: 1200px;
 }
 
-.empresa-card {
-  background-color: #682828;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  align-items: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
 
 .empresa-card:hover {
   transform: translateY(-5px);
@@ -176,30 +190,32 @@ p {
 
 .empresa-img {
   max-width: 100%;
-  height: auto;
+  height: 100px;
   border-radius: 10px;
   margin-bottom: 15px;
 }
 
 .empresa-details {
-  text-align: center;
+  text-align: justify;
+  padding: 20px;
+  width: 80%;
 }
 
-.empresa-details h2 {
-  font-size: 22px;
-  color: #ffffff;
+.empresa-details h3 {
+  font-size: 18px;
+  color: #404fd4;
   margin-bottom: 10px;
 }
 
 .empresa-description,
 .empresa-address {
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 16px;
-  color: #ffffff;
+  color: #000000;
   margin-bottom: 8px;
 }
 
 .empresa-address {
-  font-weight: bold;
-  color: #ffffff;
+  color: #000000;
 }
 </style>

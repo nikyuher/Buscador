@@ -18,7 +18,7 @@ export default defineConfig({
     proxy: {
       // Ejemplo: redirige las peticiones de /api a http://localhost:8001
       '/api': {
-        target: 'http://localhost:8001', // URL base de tu backend
+        target: 'http://localhost:5122/', // URL base de tu backend
         changeOrigin: true, // Necesario para evitar problemas de CORS
         rewrite: path => path.replace(/^\/api/, ''), // Opcional: elimina el prefijo /api en la petición redirigida
       },

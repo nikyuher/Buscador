@@ -28,8 +28,6 @@
           <a href="https://instagram.com" target="_blank">Instagram</a>
         </div>
       </div>
-
-      <!-- Información de contacto -->
       <div class="footer-section">
         <h3>Contacto</h3>
         <p>Email: <a href="mailto:support@ejemplo.com">support@ejemplo.com</a></p>

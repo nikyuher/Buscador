@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia'
 import { useLoginStore } from '../stores/Login'
 
-const loginStore = useLoginStore()
-
-
 interface Caterorias {
   idCategoria: number
   nombre: string
@@ -31,7 +28,8 @@ export const useCategoriaStore = defineStore({
   state: () => ({
     listaCategorias: [] as Caterorias[],
     categoriaInfo: null as InfoCategoria | null,
-    listaEmpresasByCategoria: [] as Caterorias[]
+    listaEmpresasByCategoria: [] as Caterorias[],
+    numEmpresas: 0
   }),
 
   actions: {
@@ -68,6 +66,7 @@ export const useCategoriaStore = defineStore({
         }
 
         const data = await response.json()
+        console.log(data)
 
         this.categoriaInfo = data
 
@@ -98,8 +97,31 @@ export const useCategoriaStore = defineStore({
         throw error
       }
     },
+    async GetNumEmpresasByCategoria(idCategoria: number) {
+      try {
+        const response = await fetch(`api/Categoria/${idCategoria}/NumEmpresas`, {
+          method: 'GET'
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.message || 'error al obtener las empresas de categoria.')
+        }
+
+        const data = await response.json()
+
+        this.numEmpresas = data
+
+        console.log('Empresas de categoria obtenida correctamente')
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
     async CreateCategoria(nombre: string) {
       try {
+        const loginStore = useLoginStore()
+
         const token = loginStore.token
 
         const nombreObjet = {
@@ -127,13 +149,14 @@ export const useCategoriaStore = defineStore({
     },
     async PutCategoria(infoCategoria: InfoCategoria) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Categoria`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(infoCategoria)
         })
@@ -151,6 +174,7 @@ export const useCategoriaStore = defineStore({
     },
     async EliminarCategoria(idCategoria: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Categoria/${idCategoria}`, {

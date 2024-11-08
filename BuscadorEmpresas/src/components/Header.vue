@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useLoginStore } from '../stores/Login';
+import { useRouter } from 'vue-router';
+
+const loginStore = useLoginStore();
+const router = useRouter(); // Obtener acceso al router
+
+// Computar si el usuario está logueado
+const isLoggedIn = computed(() => loginStore.usuario !== null);
+
+// Obtener el nombre del usuario si está logueado
+const userName = computed(() => loginStore.usuario?.nombre || '');
+
+// Método para cerrar sesión
+const handleLogout = () => {
+  loginStore.logout();
+  router.push('/');
+};
+</script>
+
 <template>
   <div class="header">
     <div class="header-name">
@@ -8,77 +29,72 @@
 
     <div class="user-actions">
       <div>
-        <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link" style="margin-right: 20px;">Register</RouterLink>
+        <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link" style="margin-right: 20px;">Register
+        </RouterLink>
         <RouterLink v-if="!isLoggedIn" to="/Login" class="nav__link">Login</RouterLink>
       </div>
       <div v-if="isLoggedIn" class="logged-in-actions">
         <div v-if="isLoggedIn && loginStore.isAdmin">
           <RouterLink to="/PanelAdmin" class="sol">Panel Admin</RouterLink>
         </div>
-        <div v-if="isLoggedIn && !loginStore.isAdmin" class="Solicitudes">
-          <RouterLink to="/Solicitudes" class="sol">Solicitudes</RouterLink>
+        <div v-if="isLoggedIn && !loginStore.isAdmin">
+          <RouterLink to="/Solicitudes" class="Solicitudes" style="margin-right: 10px;">
+            Solicitudes
+          </RouterLink>
         </div>
-        <span>Bienvenido, <RouterLink to="/Perfil">{{ userName }}</RouterLink></span>
+        <span>
+          <RouterLink to="/Perfil"><v-icon>mdi-account-circle</v-icon> Bienvenido {{ userName }}</RouterLink>
+        </span>
         <button @click="handleLogout" class="logout-button">Cerrar sesión</button>
       </div>
     </div>
+
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, onMounted, watchEffect } from 'vue';
-import { useLoginStore } from '../stores/Login';
-import { useRouter } from 'vue-router';
-
-
-// import { useUsuarioStore } from '@/stores/Usuario';
-// const usuarioStore = useUsuarioStore()
-// Importar el store
-const loginStore = useLoginStore();
-const router = useRouter(); // Obtener acceso al router
-
-// Computar si el usuario está logueado
-const isLoggedIn = computed(() => loginStore.usuario !== null);
-
-// Obtener el nombre del usuario si está logueado
-const userName = computed(() => loginStore.usuario?.nombre || '');
-
-// const llamarDatos = async () => {
-//   try {
-
-//     if (isLoggedIn) {
-//       if (loginStore.usuario?.idUsuario && loginStore.usuario !== null) {
-//         await usuarioStore.GetUsuarioId(loginStore.usuario?.idUsuario)
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error);
-
-//   }
-// }
-
-// // Usar watchEffect para llamar a llamarDatos cuando isLoggedIn cambie
-// watchEffect(() => {
-//     llamarDatos();
-// });
-
-// Método para cerrar sesión
-const handleLogout = () => {
-  loginStore.logout();
-  router.push('/'); // Redirigir a la página de inicio al cerrar sesión
-};
-</script>
-
 
 <style scoped>
+.nav__link{
+  font-weight: bold;
+  padding: 10px;
+}
+
+.nav__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 2px;
+  border-radius: 5px;
+  background-color: #00000063;
+
+}
+
+span:hover,
+.Solicitudes:hover {
+  font-size: 17px;
+  background-color: #0000007e;
+  padding: 5px;
+  border-radius: 5px;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+
+span {
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 2px;
+}
+
 .header {
   width: 100%;
   height: 10vh;
-  background-color: #990000;
+  background-color: #2a5f4d;
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 a,
@@ -137,7 +153,6 @@ nav a:first-of-type {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin-left: 20vh;
   font-family: Arial, Helvetica, sans-serif;
 }
 
