@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useCategoriaStore } from '@/stores/Categoria'
+import { useCiudadStore } from '@/stores/Ciudad';
+import type { CiudadeEmpresas } from '@/stores/Ciudad';
+import { ref, onMounted } from 'vue';
 
-const storeCategoria = useCategoriaStore()
-const categorias = ref<any[]>([])
-const isVisible = ref(false)
+const storeCiudad = useCiudadStore();
+const Ciudades = ref<CiudadeEmpresas[]>([]);
+const isVisible = ref(false);
 
 onMounted(async () => {
-    await storeCategoria.GetAllCategorias()
-    categorias.value = storeCategoria.listaCategorias.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    await storeCiudad.GetAllCiudades()
+    Ciudades.value = storeCiudad.listaCiudades.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
+    // Configuración de Intersection Observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -19,26 +21,25 @@ onMounted(async () => {
         });
     });
     observer.observe(document.querySelector('.categories-list') as Element);
-})
+});
 </script>
 
 <template>
     <div>
-        <h3 class="Categorias" :class="{ 'animate-title': isVisible }" style="font-size: 40px;">Categorías</h3>
+        <h3 class="Categorias" :class="{ 'animate-title': isVisible }" style="font-size: 40px;">Ciudades</h3>
         <div class="categories-list" :class="{ 'animate-list': isVisible }">
             <ul>
-                <li v-for="(categoria, index) in categorias" :key="index" :class="{ extraRow: index >= 5 }">
-                    <router-link
-                        :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
-                        class="category-item">
+                <li v-for="(ciudad, index) in Ciudades" :key="ciudad.idCiudad" :class="{ extraRow: index >= 5 }">
+                    <router-link :to="{ name: 'Ciudad', params: { idCiudad: ciudad.idCiudad } }" class="category-item">
                         <span class="bullet"></span>
-                        <span>{{ categoria.nombre }}</span>
+                        <span>{{ ciudad.nombre }} </span>
                     </router-link>
                 </li>
             </ul>
         </div>
     </div>
 </template>
+
 <style scoped>
 /* Animación para el título */
 .Categorias {
@@ -76,7 +77,7 @@ ul {
 li {
     display: flex;
     align-items: center;
-    padding: 8px 30px;
+    padding: 20px 30px;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease, transform 0.8s ease;

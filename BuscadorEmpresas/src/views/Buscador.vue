@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
 import Categoria from '@/components/InterfazCatMenu.vue'
+import Ciudades from '@/components/InterfazCiudades.vue'
 
 const keyword = ref('');
 const IdEmpresa = ref(0);
@@ -17,8 +18,6 @@ const errorMsg = ref(false)
 
 const mensajeAdvertencia = ref('');
 
-const ordenCitySuggestions = computed(() => { return [...citySuggestions.value].sort((a, b) => a.nombre.localeCompare(b.nombre)) })
-const ordenSuggestions = computed(() => { return [...suggestions.value].sort((a, b) => a.nombre.localeCompare(b.nombre)) })
 
 onMounted(async () => {
   categorias.value = await fetchCategorias();
@@ -100,7 +99,6 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
 };
 
 </script>
-
 <template>
 
   <body>
@@ -113,16 +111,16 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
         <div class="search-inputs">
           <div class="keyword-container">
             <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput" />
-            <ul v-if="ordenSuggestions.length" class="suggestions-list">
-              <li v-for="(suggestion, index) in ordenSuggestions" :key="index" @click="selectSuggestion(suggestion)">
+            <ul v-if="suggestions.length" class="suggestions-list">
+              <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
                 {{ suggestion.nombre }}
               </li>
             </ul>
           </div>
           <div class="city-container">
             <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
-            <ul v-if="ordenCitySuggestions.length" class="suggestions-list">
-              <li v-for="(citySuggestion, index) in ordenCitySuggestions" :key="index"
+            <ul v-if="citySuggestions.length" class="suggestions-list">
+              <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
                 @click="selectCitySuggestion(citySuggestion)">
                 {{ citySuggestion.nombre }}
               </li>
@@ -130,27 +128,27 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
           </div>
           <div v-if="IdEmpresa > 0 && validarEmpresa == true && IdCiudad == 0">
             <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
-              <button>
+              <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
           <div v-else-if="IdCiudad > 0 && validarCiudad == true && IdEmpresa == 0">
             <RouterLink :to="{ name: 'Ciudad', params: { idCiudad: IdCiudad } }">
-              <button>
+              <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
           <div v-else-if="validarEmpresa == true && validarCiudad == true">
             <RouterLink :to="{ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad, idEmpresa: IdEmpresa } }">
-              <button>
+              <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
           <div v-else>
-            <button @click="searchWithoutId">
+            <button @click="searchWithoutId" class="search-button">
               <v-icon class="lupa">mdi-magnify</v-icon>
             </button>
           </div>
@@ -158,71 +156,55 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
       </div>
       <div class="categories-container">
         <Categoria></Categoria>
+        <Ciudades></Ciudades>
       </div>
     </div>
   </body>
 </template>
 
 <style scoped>
-.lupa {
-  color: black;
-  font-size: 30px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .search-container {
   text-align: center;
-
-}
-
-input {
-  color: white;
-}
-
-li,
-a,
-h2 {
-  color: black;
-}
-
-.categories-container {
-  text-align: center;
-  display: flex;
-
-  flex-direction: column;
-  color: #990000;
-  align-items: center;
-  background-color: #e4e4e4;
-  padding: 50px;
-}
-
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-}
-
-.Categorias {
-  font-size: 5vh;
-  margin: 0 0 30px 0px;
-}
-
-.category-item {
-  background-color: rgba(223, 42, 42, 0.88);
-  color: white;
-  font-size: 20px;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
-}
-
-.category-item:hover {
-  background-color: #681717;
-  transition: 0.7s;
+  animation: fadeIn 1s ease-in;
 }
 
 .search-box {
@@ -238,12 +220,13 @@ h2 {
 
 .search-box h2 {
   color: rgb(242, 255, 54);
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  backdrop-filter: blur(5px);
+  padding: 30px 0;
   font-size: 50px;
-  font-weight:900;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 900;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  animation: bounceIn 1s ease;
 }
 
 .search-inputs {
@@ -256,37 +239,38 @@ h2 {
 input[type="text"] {
   color: black;
   padding: 10px;
-  border: 1px solid #ffffff;
-  background-color: #ffffff;
+  border: 1px solid #fff;
+  background-color: #fff;
   border-radius: 5px;
   box-shadow: 5px 5px 10px black;
   outline: none;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-input:hover{
-  transform: scale(1.1); /* Amplía el input en un 10% */
-  box-shadow: 5px 5px 10px rgb(0, 0, 0); /* Sombra para dar más efecto */
-  outline: none; /* Elimina el borde azul de enfoque */
-  margin: auto 10px
+input:hover,
+input:focus {
+  transform: scale(1.05);
+  box-shadow: 5px 5px 15px rgb(0, 0, 0);
 }
 
-button {
+.search-button {
+  color: black;
   background-color: white;
   border: none;
   border-radius: 0 10px 10px 0;
   cursor: pointer;
   padding: 10px;
   height: 46px;
+  transition: background-color 0.5s, transform 0.3s;
 }
 
-button:hover {
+.lupa {
+  font-size: 30px;
+}
+
+.search-button:hover {
   background-color: rgba(52, 238, 114, 0.89);
-  transition: 1s;
-}
-
-img {
-  width: 16px;
-  height: 16px;
+  transform: scale(1.1);
 }
 
 .suggestions-list {
@@ -301,26 +285,49 @@ img {
   width: 10%;
   max-height: 200px;
   overflow-y: auto;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .suggestions-list li {
   padding: 8px;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .suggestions-list li:hover {
   background-color: #f0f0f0;
+  transform: scale(1.05);
 }
 
 .categories-container {
   text-align: center;
   width: 80%;
   margin: auto;
+  animation: slideUp 1s ease;
 }
 
+.category-item {
+  background-color: rgba(223, 42, 42, 0.88);
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.5s;
+}
+
+.category-item:hover {
+  background-color: #681717;
+  transform: scale(1.1);
+}
+
+ul,
 .categories-list {
   list-style: none;
   padding: 0;
+  margin: 0;
+  color: black;
 }
 
 .categories-list li {

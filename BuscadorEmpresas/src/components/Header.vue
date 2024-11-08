@@ -54,6 +54,20 @@ const handleLogout = () => {
 
 
 <style scoped>
+.nav__link{
+  font-weight: bold;
+  padding: 10px;
+}
+
+.nav__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 2px;
+  border-radius: 5px;
+  background-color: #00000063;
+
+}
+
 span:hover,
 .Solicitudes:hover {
   font-size: 17px;
@@ -80,7 +94,7 @@ span {
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 a,
@@ -139,7 +153,6 @@ nav a:first-of-type {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin-left: 20vh;
   font-family: Arial, Helvetica, sans-serif;
 }
 
