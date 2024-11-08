@@ -3,6 +3,9 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { usePeticionesStore } from '../stores/Peticiones';
 import { useLoginStore } from '@/stores/Login';
 import { useUsuarioStore } from '@/stores/Usuario';
+import L from 'leaflet';
+import axios from 'axios';
+import 'leaflet/dist/leaflet.css';
 
 const peticionesStore = usePeticionesStore();
 const loginStore = useLoginStore()
@@ -10,13 +13,51 @@ const usuarioStore = useUsuarioStore()
 
 const nombreEmpresa = ref('');
 const descripcionEmpresa = ref('');
-const direccionEmpresa = ref('');
 const telefonoEmpresa = ref<number | null>(null);
 const correoEmpresa = ref('')
 const sitioWebEmpresa = ref('')
 const imagenEmpresaURL = ref('');
 const idCategoriaEmpresa = ref(null);
 const idCiudadEmpresa = ref(null);
+
+const direccionEmpresa = ref('');
+let map: L.Map;
+const marker = ref<L.Marker | null>(null);
+
+const initMap = () => {
+  map = L.map('map').setView([40.416775, -3.703790], 6);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  }).addTo(map);
+
+  // Evento de click en el mapa
+  map.on('click', async (e: L.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng;
+
+    if (marker.value) {
+      map.removeLayer(marker.value);
+    }
+
+    // Crear y agregar un nuevo marcador en la ubicación seleccionada
+    marker.value = L.marker([lat, lng]).addTo(map);
+
+    // Llamada a la API de Nominatim para obtener la dirección
+    const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+      params: {
+        lat: lat,
+        lon: lng,
+        format: 'json',
+      },
+    });
+
+    if (response.data && response.data.display_name) {
+      direccionEmpresa.value = response.data.display_name;
+    } else {
+      direccionEmpresa.value = 'Dirección no encontrada';
+    }
+  });
+};
 
 const caracteresDescripcion = computed(() => { return descripcionEmpresa.value.length })
 const caracteresNombre = computed(() => { return nombreEmpresa.value.length })
@@ -33,7 +74,6 @@ const botonEstilo = ref({});
 const errores = ref({
   nombreEmpresa: '',
   descripcionEmpresa: '',
-  direccionEmpresa: '',
   telefonoEmpresa: '',
   correoEmpresa: '',
   sitioWebEmpresa: '',
@@ -71,7 +111,6 @@ const subirTop = () => {
 
 const ValidarFormulario = async () => {
 
-  const direccionRegex = /^(.+?),\s*\d{1,5},\s*\d{5},\s*[^,]+$/;
   const correoRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
   const sitioWebRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
@@ -83,9 +122,6 @@ const ValidarFormulario = async () => {
   // Validación descripción
   errores.value.descripcionEmpresa =
     caracteresDescripcion.value < 500 ? 'La descripción debe ser mayor de 500 caracteres.' : '';
-  // Validación dirección
-  errores.value.direccionEmpresa = !direccionRegex.test(direccionEmpresa.value)
-    ? 'La dirección debe seguir el formato: Calle, Número, Código Postal, Ciudad.' : '';
   // Validación teléfono
   errores.value.telefonoEmpresa =
     telefonoLength.value !== 9 ? 'El teléfono debe tener exactamente 9 dígitos.' : '';
@@ -151,7 +187,6 @@ watch(
   [
     nombreEmpresa,
     descripcionEmpresa,
-    direccionEmpresa,
     telefonoEmpresa,
     correoEmpresa,
     sitioWebEmpresa,
@@ -178,6 +213,7 @@ onMounted(async () => {
   await peticionesStore.obtenerCiudades();
   await peticionesStore.obtenerCategorias();
   ValidarFormulario()
+  initMap();
 })
 </script>
 
@@ -199,14 +235,14 @@ onMounted(async () => {
           <p style="color: grey;"> Caracteres: {{ caracteresDescripcion }} / 1000</p>
           <textarea v-model="descripcionEmpresa" id="descripcionEmpresa" @input="limitarDescripcion"
             placeholder="Descripcion de la empresa" required></textarea>
-          <p class="error-message" v-if="errores.descripcionEmpresa">{{ errores.descripcionEmpresa }}</p>
+          <!-- <p class="error-message" v-if="errores.descripcionEmpresa">{{ errores.descripcionEmpresa }}</p> -->
         </div>
 
         <div class="form-group">
           <label for="direccionEmpresa">Dirección:</label>
           <input v-model="direccionEmpresa" id="direccionEmpresa"
-            placeholder="Calle, Número, Código Postal, Ciudad, País" />
-          <p class="error-message" v-if="errores.direccionEmpresa">{{ errores.direccionEmpresa }}</p>
+            placeholder="Calle, Número, Código Postal, Ciudad, País" readonly required>
+          <div id="map" style="height: 300px;"></div>
         </div>
 
         <div class="form-group">
