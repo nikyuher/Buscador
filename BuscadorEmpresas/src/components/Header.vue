@@ -68,11 +68,14 @@ const handleLogout = () => {
 
 }
 
+span, .Solicitudes{
+  padding: 5px;
+  font-size: 17px;
+}
+
 span:hover,
 .Solicitudes:hover {
-  font-size: 17px;
   background-color: #0000007e;
-  padding: 5px;
   border-radius: 5px;
   align-items: center;
   text-align: center;
