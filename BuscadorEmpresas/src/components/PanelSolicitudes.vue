@@ -11,8 +11,10 @@ const peticionesStore = usePeticionesStore();
 const loginStore = useLoginStore()
 const usuarioStore = useUsuarioStore()
 
+
 const nombreEmpresa = ref('');
 const descripcionEmpresa = ref('');
+const direccionEmpresa = ref('');
 const telefonoEmpresa = ref<number | null>(null);
 const correoEmpresa = ref('')
 const sitioWebEmpresa = ref('')
@@ -20,7 +22,6 @@ const imagenEmpresaURL = ref('');
 const idCategoriaEmpresa = ref(null);
 const idCiudadEmpresa = ref(null);
 
-const direccionEmpresa = ref('');
 let map: L.Map;
 const marker = ref<L.Marker | null>(null);
 
@@ -66,6 +67,7 @@ const telefonoLength = computed(() => {
 });
 
 const validarForm = ref(false)
+const formularioEnviado = ref(false);
 const success = ref(false);
 const error = ref(false);
 const Message = ref('');
@@ -108,42 +110,52 @@ const subirTop = () => {
     behavior: 'smooth'
   });
 }
-
-const ValidarFormulario = async () => {
-
-  const correoRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
-  const sitioWebRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-  const urlImgenRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-
-  // Validación nombre
+const validarNombre = () => {
   errores.value.nombreEmpresa =
     caracteresNombre.value < 3 ? 'El nombre debe tener más de 3 caracteres.' : '';
-  // Validación descripción
+};
+
+const validarDescripcion = () => {
   errores.value.descripcionEmpresa =
     caracteresDescripcion.value < 500 ? 'La descripción debe ser mayor de 500 caracteres.' : '';
-  // Validación teléfono
+};
+
+const validarTelefono = () => {
   errores.value.telefonoEmpresa =
     telefonoLength.value !== 9 ? 'El teléfono debe tener exactamente 9 dígitos.' : '';
-  // Validación correo
+};
+
+const validarCorreo = () => {
+  const correoRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
   errores.value.correoEmpresa = !correoRegex.test(correoEmpresa.value)
     ? 'El correo debe ser un Gmail válido (ejemplo@gmail.com).' : '';
-  // Validación SitioWeb
+};
+
+const validarSitioWeb = () => {
+  const sitioWebRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
   errores.value.sitioWebEmpresa = !sitioWebRegex.test(sitioWebEmpresa.value)
     ? 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).' : '';
-  // Validación SitioWeb
-  errores.value.imagenEmpresaURL = !urlImgenRegex.test(imagenEmpresaURL.value)
-    ? 'La URL de la imagen debe ser válido (http://ImagenWeb.com o https://ImagenWeb.com).' : '';
-  // Validación categoría y ciudad
-  errores.value.idCategoriaEmpresa = idCategoriaEmpresa.value === null ? 'Selecciona una categoría.' : '';
-  errores.value.idCiudadEmpresa = idCiudadEmpresa.value === null ? 'Selecciona una ciudad.' : '';
+};
 
-  // Determinar si el formulario es válido en general
-  validarForm.value = Object.values(errores.value).every((msg) => msg === '');
-  botonEstilo.value = validarForm.value ? {} : { opacity: 0.5, cursor: 'not-allowed' };
+const validarImagenURL = () => {
+  const urlImgenRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+  errores.value.imagenEmpresaURL = !urlImgenRegex.test(imagenEmpresaURL.value)
+    ? 'La URL de la imagen debe ser válida (http://ImagenWeb.com o https://ImagenWeb.com).' : '';
+};
+
+const validarCategoria = () => {
+  errores.value.idCategoriaEmpresa = idCategoriaEmpresa.value === null ? 'Selecciona una categoría.' : '';
+};
+
+const validarCiudad = () => {
+  errores.value.idCiudadEmpresa = idCiudadEmpresa.value === null ? 'Selecciona una ciudad.' : '';
 };
 
 const enviarPeticion = async () => {
+  formularioEnviado.value = true; // Activar la bandera para mostrar errores si faltan
+  await ValidarFormulario();
+
+  if (!validarForm.value) return; // Salir si el formulario no es válido
 
   try {
     const datosPeticion = {
@@ -162,20 +174,20 @@ const enviarPeticion = async () => {
     success.value = true;
     error.value = false;
     Message.value = 'Peticion enviada correctamente';
-    subirTop()
+    subirTop();
 
-    nombreEmpresa.value = ''
-    descripcionEmpresa.value = ''
-    direccionEmpresa.value = ''
-    telefonoEmpresa.value = null
-    correoEmpresa.value = ""
-    sitioWebEmpresa.value = ""
-    imagenEmpresaURL.value = ''
-    idCategoriaEmpresa.value = null
-    idCiudadEmpresa.value = null
+    nombreEmpresa.value = '';
+    descripcionEmpresa.value = '';
+    direccionEmpresa.value = '';
+    telefonoEmpresa.value = null;
+    correoEmpresa.value = '';
+    sitioWebEmpresa.value = '';
+    imagenEmpresaURL.value = '';
+    idCategoriaEmpresa.value = null;
+    idCiudadEmpresa.value = null;
+    formularioEnviado.value = false; // Reiniciar la bandera
     validarForm.value = false;
     botonEstilo.value = { opacity: 0.5, cursor: 'not-allowed' };
-
   } catch (err) {
     success.value = false;
     error.value = true;
@@ -212,7 +224,6 @@ onMounted(async () => {
   await confirmarSesion()
   await peticionesStore.obtenerCiudades();
   await peticionesStore.obtenerCategorias();
-  ValidarFormulario()
   initMap();
 })
 </script>
@@ -235,7 +246,7 @@ onMounted(async () => {
           <p style="color: grey;"> Caracteres: {{ caracteresDescripcion }} / 1000</p>
           <textarea v-model="descripcionEmpresa" id="descripcionEmpresa" @input="limitarDescripcion"
             placeholder="Descripcion de la empresa" required></textarea>
-          <!-- <p class="error-message" v-if="errores.descripcionEmpresa">{{ errores.descripcionEmpresa }}</p> -->
+          <p class="error-message" v-if="errores.descripcionEmpresa">{{ errores.descripcionEmpresa }}</p>
         </div>
 
         <div class="form-group">
@@ -292,7 +303,7 @@ onMounted(async () => {
           <p class="error-message" v-if="errores.idCiudadEmpresa">{{ errores.idCiudadEmpresa }}</p>
         </div>
 
-        <button type="submit" class="submit-btn" :style="botonEstilo" :disabled="!validarForm">
+        <button type="submit" class="submit-btn" :style="botonEstilo">
           Enviar Solicitud
         </button>
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
