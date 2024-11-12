@@ -159,4 +159,34 @@ button:disabled {
   color: red;
   text-align: center;
 }
+
+@media (max-width: 600px) {
+    .cont-form {
+        padding: 20px;
+        display: flex;
+        position: relative;
+        margin-top: 15vh;
+        
+    }
+
+    .form-card {
+        padding: 20px;
+    }
+
+    .header-name a {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .input-group input {
+        padding: 8px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
 </style>

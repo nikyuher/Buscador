@@ -1,6 +1,6 @@
 <template>
     <div class="cont-form">
-        <v-card class="py-8 px-6 mx-auto ma-4" elevation="12" max-width="400" width="100%">
+        <v-card class="form-card" elevation="12">
             <div class="header-name">
                 <RouterLink to="/">
                     <h1>BuscaNet</h1>
@@ -20,8 +20,7 @@
 
                 <div class="input-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña"
-                        required />
+                    <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña" required />
                 </div>
 
                 <button type="submit" :disabled="loading">
@@ -75,23 +74,26 @@ const register = async () => {
 </script>
 
 <style scoped>
+.cont-form {
+    padding: 100px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-card {
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+    margin: auto;
+}
+
 .header-name a {
     color: #990000;
     text-decoration: none;
+    display: block;
     text-align: center;
-}
-
-.cont-form {
-    padding: 200px;
-}
-
-.register-container {
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 24px;
 }
 
 h2 {
@@ -131,15 +133,48 @@ button:disabled {
     cursor: not-allowed;
 }
 
-.error-message {
+.error-message,
+.success-message {
     margin-top: 10px;
-    color: red;
     text-align: center;
 }
 
+.error-message {
+    color: red;
+}
+
 .success-message {
-    margin-top: 10px;
     color: green;
-    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .cont-form {
+        padding: 20px;
+        display: flex;
+        position: relative;
+        margin-top: 15vh;
+        
+    }
+
+    .form-card {
+        padding: 20px;
+    }
+
+    .header-name a {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .input-group input {
+        padding: 8px;
+    }
+
+    button {
+        font-size: 14px;
+    }
 }
 </style>
