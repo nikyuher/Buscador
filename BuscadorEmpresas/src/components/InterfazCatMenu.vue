@@ -55,7 +55,7 @@ const reducirCategorias = () => {
         <div class="categories-list" :class="{ 'animate-list': isVisible }">
             <ul>
                 <!-- Mostrar todas o solo las primeras 5 según el estado responsive -->
-                <li v-for="(categoria, index) in (mostrarTodo ? categorias : categoriasIniciales)" :key="index">
+                <li v-for="(categoria, index) in (mostrarTodo ? categorias : categoriasIniciales)" :key="index" :class="{ extraRow: index >= 5 }">
                     <router-link
                         :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
                         class="category-item">
@@ -99,7 +99,9 @@ const reducirCategorias = () => {
 ul {
     list-style-type: none;
     padding: 0;
+    height: 200px;
     margin: 0;
+    flex-direction: column;
     display: flex;
     flex-wrap: wrap;
 }
@@ -169,6 +171,7 @@ li {
     ul {
         flex-direction: column;
         align-items: center;
+        height: auto;
     }
     li, .extra-category {
         padding: 8px 10px;

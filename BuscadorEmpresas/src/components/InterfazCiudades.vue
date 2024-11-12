@@ -59,16 +59,16 @@ const reducirCiudades = () => {
         <div class="categories-list" :class="{ 'animate-list': isVisible }">
             <ul>
                 <!-- Mostrar todas o solo las primeras 5 según el estado responsive -->
-                <li v-for="(ciudad, index) in (mostrarTodo ? Ciudades : CiudadesIniciales)" :key="index">
-                    <router-link
-                        :to="{ name: 'Ciudad', params: { nombre: ciudad.nombre, idCiudad: ciudad.idCiudad } }"
+                <li v-for="(ciudad, index) in (mostrarTodo ? Ciudades : CiudadesIniciales)" :key="index"
+                    :class="{ extraRow: index >= 5 }">
+                    <router-link :to="{ name: 'Ciudad', params: { nombre: ciudad.nombre, idCiudad: ciudad.idCiudad } }"
                         class="category-item">
                         <span class="bullet"></span>
                         <span>{{ ciudad.nombre }}</span>
                     </router-link>
                 </li>
             </ul>
-            
+
             <!-- Botones "Ver Más" y "Ver Menos" solo visibles en móvil -->
             <div v-if="esResponsive && CiudadesExtras.length > 0" class="toggle-buttons">
                 <button v-if="!mostrarTodo" @click="mostrarTodasCiudades" class="ver-mas">Ver más</button>
@@ -104,8 +104,10 @@ const reducirCiudades = () => {
 ul {
     list-style-type: none;
     padding: 0;
+    height: 300px;
     margin: 0;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
 }
 
@@ -114,6 +116,7 @@ li {
     align-items: center;
     padding: 8px 20px;
     opacity: 0;
+    flex-wrap: wrap;
     transform: translateY(20px);
     transition: opacity 0.8s ease, transform 0.8s ease;
 }
@@ -122,6 +125,7 @@ li {
     opacity: 1;
     transform: translateY(0);
 }
+
 
 .category-item {
     display: flex;
@@ -149,7 +153,8 @@ li {
 }
 
 /* Botones de "Ver Más" y "Ver Menos" */
-.ver-mas, .ver-menos {
+.ver-mas,
+.ver-menos {
     background-color: #b006ff;
     color: white;
     padding: 10px 20px;
@@ -161,7 +166,8 @@ li {
     transition: background-color 0.3s;
 }
 
-.ver-mas:hover, .ver-menos:hover {
+.ver-mas:hover,
+.ver-menos:hover {
     background-color: #8805bb;
 }
 
@@ -170,14 +176,19 @@ li {
     .Categorias {
         font-size: 28px;
     }
+
     ul {
         flex-direction: column;
         align-items: center;
+        height: auto;
     }
-    li, .extra-category {
+
+    li,
+    .extra-category {
         padding: 8px 10px;
         text-align: center;
     }
+
     .toggle-buttons {
         display: flex;
         justify-content: center;
