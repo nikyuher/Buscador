@@ -7,7 +7,7 @@ import { fetchEmpresaByCiudad, fetchCiudadById, fetchEmpresasById } from '../sto
 const ciudad = ref<{ idCiudad: number; ciudadNombre: string; empresa: { idEmpresa: number; nombre: string } | null } | null>(null);
 const empresa = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; telefono: string; imagen: string; } | null>(null);
 const error = ref(false);
-const nombreCiudadError = ref('')
+const nombreCiudadError = ref('');
 const mensajeError = ref('');
 const route = useRoute();
 
@@ -25,7 +25,7 @@ const fetchEmpresaCiudadData = async (idEmpresa: number, idCiudad: number) => {
         console.error('Error al obtener los datos de la empresa por ciudad:', err);
         fetchEmpresaData(idEmpresa);
         fetchCiudadData(idCiudad);
-        mensajeError.value = `No hay ninguna empresa de ${empresa.value?.nombre} en  ${ciudad.value?.ciudadNombre}</p>`
+        mensajeError.value = `No hay ninguna empresa de ${empresa.value?.nombre} en ${ciudad.value?.ciudadNombre}</p>`;
         error.value = true;
     }
 };
@@ -75,164 +75,182 @@ onMounted(() => {
 </script>
 
 <template>
-    <h1>Inicio > Empresa > {{ empresa?.nombre }}</h1>
-    <div class="category-enterprises-container">
-        <div v-if="ciudad" class="empresa-card">
-            <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa?.idEmpresa } }" class="decorador">
-                <div class="cont-img-tef">
-                    <div style="display: flex; align-items: center; color: black;">
-                        <v-icon>mdi-phone</v-icon>
-                        <p>{{ empresa?.telefono }}</p>
-                    </div>
-                    <img :src="empresa?.imagen" alt="Imagen de la empresa" class="empresa-img" />
-                </div>
-                <div class="empresa-details">
-                    <h3>{{ empresa?.nombre }}</h3>
-                    <h3 style="color: rgb(255, 94, 66);">Ciudad: {{ ciudad?.ciudadNombre }}</h3>
-                    <p class="empresa-address"><strong>Dirección:</strong> {{ empresa?.direccion }}</p>
-                    <p class="empresa-description"><strong>Descripción:</strong> {{ empresa?.descripcion }}</p>
-                </div>
-            </RouterLink>
-
-        </div>
-        <div v-else-if="mensajeError">
-            <p style="font-size: 20px; color: white;">No hay ninguna empresa de {{ empresa?.nombre }} en {{
-                nombreCiudadError }}</p>
-        </div>
-        <div v-else>
-            <p>Cargando datos...</p>
-        </div>
+    <div class="breadcrumb">
+      <h1>Inicio > Empresa > {{ empresa?.nombre }}</h1>
     </div>
-</template>
-
-<style scoped>
-.decorador {
-    display: flex;
+  
+    <div class="category-enterprises-container">
+      <div v-if="ciudad" class="empresa-card">
+        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa?.idEmpresa } }" class="empresa-link">
+          <div class="empresa-card-content">
+            <div class="cont-img-tef">
+              <img :src="empresa?.imagen" alt="Imagen de la empresa" class="empresa-img" />
+              <div class="empresa-contact">
+                <v-icon>mdi-phone</v-icon>
+                <span>{{ empresa?.telefono }}</span>
+              </div>
+            </div>
+  
+            <div class="empresa-details">
+              <h3 class="empresa-title">{{ empresa?.nombre }}</h3>
+              <h4 class="empresa-city">Ciudad: {{ ciudad?.ciudadNombre }}</h4>
+              <p class="empresa-address"><strong>Dirección:</strong> {{ empresa?.direccion }}</p>
+              <p class="empresa-description"><strong>Descripción:</strong> {{ empresa?.descripcion }}</p>
+            </div>
+          </div>
+        </RouterLink>
+      </div>
+  
+      <div v-else-if="mensajeError" class="no-data">
+        <p>No hay ninguna empresa de {{ empresa?.nombre }} en {{ nombreCiudadError }}</p>
+      </div>
+  
+      <div v-else class="loading">
+        <p>Cargando datos...</p>
+      </div>
+    </div>
+  </template>
+  
+  
+  <style scoped>
+  .breadcrumb h1 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
-.cont-img-tef {
-    width: 190px;
-    text-align: center;
+.category-enterprises-container {
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .empresa-card {
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    transition: transform 0.2s, box-shadow 0.2s;
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
-
-a {
-    text-decoration: none;
-}
-
-.Datos {
-    background-color: rgb(0, 0, 0);
-    border-radius: 10px;
-    padding: 40px 40px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-.Datos p {
-    font-size: 17px;
-}
-
-.Datos h2 {
-    color: rgb(235, 160, 48);
-}
-
-.category-enterprises-container {
-    padding: 20px;
-    background-color: rgb(209, 209, 209);
-    width: 60%;
-    margin: 150px auto;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    background-color: rgb(23 6 51 / 88%);
-    margin: 30px;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-h1 {
-    color: rgb(0, 0, 0);
-    font-size: 17px;
-}
-
-
-p {
-    margin: 5px 0;
-    color: rgb(0, 0, 0);
-}
-
-.breadcrumb {
-    font-size: 17px;
-    font-weight: 600;
-    color: #000000;
-    margin-bottom: 20px;
-}
-
-.category-enterprises-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
-
-.error-message,
-.no-data {
-    font-size: 18px;
-    color: #ff4d4f;
-    margin-top: 20px;
-}
-
-.empresa-list {
-    width: 100%;
-}
-
 
 .empresa-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.empresa-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+}
+
+.empresa-card-content {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.cont-img-tef {
+  text-align: center;
+  flex-shrink: 0;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .empresa-img {
-    max-width: 100%;
-    height: 100px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.empresa-contact {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #555;
+  font-size: 14px;
 }
 
 .empresa-details {
-    text-align: justify;
-    padding: 20px;
-    width: 80%;
+  flex: 1;
+  text-align: left;
 }
 
-.empresa-details h3 {
-    font-size: 18px;
-    color: #404fd4;
-    margin-bottom: 10px;
+.empresa-title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 700;
 }
 
-.empresa-description,
-.empresa-address {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+.empresa-city {
+  font-size: 18px;
+  color: #ff5e42;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.empresa-address,
+.empresa-description {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.no-data,
+.loading {
+  font-size: 18px;
+  color: #ff4d4f;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.no-data p,
+.loading p {
+  font-weight: 500;
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+  .empresa-card-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .cont-img-tef {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .empresa-img {
+    width: 110px;
+    height: 110px;
+  }
+
+  .empresa-title {
+    font-size: 20px;
+  }
+
+  .empresa-city {
     font-size: 16px;
-    color: #000000;
-    margin-bottom: 8px;
-}
+  }
 
-.empresa-address {
-    color: #000000;
+  .empresa-details {
+    margin-top: 15px;
+  }
 }
-</style>
+  </style>

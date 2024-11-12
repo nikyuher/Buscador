@@ -11,15 +11,12 @@ const recortarTexto = (texto: string, maxLongitud: number) => {
   return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
 };
 
-// Obtener los detalles de todas las empresas por categoría
 const fetchData = async (idCategoria: number) => {
   try {
     const response = await fetchEmpresasByCategoria(idCategoria);
-
     if (response && response.empresas && Array.isArray(response.empresas)) {
       categoriaNombre.value = response.categoriaNombre || 'Sin categoría';
 
-      // Mapear cada empresa y obtener sus detalles
       const empresasDetalles = await Promise.all(
         response.empresas.map(async (empresa) => {
           const detalles = await fetchEmpresasById(empresa.idEmpresa);
@@ -33,7 +30,6 @@ const fetchData = async (idCategoria: number) => {
           };
         })
       );
-
       empresas.value = empresasDetalles;
     } else {
       console.error('Respuesta no válida del servidor');
@@ -44,6 +40,7 @@ const fetchData = async (idCategoria: number) => {
     error.value = true;
   }
 };
+
 const route = useRoute();
 
 onMounted(async () => {
@@ -69,9 +66,9 @@ onMounted(async () => {
 
     <div v-if="!error && empresas.length" class="empresa-list">
       <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
-        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="decorador">
-          <div class="cont-img-tef">
-            <div style="display: flex; align-items: center; color: black;">
+        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-link">
+          <div class="empresa-img-container">
+            <div class="empresa-contact-info">
               <v-icon>mdi-phone</v-icon>
               <p>{{ empresa.telefono }}</p>
             </div>
@@ -95,80 +92,39 @@ onMounted(async () => {
   display: flex;
 }
 
-.cont-img-tef {
-  width: 190px;
-  text-align: center;
-}
-
 .empresa-card {
   background-color: #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
+  border-radius: 10px;
   transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 350px;
+  text-decoration: none;
 }
 
 a {
   text-decoration: none;
 }
 
-.Datos {
-  background-color: rgb(0, 0, 0);
-  border-radius: 10px;
-  padding: 40px 40px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-.Datos p {
-  font-size: 17px;
-}
-
-.Datos h2 {
-  color: rgb(235, 160, 48);
-}
-
 .category-enterprises-container {
   padding: 20px;
   background-color: rgb(209, 209, 209);
-  width: 60%;
-  margin: auto;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  background-color: rgb(23 6 51 / 88%);
-  margin: 30px;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-h1 {
-  color: rgb(255, 255, 255);
-}
-
-
-p {
-  margin: 5px 0;
-  color: rgb(0, 0, 0);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
 }
 
 .breadcrumb {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
-  color: #000000;
+  color: #333;
   margin-bottom: 20px;
-}
-
-.category-enterprises-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
 }
 
 .error-message,
@@ -176,46 +132,80 @@ p {
   font-size: 18px;
   color: #ff4d4f;
   margin-top: 20px;
+  text-align: center;
 }
 
 .empresa-list {
-  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
 }
 
-
-.empresa-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.empresa-img-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 .empresa-img {
   max-width: 100%;
-  height: 100px;
+  height: 150px;
+  object-fit: cover;
   border-radius: 10px;
-  margin-bottom: 15px;
+}
+
+.empresa-contact-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .empresa-details {
-  text-align: justify;
-  padding: 20px;
-  width: 80%;
+  text-align: center;
+  padding: 10px;
+  color: #333;
 }
 
 .empresa-details h3 {
-  font-size: 18px;
+  font-size: 20px;
   color: #404fd4;
   margin-bottom: 10px;
 }
 
 .empresa-description,
 .empresa-address {
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 16px;
-  color: #000000;
+  font-size: 14px;
+  color: #555;
   margin-bottom: 8px;
 }
 
-.empresa-address {
-  color: #000000;
+.empresa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .empresa-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .empresa-img {
+    height: 120px;
+  }
+
+  .empresa-details h3 {
+    font-size: 18px;
+  }
+
+  .empresa-description,
+  .empresa-address {
+    font-size: 13px;
+  }
 }
 </style>

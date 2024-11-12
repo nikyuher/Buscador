@@ -336,4 +336,45 @@ ul,
   margin: 5px 0;
   border-radius: 5px;
 }
+@media (max-width: 768px) {
+  .search-box {
+    padding-top: 50px;
+    min-height: 500px;
+  }
+
+  .search-box h2 {
+    font-size: 28px;
+    padding: 15px 0;
+  }
+
+  .search-inputs {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 50px;
+  }
+
+  .search-button {
+    padding: 10px;
+    font-size: 18px;
+    width: auto;
+  }
+
+  .lupa {
+    font-size: 24px;
+  }
+
+  .suggestions-list {
+    width: 70%;
+    margin-left: 7vh;
+  }
+
+  .categories-container {
+    width: 90%;
+  }
+  
+  input[type="text"] {  
+  width: 70%;
+  }
+}
+
 </style>

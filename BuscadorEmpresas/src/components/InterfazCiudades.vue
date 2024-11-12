@@ -1,15 +1,29 @@
 <script setup lang="ts">
 import { useCiudadStore } from '@/stores/Ciudad';
 import type { CiudadeEmpresas } from '@/stores/Ciudad';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const storeCiudad = useCiudadStore();
 const Ciudades = ref<CiudadeEmpresas[]>([]);
+const CiudadesIniciales = ref<CiudadeEmpresas[]>([]);
+const CiudadesExtras = ref<CiudadeEmpresas[]>([]);
+const mostrarTodo = ref(false);
 const isVisible = ref(false);
+const esResponsive = ref(window.innerWidth <= 600);
+
+// Función para actualizar el modo responsive según el ancho de la ventana
+const actualizarModoResponsive = () => {
+    esResponsive.value = window.innerWidth <= 600;
+    mostrarTodo.value = !esResponsive.value; // Mostrar todas las categorías en pantallas grandes
+};
 
 onMounted(async () => {
-    await storeCiudad.GetAllCiudades()
+    await storeCiudad.GetAllCiudades();
     Ciudades.value = storeCiudad.listaCiudades.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+    // Separar en dos listas: primeras 5 y el resto
+    CiudadesIniciales.value = Ciudades.value.slice(0, 5);
+    CiudadesExtras.value = Ciudades.value.slice(5);
 
     // Configuración de Intersection Observer
     const observer = new IntersectionObserver((entries) => {
@@ -21,7 +35,22 @@ onMounted(async () => {
         });
     });
     observer.observe(document.querySelector('.categories-list') as Element);
+
+    actualizarModoResponsive();
+    window.addEventListener('resize', actualizarModoResponsive);
 });
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', actualizarModoResponsive);
+});
+
+// Métodos para mostrar todas las ciudades o reducir la lista
+const mostrarTodasCiudades = () => {
+    mostrarTodo.value = true;
+}
+const reducirCiudades = () => {
+    mostrarTodo.value = false;
+}
 </script>
 
 <template>
@@ -29,19 +58,28 @@ onMounted(async () => {
         <h3 class="Categorias" :class="{ 'animate-title': isVisible }" style="font-size: 40px;">Ciudades</h3>
         <div class="categories-list" :class="{ 'animate-list': isVisible }">
             <ul>
-                <li v-for="(ciudad, index) in Ciudades" :key="ciudad.idCiudad" :class="{ extraRow: index >= 5 }">
-                    <router-link :to="{ name: 'Ciudad', params: { idCiudad: ciudad.idCiudad } }" class="category-item">
+                <!-- Mostrar todas o solo las primeras 5 según el estado responsive -->
+                <li v-for="(ciudad, index) in (mostrarTodo ? Ciudades : CiudadesIniciales)" :key="index">
+                    <router-link
+                        :to="{ name: 'Ciudad', params: { nombre: ciudad.nombre, idCiudad: ciudad.idCiudad } }"
+                        class="category-item">
                         <span class="bullet"></span>
-                        <span>{{ ciudad.nombre }} </span>
+                        <span>{{ ciudad.nombre }}</span>
                     </router-link>
                 </li>
             </ul>
+            
+            <!-- Botones "Ver Más" y "Ver Menos" solo visibles en móvil -->
+            <div v-if="esResponsive && CiudadesExtras.length > 0" class="toggle-buttons">
+                <button v-if="!mostrarTodo" @click="mostrarTodasCiudades" class="ver-mas">Ver más</button>
+                <button v-if="mostrarTodo" @click="reducirCiudades" class="ver-menos">Ver menos</button>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-/* Animación para el título */
+/* Estilos de la animación y estructura */
 .Categorias {
     opacity: 0;
     transform: translateY(-20px);
@@ -53,36 +91,31 @@ onMounted(async () => {
     transform: translateY(0);
 }
 
-/* Animación de la lista */
 .categories-list {
     opacity: 0;
     transition: opacity 1s ease-in-out;
+    margin-bottom: 5vh;
 }
 
 .animate-list {
     opacity: 1;
 }
 
-/* Animaciones para cada elemento */
 ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: left;
     flex-wrap: wrap;
-    max-height: 50vh;
 }
 
 li {
     display: flex;
     align-items: center;
-    padding: 20px 30px;
+    padding: 8px 20px;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease, transform 0.8s ease;
-    transition-delay: calc(var(--index) * 0.1s);
-    /* Retardo para cada elemento */
 }
 
 .animate-list li {
@@ -90,7 +123,6 @@ li {
     transform: translateY(0);
 }
 
-/* Estilo de los items */
 .category-item {
     display: flex;
     align-items: center;
@@ -110,5 +142,46 @@ li {
     background-color: #91763c;
     border-radius: 50%;
     margin-right: 10px;
+}
+
+.extra-category {
+    flex: 1 1 50%;
+}
+
+/* Botones de "Ver Más" y "Ver Menos" */
+.ver-mas, .ver-menos {
+    background-color: #b006ff;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.ver-mas:hover, .ver-menos:hover {
+    background-color: #8805bb;
+}
+
+/* Responsive para móvil */
+@media (max-width: 600px) {
+    .Categorias {
+        font-size: 28px;
+    }
+    ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    li, .extra-category {
+        padding: 8px 10px;
+        text-align: center;
+    }
+    .toggle-buttons {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
 }
 </style>
