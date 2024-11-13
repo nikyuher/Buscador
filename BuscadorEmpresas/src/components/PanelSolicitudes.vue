@@ -36,7 +36,7 @@ const initMap = () => {
   map.on('click', async (e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng;
 
-    if (marker.value) {
+    if (marker.value instanceof L.Marker) {
       map.removeLayer(marker.value);
     }
 
@@ -108,8 +108,6 @@ const subirTop = () => {
   });
 }
 const validarNombre = async () => {
-  // errores.value.nombreEmpresa =
-  // caracteresNombre.value < 3 ? 'El nombre debe tener más de 3 caracteres.' : '';
 
   if (caracteresNombre.value < 3) {
     errores.value.nombreEmpresa = 'El nombre debe tener más de 3 caracteres.'
@@ -121,8 +119,6 @@ const validarNombre = async () => {
 };
 
 const validarDescripcion = async () => {
-  // errores.value.descripcionEmpresa =
-  //   caracteresDescripcion.value < 500 ? 'La descripción debe ser mayor de 500 caracteres.' : '';
 
   if (caracteresDescripcion.value < 500) {
     errores.value.descripcionEmpresa = 'La descripción debe ser mayor de 500 caracteres.'
@@ -147,8 +143,6 @@ const validarTelefono = async () => {
 
 const validarCorreo = async () => {
   const correoRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-  // errores.value.correoEmpresa = !correoRegex.test(correoEmpresa.value)
-  //   ? 'El correo debe ser un Gmail válido (ejemplo@gmail.com).' : '';
 
   if (!correoRegex.test(correoEmpresa.value)) {
     errores.value.correoEmpresa = 'El correo debe ser un Gmail válido (ejemplo@gmail.com).'
@@ -161,8 +155,6 @@ const validarCorreo = async () => {
 
 const validarSitioWeb = async () => {
   const sitioWebRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-  // errores.value.sitioWebEmpresa = !sitioWebRegex.test(sitioWebEmpresa.value)
-  //   ? 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).' : '';
 
   if (!sitioWebRegex.test(sitioWebEmpresa.value)) {
     errores.value.sitioWebEmpresa = 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).'
@@ -176,8 +168,6 @@ const validarSitioWeb = async () => {
 
 const validarImagenURL = async () => {
   const urlImgenRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-  // errores.value.imagenEmpresaURL = !urlImgenRegex.test(imagenEmpresaURL.value)
-  //   ? 'La URL de la imagen debe ser válida (http://ImagenWeb.com o https://ImagenWeb.com).' : '';
 
   if (!urlImgenRegex.test(imagenEmpresaURL.value)) {
     errores.value.imagenEmpresaURL = 'La URL de la imagen debe ser válida (http://ImagenWeb.com o https://ImagenWeb.com).'
@@ -190,7 +180,6 @@ const validarImagenURL = async () => {
 };
 
 const validarCategoria = async () => {
-  // errores.value.idCategoriaEmpresa = idCategoriaEmpresa.value === null ? 'Selecciona una categoría.' : '';
 
   if (idCategoriaEmpresa.value === null) {
     errores.value.idCategoriaEmpresa = 'Selecciona una categoría.'
@@ -203,7 +192,6 @@ const validarCategoria = async () => {
 };
 
 const validarCiudad = async () => {
-  // errores.value.idCiudadEmpresa = idCiudadEmpresa.value === null ? 'Selecciona una ciudad.' : '';
 
   if (idCiudadEmpresa.value === null) {
     errores.value.idCiudadEmpresa = 'Selecciona una ciudad.'

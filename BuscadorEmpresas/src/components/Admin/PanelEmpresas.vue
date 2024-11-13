@@ -65,7 +65,7 @@ const initMap = (lat = 40.416775, lng = -3.703790) => {
     const { lat, lng } = e.latlng;
 
     // Si existe un marcador previo, se elimina
-    if (marker.value) {
+    if (marker.value instanceof L.Marker) {
       map.removeLayer(marker.value);
     }
 
