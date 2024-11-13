@@ -3,14 +3,7 @@ import { useLoginStore } from '@/stores/Login';
 import { useUsuarioStore } from '@/stores/Usuario';
 import { ref, computed, onMounted, reactive } from 'vue'
 import { useEmpresaStore } from '@/stores/Empresa';
-
-interface DatosEmpresa {
-    idEmpresa: number;
-    nombre: string;
-    descripcion: string;
-    direccion: string;
-    imagen: string;
-}
+import type { DatosEmpresa } from '@/stores/Empresa'
 
 const empresaStore = useEmpresaStore();
 const loginStore = useLoginStore()
@@ -87,6 +80,9 @@ const idEmpresa = ref(0)
 const nombre = ref('')
 const descripcion = ref('')
 const direccion = ref('')
+const telefono = ref()
+const correoEmpresa = ref('')
+const sitioWeb = ref('')
 const imagen = ref('')
 
 const limpiarFormulario = () => {
@@ -104,6 +100,9 @@ const seleccionarEmpresaParaEditar = (empresa: any) => {
     nombre.value = empresa.nombre
     descripcion.value = empresa.descripcion
     direccion.value = empresa.direccion
+    telefono.value = empresa.telefono
+    correoEmpresa.value = empresa.correoEmpresa
+    sitioWeb.value = empresa.sitioWeb
     imagen.value = empresa.imagen
     editMode.value = true;
 
@@ -140,6 +139,9 @@ const confirmarEnvio = async () => {
                 nombre: nombre.value,
                 descripcion: descripcion.value,
                 direccion: direccion.value,
+                telefono: telefono.value,
+                correoEmpresa: correoEmpresa.value,
+                sitioWeb: sitioWeb.value,
                 imagen: imagen.value
             }
 
@@ -211,6 +213,18 @@ const confirmarEnvio = async () => {
                                         <div>
                                             <label for="direccion">Dirección:</label>
                                             <input v-model="direccion" id="direccion" type="text" required />
+                                        </div>
+                                        <div>
+                                            <label for="telefono">Telefono:</label>
+                                            <input v-model="telefono" type="number" required>
+                                        </div>
+                                        <div>
+                                            <label for="correoEmpresa">Correo Empresa:</label>
+                                            <input v-model="correoEmpresa" type="text" required>
+                                        </div>
+                                        <div>
+                                            <label for="sitioWeb">Sitio Web:</label>
+                                            <input v-model="sitioWeb" type="text" required>
                                         </div>
                                         <div>
                                             <label for="imagen">URL de la Imagen:</label>

@@ -66,12 +66,9 @@ const telefonoLength = computed(() => {
   return telefonoEmpresa.value !== null ? telefonoEmpresa.value.toString().length : 0;
 });
 
-const validarForm = ref(false)
-const formularioEnviado = ref(false);
 const success = ref(false);
 const error = ref(false);
 const Message = ref('');
-const botonEstilo = ref({});
 
 const errores = ref({
   nombreEmpresa: '',
@@ -110,84 +107,163 @@ const subirTop = () => {
     behavior: 'smooth'
   });
 }
-const validarNombre = () => {
-  errores.value.nombreEmpresa =
-    caracteresNombre.value < 3 ? 'El nombre debe tener más de 3 caracteres.' : '';
+const validarNombre = async () => {
+  // errores.value.nombreEmpresa =
+  // caracteresNombre.value < 3 ? 'El nombre debe tener más de 3 caracteres.' : '';
+
+  if (caracteresNombre.value < 3) {
+    errores.value.nombreEmpresa = 'El nombre debe tener más de 3 caracteres.'
+    return false
+  } else {
+    errores.value.nombreEmpresa = ''
+    return true
+  }
 };
 
-const validarDescripcion = () => {
-  errores.value.descripcionEmpresa =
-    caracteresDescripcion.value < 500 ? 'La descripción debe ser mayor de 500 caracteres.' : '';
+const validarDescripcion = async () => {
+  // errores.value.descripcionEmpresa =
+  //   caracteresDescripcion.value < 500 ? 'La descripción debe ser mayor de 500 caracteres.' : '';
+
+  if (caracteresDescripcion.value < 500) {
+    errores.value.descripcionEmpresa = 'La descripción debe ser mayor de 500 caracteres.'
+    return false
+  } else {
+    errores.value.descripcionEmpresa = ''
+    return true
+  }
 };
 
-const validarTelefono = () => {
+const validarTelefono = async () => {
   errores.value.telefonoEmpresa =
     telefonoLength.value !== 9 ? 'El teléfono debe tener exactamente 9 dígitos.' : '';
+  if (telefonoLength.value !== 9) {
+    errores.value.telefonoEmpresa = 'El teléfono debe tener exactamente 9 dígitos.'
+    return false
+  } else {
+    errores.value.telefonoEmpresa = ''
+    return true
+  }
 };
 
-const validarCorreo = () => {
+const validarCorreo = async () => {
   const correoRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-  errores.value.correoEmpresa = !correoRegex.test(correoEmpresa.value)
-    ? 'El correo debe ser un Gmail válido (ejemplo@gmail.com).' : '';
+  // errores.value.correoEmpresa = !correoRegex.test(correoEmpresa.value)
+  //   ? 'El correo debe ser un Gmail válido (ejemplo@gmail.com).' : '';
+
+  if (!correoRegex.test(correoEmpresa.value)) {
+    errores.value.correoEmpresa = 'El correo debe ser un Gmail válido (ejemplo@gmail.com).'
+    return false
+  } else {
+    errores.value.correoEmpresa = ''
+    return true
+  }
 };
 
-const validarSitioWeb = () => {
+const validarSitioWeb = async () => {
   const sitioWebRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-  errores.value.sitioWebEmpresa = !sitioWebRegex.test(sitioWebEmpresa.value)
-    ? 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).' : '';
+  // errores.value.sitioWebEmpresa = !sitioWebRegex.test(sitioWebEmpresa.value)
+  //   ? 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).' : '';
+
+  if (!sitioWebRegex.test(sitioWebEmpresa.value)) {
+    errores.value.sitioWebEmpresa = 'El sitio Web debe ser válido (http://MiWeb.com o https://MiWeb.com).'
+    return false
+  } else {
+    errores.value.sitioWebEmpresa = ''
+    return true
+  }
+
 };
 
-const validarImagenURL = () => {
+const validarImagenURL = async () => {
   const urlImgenRegex = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-  errores.value.imagenEmpresaURL = !urlImgenRegex.test(imagenEmpresaURL.value)
-    ? 'La URL de la imagen debe ser válida (http://ImagenWeb.com o https://ImagenWeb.com).' : '';
+  // errores.value.imagenEmpresaURL = !urlImgenRegex.test(imagenEmpresaURL.value)
+  //   ? 'La URL de la imagen debe ser válida (http://ImagenWeb.com o https://ImagenWeb.com).' : '';
+
+  if (!urlImgenRegex.test(imagenEmpresaURL.value)) {
+    errores.value.imagenEmpresaURL = 'La URL de la imagen debe ser válida (http://ImagenWeb.com o https://ImagenWeb.com).'
+    return false
+  } else {
+    errores.value.imagenEmpresaURL = ''
+    return true
+  }
+
 };
 
-const validarCategoria = () => {
-  errores.value.idCategoriaEmpresa = idCategoriaEmpresa.value === null ? 'Selecciona una categoría.' : '';
+const validarCategoria = async () => {
+  // errores.value.idCategoriaEmpresa = idCategoriaEmpresa.value === null ? 'Selecciona una categoría.' : '';
+
+  if (idCategoriaEmpresa.value === null) {
+    errores.value.idCategoriaEmpresa = 'Selecciona una categoría.'
+    return false
+  } else {
+    errores.value.idCategoriaEmpresa = ''
+    return true
+  }
+
 };
 
-const validarCiudad = () => {
-  errores.value.idCiudadEmpresa = idCiudadEmpresa.value === null ? 'Selecciona una ciudad.' : '';
+const validarCiudad = async () => {
+  // errores.value.idCiudadEmpresa = idCiudadEmpresa.value === null ? 'Selecciona una ciudad.' : '';
+
+  if (idCiudadEmpresa.value === null) {
+    errores.value.idCiudadEmpresa = 'Selecciona una ciudad.'
+    return false
+  } else {
+    errores.value.idCiudadEmpresa = ''
+    return true
+  }
 };
 
 const enviarPeticion = async () => {
-  formularioEnviado.value = true; // Activar la bandera para mostrar errores si faltan
-  await ValidarFormulario();
-
-  if (!validarForm.value) return; // Salir si el formulario no es válido
 
   try {
-    const datosPeticion = {
-      nombreEmpresa: nombreEmpresa.value,
-      descripcionEmpresa: descripcionEmpresa.value,
-      direccionEmpresa: direccionEmpresa.value,
-      telefonoEmpresa: telefonoEmpresa.value,
-      correoEmpresa: correoEmpresa.value,
-      sitioWebEmpresa: sitioWebEmpresa.value,
-      imagenEmpresaURL: imagenEmpresaURL.value,
-      idCategoriaEmpresa: idCategoriaEmpresa.value,
-      idCiudadEmpresa: idCiudadEmpresa.value,
-    };
 
-    await peticionesStore.CrearPeticion(datosPeticion);
-    success.value = true;
-    error.value = false;
-    Message.value = 'Peticion enviada correctamente';
-    subirTop();
+    await validarNombre()
+    await validarDescripcion()
+    await validarTelefono()
+    await validarCorreo()
+    await validarSitioWeb()
+    await validarImagenURL()
+    await validarCategoria()
+    await validarCiudad()
 
-    nombreEmpresa.value = '';
-    descripcionEmpresa.value = '';
-    direccionEmpresa.value = '';
-    telefonoEmpresa.value = null;
-    correoEmpresa.value = '';
-    sitioWebEmpresa.value = '';
-    imagenEmpresaURL.value = '';
-    idCategoriaEmpresa.value = null;
-    idCiudadEmpresa.value = null;
-    formularioEnviado.value = false; // Reiniciar la bandera
-    validarForm.value = false;
-    botonEstilo.value = { opacity: 0.5, cursor: 'not-allowed' };
+    if (await validarNombre() &&
+      await validarDescripcion() &&
+      await validarTelefono() &&
+      await validarCorreo() &&
+      await validarSitioWeb() &&
+      await validarImagenURL() &&
+      await validarCategoria() &&
+      await validarCiudad()) {
+
+      const datosPeticion = {
+        nombreEmpresa: nombreEmpresa.value,
+        descripcionEmpresa: descripcionEmpresa.value,
+        direccionEmpresa: direccionEmpresa.value,
+        telefonoEmpresa: telefonoEmpresa.value,
+        correoEmpresa: correoEmpresa.value,
+        sitioWebEmpresa: sitioWebEmpresa.value,
+        imagenEmpresaURL: imagenEmpresaURL.value,
+        idCategoriaEmpresa: idCategoriaEmpresa.value,
+        idCiudadEmpresa: idCiudadEmpresa.value,
+      };
+
+      await peticionesStore.CrearPeticion(datosPeticion);
+      success.value = true;
+      error.value = false;
+      Message.value = 'Peticion enviada correctamente';
+      subirTop();
+
+      nombreEmpresa.value = '';
+      descripcionEmpresa.value = '';
+      direccionEmpresa.value = '';
+      telefonoEmpresa.value = null;
+      correoEmpresa.value = '';
+      sitioWebEmpresa.value = '';
+      imagenEmpresaURL.value = '';
+      idCategoriaEmpresa.value = null;
+      idCiudadEmpresa.value = null;
+    }
   } catch (err) {
     success.value = false;
     error.value = true;
@@ -195,19 +271,6 @@ const enviarPeticion = async () => {
   }
 };
 
-watch(
-  [
-    nombreEmpresa,
-    descripcionEmpresa,
-    telefonoEmpresa,
-    correoEmpresa,
-    sitioWebEmpresa,
-    imagenEmpresaURL,
-    idCategoriaEmpresa,
-    idCiudadEmpresa,
-  ],
-  ValidarFormulario
-);
 
 const confirmarSesion = async () => {
   try {
@@ -303,7 +366,7 @@ onMounted(async () => {
           <p class="error-message" v-if="errores.idCiudadEmpresa">{{ errores.idCiudadEmpresa }}</p>
         </div>
 
-        <button type="submit" class="submit-btn" :style="botonEstilo">
+        <button type="submit" class="submit-btn">
           Enviar Solicitud
         </button>
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
