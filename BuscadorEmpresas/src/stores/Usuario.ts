@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import { useLoginStore } from '../stores/Login'
 
-const loginStore = useLoginStore()
-
 interface Usuario {
   idUsuario: number
   nombre: string
@@ -42,6 +40,7 @@ export const useUsuarioStore = defineStore({
   actions: {
     async GetAllUsuarios() {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Usuario`, {
@@ -68,6 +67,7 @@ export const useUsuarioStore = defineStore({
     },
     async GetUsuarioId(idUsuario: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Usuario/${idUsuario}`, {
@@ -94,6 +94,7 @@ export const useUsuarioStore = defineStore({
     },
     async GetPeticionesByUsuario(idUsuario: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Usuario/${idUsuario}/peticiones`, {
@@ -120,6 +121,7 @@ export const useUsuarioStore = defineStore({
     },
     async GetEmpresasByUsuario(idUsuario: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Usuario/${idUsuario}/empresas`, {
@@ -146,6 +148,7 @@ export const useUsuarioStore = defineStore({
     },
     async PutDatosUsuarioId(infoUser: infoUsuario) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Usuario`, {
@@ -165,7 +168,7 @@ export const useUsuarioStore = defineStore({
         const data = await response.json()
         this.usuario = data
 
-        loginStore.usuario = { ...loginStore.usuario, ...data };
+        loginStore.usuario = { ...loginStore.usuario, ...data }
 
         console.log('Usuario modificado correctamente')
       } catch (error) {
@@ -175,6 +178,7 @@ export const useUsuarioStore = defineStore({
     },
     async EliminarUsuarios(idUsuario: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Usuario/${idUsuario}`, {
@@ -197,6 +201,7 @@ export const useUsuarioStore = defineStore({
     },
     async EliminarEmpresasByUsuarios(IdEmpresaUsuario: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
         const idUsuario = loginStore.usuario?.idUsuario
 

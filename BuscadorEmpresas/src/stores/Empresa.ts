@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia'
-import { useLoginStore } from '../stores/Login'
-
-const loginStore = useLoginStore()
+import { useLoginStore } from '@/stores/Login'
 
 export interface Empresa {
   idEmpresa: number
@@ -25,7 +23,7 @@ interface EmpresasCiudades {
   idEmpresaCiudad: number
   idCiudad: number
 }
-interface DatosEmpresa {
+export interface DatosEmpresa {
   idEmpresa: number
   nombre: string
   descripcion: string
@@ -111,6 +109,7 @@ export const useEmpresaStore = defineStore({
     },
     async CreateEmpresa(DatosEmpresa: DatosEmpresa) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const objectCrear = {
@@ -146,6 +145,7 @@ export const useEmpresaStore = defineStore({
     },
     async AddCategoriaToEmpresa(idCategoria: number, idEmpresa: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const objetoAñadir = {
@@ -174,6 +174,7 @@ export const useEmpresaStore = defineStore({
     },
     async AddCiudadToEmpresa(idCiudad: number, idEmpresa: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const objetoAñadir = {
@@ -202,6 +203,7 @@ export const useEmpresaStore = defineStore({
     },
     async PutDatosEmpresa(DatosEmpresa: DatosEmpresa) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
         const idUsuario = loginStore.usuario?.idUsuario
 
@@ -211,7 +213,7 @@ export const useEmpresaStore = defineStore({
           nombre: DatosEmpresa.nombre,
           descripcion: DatosEmpresa.descripcion,
           direccion: DatosEmpresa.direccion,
-          teledono: DatosEmpresa.telefono,
+          telefono: DatosEmpresa.telefono,
           correoEmpresa: DatosEmpresa.correoEmpresa,
           sitioWeb: DatosEmpresa.sitioWeb,
           imagen: DatosEmpresa.imagen
@@ -238,6 +240,7 @@ export const useEmpresaStore = defineStore({
     },
     async EliminarEmpresa(idEmpresa: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
         const idUsuario = loginStore.usuario?.idUsuario
 
@@ -261,6 +264,7 @@ export const useEmpresaStore = defineStore({
     },
     async EliminarCategoriaByEmpresa(idCategoriaEmpresa: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(
@@ -286,6 +290,7 @@ export const useEmpresaStore = defineStore({
     },
     async EliminarCiudadByEmpresa(idCiudadEmpresa: number) {
       try {
+        const loginStore = useLoginStore()
         const token = loginStore.token
 
         const response = await fetch(`api/Empresa/ciudad?IdempresaCiudad=${idCiudadEmpresa}`, {

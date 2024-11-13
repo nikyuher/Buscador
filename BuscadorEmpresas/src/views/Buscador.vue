@@ -3,7 +3,9 @@ import { ref, onMounted, computed } from 'vue';
 import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
 import Categoria from '@/components/InterfazCatMenu.vue'
 import Ciudades from '@/components/InterfazCiudades.vue'
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const keyword = ref('');
 const IdEmpresa = ref(0);
 const IdCiudad = ref(0);
@@ -22,6 +24,18 @@ const mensajeAdvertencia = ref('');
 onMounted(async () => {
   categorias.value = await fetchCategorias();
 });
+
+const handleSearch = () => {
+  if (IdEmpresa.value > 0 && IdCiudad.value === 0 && validarEmpresa.value) {
+    router.push({ name: 'Empresa', params: { idEmpresa: IdEmpresa.value } });
+  } else if (IdCiudad.value > 0 && IdEmpresa.value === 0 && validarCiudad.value) {
+    router.push({ name: 'Ciudad', params: { idCiudad: IdCiudad.value } });
+  } else if (validarEmpresa.value && validarCiudad.value) {
+    router.push({ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad.value, idEmpresa: IdEmpresa.value } });
+  } else {
+    searchWithoutId();
+  }
+};
 
 const searchWithoutId = () => {
   if (IdEmpresa.value === 0 && IdCiudad.value === 0) {
@@ -110,7 +124,8 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
         </div>
         <div class="search-inputs">
           <div class="keyword-container">
-            <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput" />
+            <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput"
+              @keyup.enter="handleSearch" />
             <ul v-if="suggestions.length" class="suggestions-list">
               <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
                 {{ suggestion.nombre }}
@@ -118,7 +133,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
             </ul>
           </div>
           <div class="city-container">
-            <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" />
+            <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" @keyup.enter="handleSearch" />
             <ul v-if="citySuggestions.length" class="suggestions-list">
               <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
                 @click="selectCitySuggestion(citySuggestion)">
