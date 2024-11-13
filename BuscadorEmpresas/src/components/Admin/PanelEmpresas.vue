@@ -6,13 +6,10 @@ import { usePeticionesStore } from '@/stores/Peticiones';
 import { useCategoriaStore } from '@/stores/Categoria';
 import { useCiudadStore } from '@/stores/Ciudad';
 
-interface DatosEmpresa {
-  idEmpresa: number;
-  nombre: string;
-  descripcion: string;
-  direccion: string;
-  imagen: string;
-}
+import type { DatosEmpresa } from '@/stores/Empresa'
+import L from 'leaflet';
+import axios from 'axios';
+import 'leaflet/dist/leaflet.css';
 
 const peticionesStore = usePeticionesStore();
 const empresaStore = useEmpresaStore();
@@ -39,11 +36,58 @@ const idEmpresa = ref(0)
 const nombre = ref('')
 const descripcion = ref('')
 const direccion = ref('')
+const telefono = ref()
+const correoEmpresa = ref('')
+const sitioWeb = ref('')
 const imagen = ref('')
 
 const filtroNombre = ref('');
 const filtroCategoria = ref(0);
 const filtroCiudad = ref(0);
+
+
+let map: L.Map;
+
+const marker = ref<L.Marker | null>(null);
+
+const initMap = (lat = 40.416775, lng = -3.703790) => {
+  map = L.map('map').setView([lat, lng], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  }).addTo(map);
+
+  // Añade un marcador en la ubicación inicial
+  marker.value = L.marker([lat, lng]).addTo(map);
+
+  // Evento de click en el mapa para actualizar la dirección
+  map.on('click', async (e: L.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng;
+
+    // Si existe un marcador previo, se elimina
+    if (marker.value) {
+      map.removeLayer(marker.value);
+    }
+
+    // Crear y agregar un nuevo marcador en la ubicación seleccionada
+    marker.value = L.marker([lat, lng]).addTo(map);
+
+    // Obtener la dirección desde Nominatim usando las nuevas coordenadas
+    const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+      params: {
+        lat: lat,
+        lon: lng,
+        format: 'json',
+      },
+    });
+
+    if (response.data && response.data.display_name) {
+      direccion.value = response.data.display_name;
+    } else {
+      direccion.value = 'Dirección no encontrada';
+    }
+  });
+};
 
 const empresasFiltradas = computed(() => {
   return listaEmpresas.value.filter((empresa) => {
@@ -71,15 +115,39 @@ const limpiarFormulario = () => {
   editMode.value = false;
 };
 
-const seleccionarEmpresaParaEditar = (empresa: any) => {
+const seleccionarEmpresaParaEditar = async (empresa: any) => {
   idEmpresa.value = empresa.idEmpresa;
   nombre.value = empresa.nombre
   descripcion.value = empresa.descripcion
   direccion.value = empresa.direccion
+  telefono.value = empresa.telefono
+  correoEmpresa.value = empresa.correoEmpresa
+  sitioWeb.value = empresa.sitioWeb
   imagen.value = empresa.imagen
   editMode.value = true;
 
   subirTop();
+  // Obtener coordenadas de la dirección existente
+  try {
+    const geocodeResponse = await axios.get('https://nominatim.openstreetmap.org/search', {
+      params: {
+        q: direccion.value,
+        format: 'json',
+        limit: 1,
+      },
+    });
+
+    if (geocodeResponse.data.length > 0) {
+      const { lat, lon } = geocodeResponse.data[0];
+      initMap(parseFloat(lat), parseFloat(lon)); // Inicializar el mapa en la dirección de la empresa
+    } else {
+      initMap(); // Si no encuentra la dirección, usar la posición por defecto
+      direccion.value = 'Dirección no encontrada';
+    }
+  } catch (error) {
+    console.error('Error obteniendo coordenadas de la dirección:', error);
+    initMap(); // En caso de error, iniciar el mapa con la ubicación por defecto
+  }
 };
 
 const confirmarEnvio = async () => {
@@ -94,6 +162,9 @@ const confirmarEnvio = async () => {
       nombre: nombre.value,
       descripcion: descripcion.value,
       direccion: direccion.value,
+      telefono: telefono.value,
+      correoEmpresa: correoEmpresa.value,
+      sitioWeb: sitioWeb.value,
       imagen: imagen.value
     }
 
@@ -218,29 +289,29 @@ const obtenerNombreCiudades = (idCiudad: number) => {
     </div>
 
     <div class="filtros">
-  <div class="filtro">
-    <label for="filtroNombre">Nombre de Empresa</label>
-    <input v-model="filtroNombre" id="filtroNombre" type="text" placeholder="Buscar por nombre" />
-  </div>
-  <div class="filtro">
-    <label for="filtroCategoria">Categoría</label>
-    <select v-model="filtroCategoria" id="filtroCategoria">
-      <option value="0">Todas las categorías</option>
-      <option v-for="categoria in categorias" :key="categoria.idCategoria" :value="categoria.idCategoria">
-        {{ categoria.nombre }}
-      </option>
-    </select>
-  </div>
-  <div class="filtro">
-    <label for="filtroCiudad">Ciudad</label>
-    <select v-model="filtroCiudad" id="filtroCiudad">
-      <option value="0">Todas las ciudades</option>
-      <option v-for="ciudad in ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
-        {{ ciudad.nombre }}
-      </option>
-    </select>
-  </div>
-</div>
+      <div class="filtro">
+        <label for="filtroNombre">Nombre de Empresa</label>
+        <input v-model="filtroNombre" id="filtroNombre" type="text" placeholder="Buscar por nombre" />
+      </div>
+      <div class="filtro">
+        <label for="filtroCategoria">Categoría</label>
+        <select v-model="filtroCategoria" id="filtroCategoria">
+          <option value="0">Todas las categorías</option>
+          <option v-for="categoria in categorias" :key="categoria.idCategoria" :value="categoria.idCategoria">
+            {{ categoria.nombre }}
+          </option>
+        </select>
+      </div>
+      <div class="filtro">
+        <label for="filtroCiudad">Ciudad</label>
+        <select v-model="filtroCiudad" id="filtroCiudad">
+          <option value="0">Todas las ciudades</option>
+          <option v-for="ciudad in ciudades" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+            {{ ciudad.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
 
 
     <table class="styled-table">
@@ -277,7 +348,7 @@ const obtenerNombreCiudades = (idCiudad: number) => {
                 <v-btn class="edit" prepend-icon="mdi-pen" v-bind="activatorProps"
                   @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa)"></v-btn>
               </template>
-              <div style="background-color: white; padding: 30px; border-radius: 10px">
+              <div class="scroll-container">
                 <form @submit.prevent="confirmarEnvio">
                   <div>
                     <label for="nombre">Nombre de la Empresa:</label>
@@ -291,6 +362,19 @@ const obtenerNombreCiudades = (idCiudad: number) => {
                   <div>
                     <label for="direccion">Dirección:</label>
                     <input v-model="direccion" id="direccion" type="text" required />
+                    <div id="map" style="height: 300px;"></div>
+                  </div>
+                  <div>
+                    <label for="telefono">Telefono:</label>
+                    <input v-model="telefono" type="number" required>
+                  </div>
+                  <div>
+                    <label for="correoEmpresa">Correo Empresa:</label>
+                    <input v-model="correoEmpresa" type="text" required>
+                  </div>
+                  <div>
+                    <label for="sitioWeb">Sitio Web:</label>
+                    <input v-model="sitioWeb" type="text" required>
                   </div>
                   <div>
                     <label for="imagen">URL de la Imagen:</label>
@@ -337,6 +421,14 @@ const obtenerNombreCiudades = (idCiudad: number) => {
 </template>
 
 <style scoped>
+.scroll-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
 
 .filtros {
   display: flex;
@@ -351,7 +443,8 @@ const obtenerNombreCiudades = (idCiudad: number) => {
   width: 32%;
 }
 
-input, select {
+input,
+select {
   border: 1px solid gray;
   border-radius: 5px;
   padding: 10px;

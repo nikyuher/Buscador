@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useLoginStore } from '@/stores/Login';
 import { useUsuarioStore } from '@/stores/Usuario';
-import { ref, computed, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useEmpresaStore } from '@/stores/Empresa';
 import type { DatosEmpresa } from '@/stores/Empresa'
+import L from 'leaflet';
+import axios from 'axios';
+import 'leaflet/dist/leaflet.css';
 
 const empresaStore = useEmpresaStore();
 const loginStore = useLoginStore()
@@ -14,10 +17,61 @@ const listaEmpresas = ref<any[]>([])
 const editMode = ref(false);
 const dialogosVisibles = reactive<{ [key: string]: boolean }>({});
 
+const idEmpresa = ref(0)
+const nombre = ref('')
+const descripcion = ref('')
+const direccion = ref('')
+const telefono = ref()
+const correoEmpresa = ref('')
+const sitioWeb = ref('')
+const imagen = ref('')
+
 const success = ref(false);
 const error = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
+
+let map: L.Map;
+
+const marker = ref<L.Marker | null>(null);
+const initMap = (lat = 40.416775, lng = -3.703790) => {
+    map = L.map('map').setView([lat, lng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    // Añade un marcador en la ubicación inicial
+    marker.value = L.marker([lat, lng]).addTo(map);
+
+    // Evento de click en el mapa para actualizar la dirección
+    map.on('click', async (e: L.LeafletMouseEvent) => {
+        const { lat, lng } = e.latlng;
+
+        // Si existe un marcador previo, se elimina
+        if (marker.value) {
+            map.removeLayer(marker.value);
+        }
+
+        // Crear y agregar un nuevo marcador en la ubicación seleccionada
+        marker.value = L.marker([lat, lng]).addTo(map);
+
+        // Obtener la dirección desde Nominatim usando las nuevas coordenadas
+        const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+            params: {
+                lat: lat,
+                lon: lng,
+                format: 'json',
+            },
+        });
+
+        if (response.data && response.data.display_name) {
+            direccion.value = response.data.display_name;
+        } else {
+            direccion.value = 'Dirección no encontrada';
+        }
+    });
+};
 
 const DatosEmpresasUsuario = async (id: number) => {
 
@@ -30,7 +84,6 @@ const DatosEmpresasUsuario = async (id: number) => {
     } catch (error) {
 
     }
-
 }
 
 
@@ -66,25 +119,6 @@ const eliminarEmpresa = async (idEmpresa: number) => {
     }
 }
 
-onMounted(() => {
-    confirmarSesion()
-
-    if (loginStore.usuario?.idUsuario) {
-        DatosEmpresasUsuario(loginStore.usuario?.idUsuario)
-    } else {
-        console.log('No hay un usuario registrado');
-    }
-})
-
-const idEmpresa = ref(0)
-const nombre = ref('')
-const descripcion = ref('')
-const direccion = ref('')
-const telefono = ref()
-const correoEmpresa = ref('')
-const sitioWeb = ref('')
-const imagen = ref('')
-
 const limpiarFormulario = () => {
     idEmpresa.value = 0;
     nombre.value = ''
@@ -95,7 +129,7 @@ const limpiarFormulario = () => {
     editMode.value = false;
 };
 
-const seleccionarEmpresaParaEditar = (empresa: any) => {
+const seleccionarEmpresaParaEditar = async (empresa: any) => {
     idEmpresa.value = empresa.idEmpresa;
     nombre.value = empresa.nombre
     descripcion.value = empresa.descripcion
@@ -105,8 +139,28 @@ const seleccionarEmpresaParaEditar = (empresa: any) => {
     sitioWeb.value = empresa.sitioWeb
     imagen.value = empresa.imagen
     editMode.value = true;
-
     subirTop();
+    // Obtener coordenadas de la dirección existente
+    try {
+        const geocodeResponse = await axios.get('https://nominatim.openstreetmap.org/search', {
+            params: {
+                q: direccion.value,
+                format: 'json',
+                limit: 1,
+            },
+        });
+
+        if (geocodeResponse.data.length > 0) {
+            const { lat, lon } = geocodeResponse.data[0];
+            initMap(parseFloat(lat), parseFloat(lon)); // Inicializar el mapa en la dirección de la empresa
+        } else {
+            initMap(); // Si no encuentra la dirección, usar la posición por defecto
+            direccion.value = 'Dirección no encontrada';
+        }
+    } catch (error) {
+        console.error('Error obteniendo coordenadas de la dirección:', error);
+        initMap(); // En caso de error, iniciar el mapa con la ubicación por defecto
+    }
 };
 
 const subirTop = () => {
@@ -170,6 +224,17 @@ const confirmarEnvio = async () => {
         console.error(err);
     }
 };
+
+
+onMounted(async () => {
+    confirmarSesion()
+
+    if (loginStore.usuario?.idUsuario) {
+        DatosEmpresasUsuario(loginStore.usuario?.idUsuario)
+    } else {
+        console.log('No hay un usuario registrado');
+    }
+})
 </script>
 
 <template>
@@ -199,7 +264,7 @@ const confirmarEnvio = async () => {
                                         v-bind="activatorProps"
                                         @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa.empresa)"></v-btn>
                                 </template>
-                                <div style="background-color: white; padding: 30px; border-radius: 10px">
+                                <div class="scroll-container">
                                     <form @submit.prevent="confirmarEnvio">
                                         <div>
                                             <label for="nombre">Nombre de la Empresa:</label>
@@ -212,7 +277,8 @@ const confirmarEnvio = async () => {
 
                                         <div>
                                             <label for="direccion">Dirección:</label>
-                                            <input v-model="direccion" id="direccion" type="text" required />
+                                            <input v-model="direccion" id="direccion" type="text" required readonly />
+                                            <div id="map" style="height: 300px;"></div>
                                         </div>
                                         <div>
                                             <label for="telefono">Telefono:</label>
@@ -262,7 +328,7 @@ const confirmarEnvio = async () => {
         </div>
         <div v-else style="text-align: center; margin: 20px;">
             <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
-            <p>No tienes ninguna empesa creada.</p>
+            <p>No tienes ninguna empresa creada.</p>
         </div>
     </div>
     <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
@@ -275,6 +341,15 @@ const confirmarEnvio = async () => {
 </template>
 
 <style scoped>
+.scroll-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}
+
 label {
     margin-bottom: 5px;
 }
