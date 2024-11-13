@@ -8,10 +8,10 @@ const categoriasIniciales = ref<any[]>([])
 const categoriasExtras = ref<any[]>([])
 const mostrarTodo = ref(false)
 const isVisible = ref(false)
-const esResponsive = ref(window.innerWidth <= 600)
+const esResponsive = ref(window.innerWidth <= 1019)
 
 const actualizarModoResponsive = () => {
-    esResponsive.value = window.innerWidth <= 600;
+    esResponsive.value = window.innerWidth <= 1019;
     if (!esResponsive.value) {
         mostrarTodo.value = true; // Mostrar todas las categorías en pantallas grandes
     } else {
@@ -164,7 +164,7 @@ li {
 }
 
 /* Responsive para móvil */
-@media (max-width: 600px) {
+@media (max-width: 1019px) {
     .Categorias {
         font-size: 28px;
     }
