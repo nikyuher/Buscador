@@ -57,7 +57,7 @@ const onKeywordInput = async () => {
   if (keyword.value.length >= 1) {
     let filtrarDatos = await fetchSuggestions(keyword.value);
 
-    suggestions.value = filtrarDatos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    suggestions.value = filtrarDatos;
 
     validarEmpresa.value = false;
     errorMsg.value = false;
@@ -88,7 +88,7 @@ const onCityInput = async () => {
   if (city.value.length >= 1) {
     let filtrarCiudades = await fetchCitySuggestions(city.value);
 
-    citySuggestions.value = filtrarCiudades.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    citySuggestions.value = filtrarCiudades;
 
     validarCiudad.value = false;
 
@@ -351,6 +351,7 @@ ul,
   margin: 5px 0;
   border-radius: 5px;
 }
+
 @media (max-width: 768px) {
   .search-box {
     padding-top: 50px;
@@ -386,10 +387,9 @@ ul,
   .categories-container {
     width: 90%;
   }
-  
-  input[type="text"] {  
-  width: 70%;
+
+  input[type="text"] {
+    width: 70%;
   }
 }
-
 </style>

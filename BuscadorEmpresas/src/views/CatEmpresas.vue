@@ -66,7 +66,7 @@ onMounted(async () => {
 
     <div v-if="!error && empresas.length" class="empresa-list">
       <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
-        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-link">
+        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }">
           <div class="empresa-img-container">
             <div class="empresa-contact-info">
               <v-icon>mdi-phone</v-icon>
@@ -96,15 +96,10 @@ onMounted(async () => {
   background-color: #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  border-radius: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 20px;
   width: 100%;
-  max-width: 350px;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 a {

@@ -54,7 +54,6 @@ const reducirCategorias = () => {
         <h3 class="Categorias" :class="{ 'animate-title': isVisible }" style="font-size: 40px;">Categorías</h3>
         <div class="categories-list" :class="{ 'animate-list': isVisible }">
             <ul>
-                <!-- Mostrar todas o solo las primeras 5 según el estado responsive -->
                 <li v-for="(categoria, index) in (mostrarTodo ? categorias : categoriasIniciales)" :key="index" :class="{ extraRow: index >= 5 }">
                     <router-link
                         :to="{ name: 'CatEmpresas', params: { nombre: categoria.nombre, idCategoria: categoria.idCategoria } }"
@@ -64,8 +63,6 @@ const reducirCategorias = () => {
                     </router-link>
                 </li>
             </ul>
-            
-            <!-- Botones "Ver Más" y "Ver Menos" solo visibles en móvil -->
             <div v-if="esResponsive && categoriasExtras.length > 0" class="toggle-buttons">
                 <button v-if="!mostrarTodo" @click="mostrarTodasCategorias" class="ver-mas">Ver más</button>
                 <button v-if="mostrarTodo" @click="reducirCategorias" class="ver-menos">Ver menos</button>

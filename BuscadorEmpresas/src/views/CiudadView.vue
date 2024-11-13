@@ -68,19 +68,21 @@ onMounted(async () => {
       <h2 style="font-size: 30px">Empresas en {{ ciudadNombre }}:</h2>
 
       <div v-if="empresas.length > 0" class="empresa-list">
-        <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
-          <div class="cont-img-tef">
-            <div style="display: flex; align-items: center; color: black;">
-              <v-icon>mdi-phone</v-icon>
-              <p>{{ empresa.telefono }}</p>
+        <div v-for="empresa in empresas" :key="empresa.idEmpresa">
+          <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
+            <div class="cont-img-tef">
+              <div style="display: flex; align-items: center; color: black;">
+                <v-icon>mdi-phone</v-icon>
+                <p>{{ empresa.telefono }}</p>
+              </div>
+              <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
             </div>
-            <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-          </div>
-          <div class="empresa-details">
-            <h3>{{ empresa.nombre }}</h3>
-            <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-            <p class="empresa-description"> <strong>Descripción</strong> {{ empresa.descripcion }}</p>
-          </div>
+            <div class="empresa-details">
+              <h3>{{ empresa.nombre }}</h3>
+              <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+              <p class="empresa-description"> <strong>Descripción</strong> {{ empresa.descripcion }}</p>
+            </div>
+          </router-link>
         </div>
       </div>
 
