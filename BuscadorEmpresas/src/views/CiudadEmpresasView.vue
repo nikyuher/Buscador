@@ -11,6 +11,10 @@ const nombreCiudadError = ref('');
 const mensajeError = ref('');
 const route = useRoute();
 
+const recortarTexto = (texto: string, maxLongitud: number) => {
+    return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
+};
+
 // Función para obtener los datos de la empresa por ciudad
 const fetchEmpresaCiudadData = async (idEmpresa: number, idCiudad: number) => {
     try {

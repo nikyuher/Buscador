@@ -65,10 +65,10 @@ onMounted(async () => {
     <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
 
     <div v-if="!error && empresas.length" class="empresa-list">
-      <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
-        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }">
+      <div v-for="empresa in empresas" :key="empresa.idEmpresa">
+        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
           <div class="empresa-img-container">
-            <div class="empresa-contact-info">
+            <div class="empresa-contact-info" >
               <v-icon>mdi-phone</v-icon>
               <p>{{ empresa.telefono }}</p>
             </div>
@@ -77,7 +77,8 @@ onMounted(async () => {
           <div class="empresa-details">
             <h3>{{ empresa.nombre }}</h3>
             <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-            <p class="empresa-description"><strong>Descripción:</strong> {{ recortarTexto(empresa.descripcion, 167) }}</p>
+            <p class="empresa-description"><strong>Descripción:</strong> {{ recortarTexto(empresa.descripcion, 167) }}
+            </p>
           </div>
         </RouterLink>
       </div>
@@ -110,13 +111,12 @@ a {
   padding: 20px;
   background-color: rgb(209, 209, 209);
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  width: 60%;
+  margin: 150px auto;
 }
 
 .breadcrumb {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   color: #333;
   margin-bottom: 20px;
@@ -131,36 +131,32 @@ a {
 }
 
 .empresa-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  width: 100%;
 }
 
 .empresa-img-container {
-  width: 100%;
+  width: 190px;
   text-align: center;
-  margin-bottom: 15px;
 }
 
 .empresa-img {
   max-width: 100%;
-  height: 150px;
-  object-fit: cover;
+  height: 100px;
   border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .empresa-contact-info {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #555;
+  color: #000000;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
 .empresa-details {
-  text-align: center;
+  text-align: left;
   padding: 10px;
   color: #333;
 }
@@ -174,7 +170,7 @@ a {
 .empresa-description,
 .empresa-address {
   font-size: 14px;
-  color: #555;
+  color: #000000;
   margin-bottom: 8px;
 }
 

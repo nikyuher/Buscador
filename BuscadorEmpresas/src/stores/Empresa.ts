@@ -46,7 +46,7 @@ export const useEmpresaStore = defineStore({
   actions: {
     async GetAllEmpresas() {
       try {
-        const response = await fetch(`api/Empresa`, {
+        const response = await fetch(`/api/Empresa`, {
           method: 'GET'
         })
 
@@ -88,7 +88,7 @@ export const useEmpresaStore = defineStore({
     },
     async BuscadorEmpresa(nombreEmpresa: string) {
       try {
-        const response = await fetch(`api/Empresa/buscar?nombre=${nombreEmpresa}`, {
+        const response = await fetch(`/api/Empresa/buscar?nombre=${nombreEmpresa}`, {
           method: 'GET'
         })
 
@@ -123,7 +123,7 @@ export const useEmpresaStore = defineStore({
           imagen: DatosEmpresa.imagen
         }
 
-        const response = await fetch(`api/Empresa`, {
+        const response = await fetch(`/api/Empresa`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -153,7 +153,7 @@ export const useEmpresaStore = defineStore({
           idEmpresa: idEmpresa
         }
 
-        const response = await fetch(`api/Empresa/categoria`, {
+        const response = await fetch(`/api/Empresa/categoria`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`
@@ -182,7 +182,7 @@ export const useEmpresaStore = defineStore({
           idEmpresa: idEmpresa
         }
 
-        const response = await fetch(`api/Empresa/ciudad`, {
+        const response = await fetch(`/api/Empresa/ciudad`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`
@@ -218,7 +218,7 @@ export const useEmpresaStore = defineStore({
           sitioWeb: DatosEmpresa.sitioWeb,
           imagen: DatosEmpresa.imagen
         }
-        const response = await fetch(`api/Empresa/${DatosEmpresa.idEmpresa}`, {
+        const response = await fetch(`/api/Empresa/${DatosEmpresa.idEmpresa}`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -244,7 +244,7 @@ export const useEmpresaStore = defineStore({
         const token = loginStore.token
         const idUsuario = loginStore.usuario?.idUsuario
 
-        const response = await fetch(`api/Empresa/${idEmpresa}/user?idUsuario=${idUsuario}`, {
+        const response = await fetch(`/api/Empresa/${idEmpresa}/user?idUsuario=${idUsuario}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`
@@ -268,7 +268,7 @@ export const useEmpresaStore = defineStore({
         const token = loginStore.token
 
         const response = await fetch(
-          `api/Empresa/categoria?IdempresaCategoria=${idCategoriaEmpresa}`,
+          `/api/Empresa/categoria?IdempresaCategoria=${idCategoriaEmpresa}`,
           {
             method: 'DELETE',
             headers: {
@@ -293,7 +293,7 @@ export const useEmpresaStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Empresa/ciudad?IdempresaCiudad=${idCiudadEmpresa}`, {
+        const response = await fetch(`/api/Empresa/ciudad?IdempresaCiudad=${idCiudadEmpresa}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`

@@ -45,6 +45,10 @@ const fetchCiudadData = async (idCiudad: number) => {
 // Usar el route para obtener el idCiudad
 const route = useRoute();
 
+const recortarTexto = (texto: string, maxLongitud: number) => {
+    return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
+};
+
 onMounted(async () => {
   const idCiudadParam = route.params.idCiudad;
   const idCiudad = Array.isArray(idCiudadParam)
@@ -71,7 +75,7 @@ onMounted(async () => {
         <div v-for="empresa in empresas" :key="empresa.idEmpresa">
           <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
             <div class="cont-img-tef">
-              <div style="display: flex; align-items: center; color: black;">
+              <div class="empresa-contact-info ">
                 <v-icon>mdi-phone</v-icon>
                 <p>{{ empresa.telefono }}</p>
               </div>
@@ -80,7 +84,7 @@ onMounted(async () => {
             <div class="empresa-details">
               <h3>{{ empresa.nombre }}</h3>
               <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-              <p class="empresa-description"> <strong>Descripción</strong> {{ empresa.descripcion }}</p>
+              <p class="empresa-description"> <strong>Descripción</strong> {{  recortarTexto(empresa.descripcion, 167) }}</p>
             </div>
           </router-link>
         </div>
@@ -118,6 +122,15 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.empresa-contact-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #000000;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 a {
@@ -192,6 +205,7 @@ p {
 
 .empresa-list {
   width: 100%;
+  
 }
 
 

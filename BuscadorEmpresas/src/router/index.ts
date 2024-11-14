@@ -61,6 +61,11 @@ const router = createRouter({
       component: () => import('@/views/ChangePasswordView.vue')
     },
     {
+      path: '/Resultado/:empresa',
+      name: 'Resultado',
+      component: () => import('@/views/ResultadosView.vue')
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/ErrorUrlView.vue')
