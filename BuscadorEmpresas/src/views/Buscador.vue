@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { fetchSuggestions, fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
+import { ref, onMounted } from 'vue';
+import { fetchCitySuggestions, fetchCategorias } from '../stores/Buscador';
 import Categoria from '@/components/InterfazCatMenu.vue'
 import Ciudades from '@/components/InterfazCiudades.vue'
 import { useRouter } from 'vue-router';
@@ -26,12 +26,12 @@ onMounted(async () => {
 });
 
 const handleSearch = () => {
-  if (keyword.value.length > 0 && city.value.length === 0) {
+  if (keyword.value.length > 0 && city.value.length === 0 && validarEmpresa.value) {
     router.push({ name: 'Resultado', params: { empresa: keyword.value } });
-  } else if (IdCiudad.value > 0 && IdEmpresa.value === 0 && validarCiudad.value) {
+  } else if (IdCiudad.value > 0 && keyword.value.length === 0 && validarCiudad.value) {
     router.push({ name: 'Ciudad', params: { idCiudad: IdCiudad.value } });
   } else if (validarEmpresa.value && validarCiudad.value) {
-    router.push({ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad.value, idEmpresa: IdEmpresa.value } });
+    router.push({ name: 'Resultado', params: { empresa: keyword.value, idCiudad: IdCiudad.value } });
   } else {
     searchWithoutId();
   }
@@ -55,9 +55,6 @@ const searchWithoutId = () => {
 
 const onKeywordInput = async () => {
   if (keyword.value.length >= 1) {
-    let filtrarDatos = await fetchSuggestions(keyword.value);
-
-    suggestions.value = filtrarDatos;
 
     validarEmpresa.value = false;
     errorMsg.value = false;
@@ -72,17 +69,6 @@ const onKeywordInput = async () => {
     validarEmpresa.value = false;
   }
 };
-
-// const selectSuggestion = (suggestion: { idEmpresa: number; nombre: string }) => {
-//   keyword.value = suggestion.nombre;
-//   IdEmpresa.value = suggestion.idEmpresa;
-//   validarEmpresa.value = true;
-//   errorMsg.value = false;
-//   suggestions.value = [];
-//   console.log(IdEmpresa.value);
-
-
-// };
 
 const onCityInput = async () => {
   if (city.value.length >= 1) {
@@ -126,12 +112,6 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
           <div class="keyword-container">
             <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput"
               @keyup.enter="handleSearch()" />
-
-            <!-- <ul v-if="suggestions.length" class="suggestions-list">
-              <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
-                {{ suggestion.nombre }}
-              </li>
-            </ul> -->
           </div>
           <div class="city-container">
             <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" @keyup.enter="handleSearch()" />

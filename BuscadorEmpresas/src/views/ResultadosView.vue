@@ -3,29 +3,41 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useEmpresaStore } from '@/stores/Empresa'
+import { useCiudadStore } from '@/stores/Ciudad'
 import type { Empresa } from '@/stores/Empresa'
+import type { CiudadeEmpresas } from '@/stores/Ciudad'
 
 
 const route = useRoute();
 const empresaName = ref(route.params.empresa.toString());
+const idCiudad = ref(route.params.idCiudad ? parseInt(route.params.idCiudad as string) : null);
 
 const empresaStore = useEmpresaStore()
+const ciudadStore = useCiudadStore()
 
 const empresas = ref<Empresa[]>([])
+const ciudadesEmpresas = ref<CiudadeEmpresas | null>(null)
 
 const recortarTexto = (texto: string, maxLongitud: number) => {
     return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
 };
 
 onMounted(async () => {
-    await empresaStore.BuscadorEmpresa(empresaName.value)
-    empresas.value = empresaStore.listaBuscadorEmpresa
+    if (idCiudad.value) {
+        await ciudadStore.GetEmpresaExistente(empresaName.value, idCiudad.value);
+        ciudadesEmpresas.value = ciudadStore.ciudadExistente;
+    } else {
+        await empresaStore.BuscadorEmpresa(empresaName.value);
+        empresas.value = empresaStore.listaBuscadorEmpresa;
+    }
+
 })
 
 </script>
 
 <template>
-    <div class="category-enterprises-container">
+    <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
+    <div v-if="idCiudad === null" class="category-enterprises-container">
         <div v-if="empresas.length > 0" class="empresa-list">
             <div v-for="empresa in empresas" :key="empresa.idEmpresa">
                 <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
@@ -41,6 +53,32 @@ onMounted(async () => {
                         <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
                         <p class="empresa-description"> <strong>Descripción</strong> {{
                             recortarTexto(empresa.descripcion, 167) }}</p>
+                    </div>
+                </router-link>
+            </div>
+        </div>
+    </div>
+    <div v-else class="category-enterprises-container">
+        <div v-if="ciudadesEmpresas" class="empresa-list">
+            <h2>{{ ciudadesEmpresas.nombre }}</h2>
+            <div v-for="(ciudad, index) in ciudadesEmpresas.empresasCiudades" :key="index">
+                <router-link :to="{ name: 'Empresa', params: { idEmpresa: ciudad.empresa.idEmpresa } }"
+                    class="empresa-card">
+                    <div class="cont-img-tef">
+                        <div class="empresa-contact-info">
+                            <v-icon>mdi-phone</v-icon>
+                            <p>{{ ciudad.empresa.telefono }}</p>
+                        </div>
+                        <img :src="ciudad.empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+                    </div>
+                    <div class="empresa-details">
+                        <h3>{{ ciudad.empresa.nombre }}</h3>
+                        <p class="empresa-address">
+                            <strong>Dirección:</strong> {{ ciudad.empresa.direccion }}
+                        </p>
+                        <p class="empresa-description">
+                            <strong>Descripción:</strong> {{ recortarTexto(ciudad.empresa.descripcion, 167) }}
+                        </p>
                     </div>
                 </router-link>
             </div>
