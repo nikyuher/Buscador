@@ -10,7 +10,6 @@ const keyword = ref('');
 const IdEmpresa = ref(0);
 const IdCiudad = ref(0);
 const city = ref('');
-const suggestions = ref<{ idEmpresa: number; nombre: string }[]>([]);
 const citySuggestions = ref<{ idCiudad: number; nombre: string }[]>([]);
 const categorias = ref<{ idCategoria: number; nombre: string }[]>([]);
 
@@ -38,16 +37,20 @@ const handleSearch = () => {
 };
 
 const searchWithoutId = () => {
-  if (IdEmpresa.value === 0 && IdCiudad.value === 0) {
+  if (keyword.value.length === 0 && IdCiudad.value === 0) {
     mensajeAdvertencia.value = 'Debe seleccionar una empresa o una ciudad válida.';
     errorMsg.value = true
-  } else if (IdEmpresa.value > 0 && IdCiudad.value === 0 && validarEmpresa.value) {
+  } else if (keyword.value.length > 0 && IdCiudad.value === 0 && validarEmpresa.value) {
     mensajeAdvertencia.value = 'Buscando solo por empresa.';
     errorMsg.value = true
-  } else if (IdCiudad.value > 0 && IdEmpresa.value === 0 && validarCiudad.value) {
+  } else if (IdCiudad.value > 0 && keyword.value.length === 0 && validarCiudad.value) {
     mensajeAdvertencia.value = 'Buscando solo por ciudad.';
     errorMsg.value = true
-  } else {
+  } 
+  else if(validarEmpresa.value && validarCiudad.value){
+
+  }
+  else {
     mensajeAdvertencia.value = 'Debe seleccionar valores válidos.';
     errorMsg.value = true
   }
@@ -56,17 +59,17 @@ const searchWithoutId = () => {
 const onKeywordInput = async () => {
   if (keyword.value.length >= 1) {
 
-    validarEmpresa.value = false;
+    validarEmpresa.value = true;
     errorMsg.value = false;
 
-    const empresaSeleccionada = suggestions.value.find(s => s.nombre === keyword.value);
-    if (empresaSeleccionada) {
-      IdEmpresa.value = empresaSeleccionada.idEmpresa;
-      validarEmpresa.value = true;
-    }
-  } else {
-    suggestions.value = [];
-    validarEmpresa.value = false;
+  //   const empresaSeleccionada = suggestions.value.find(s => s.nombre === keyword.value);
+  //   if (empresaSeleccionada) {
+  //     IdEmpresa.value = empresaSeleccionada.idEmpresa;
+  //     validarEmpresa.value = true;
+  //   }
+  // } else {
+  //   suggestions.value = [];
+  //   validarEmpresa.value = false;
   }
 };
 
@@ -122,14 +125,14 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
               </li>
             </ul>
           </div>
-          <div v-if="IdEmpresa > 0 && validarEmpresa == true && IdCiudad == 0">
-            <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: IdEmpresa } }">
+          <div v-if="keyword.length > 0 && validarEmpresa == true && IdCiudad == 0">
+            <RouterLink :to="{ name: 'Resultado', params: { empresa: keyword } }">
               <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
             </RouterLink>
           </div>
-          <div v-else-if="IdCiudad > 0 && validarCiudad == true && IdEmpresa == 0">
+          <div v-else-if="IdCiudad > 0 && validarCiudad == true && keyword.length == 0">
             <RouterLink :to="{ name: 'Ciudad', params: { idCiudad: IdCiudad } }">
               <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
@@ -137,7 +140,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
             </RouterLink>
           </div>
           <div v-else-if="validarEmpresa == true && validarCiudad == true">
-            <RouterLink :to="{ name: 'CiudadEmpresas', params: { idCiudad: IdCiudad, idEmpresa: IdEmpresa } }">
+            <RouterLink :to="{ name: 'Resultado', params: { empresa: keyword, idCiudad: IdCiudad } }">
               <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
               </button>
