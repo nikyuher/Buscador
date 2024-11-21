@@ -25,7 +25,7 @@ onMounted(async () => {
 });
 
 const handleSearch = () => {
-  if (keyword.value.length > 0 && city.value.length === 0 && validarEmpresa.value) {
+  if (keyword.value.length >= 1 && IdCiudad.value === 0 && validarEmpresa.value) {
     router.push({ name: 'Resultado', params: { empresa: keyword.value } });
   } else if (IdCiudad.value > 0 && keyword.value.length === 0 && validarCiudad.value) {
     router.push({ name: 'Ciudad', params: { idCiudad: IdCiudad.value } });
@@ -40,7 +40,7 @@ const searchWithoutId = () => {
   if (keyword.value.length === 0 && IdCiudad.value === 0) {
     mensajeAdvertencia.value = 'Debe seleccionar una empresa o una ciudad válida.';
     errorMsg.value = true
-  } else if (keyword.value.length > 0 && IdCiudad.value === 0 && validarEmpresa.value) {
+  } else if (keyword.value.length >= 1 && IdCiudad.value === 0 && validarEmpresa.value) {
     mensajeAdvertencia.value = 'Buscando solo por empresa.';
     errorMsg.value = true
   } else if (IdCiudad.value > 0 && keyword.value.length === 0 && validarCiudad.value) {
@@ -113,11 +113,11 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
         </div>
         <div class="search-inputs">
           <div class="keyword-container">
-            <input type="text" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput"
+            <input type="search" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput"
               @keyup.enter="handleSearch()" />
           </div>
           <div class="city-container">
-            <input type="text" v-model="city" placeholder="Ciudad" @input="onCityInput" @keyup.enter="handleSearch()" />
+            <input type="search" v-model="city" placeholder="Ciudad" @input="onCityInput" @keyup.enter="handleSearch()" />
             <ul v-if="citySuggestions.length" class="suggestions-list">
               <li v-for="(citySuggestion, index) in citySuggestions" :key="index"
                 @click="selectCitySuggestion(citySuggestion)">
@@ -125,7 +125,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
               </li>
             </ul>
           </div>
-          <div v-if="keyword.length > 0 && validarEmpresa == true && IdCiudad == 0">
+          <div v-if="keyword.length >= 1 && validarEmpresa == true && IdCiudad == 0">
             <RouterLink :to="{ name: 'Resultado', params: { empresa: keyword } }">
               <button class="search-button">
                 <v-icon class="lupa">mdi-magnify</v-icon>
@@ -235,7 +235,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
   margin-top: 100px;
 }
 
-input[type="text"] {
+input[type="search"] {
   color: black;
   padding: 10px;
   border: 1px solid #fff;

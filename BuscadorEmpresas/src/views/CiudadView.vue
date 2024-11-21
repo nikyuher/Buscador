@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { fetchEmpresasByCiudad, fetchEmpresasById } from '../stores/Buscador'; // Importamos ambas funciones
+import { fetchEmpresasByCiudad, fetchEmpresasById } from '@/stores/Buscador'; // Importamos ambas funciones
 
 // Definir los estados
 const ciudadNombre = ref('');
 const empresas = ref<{ idEmpresa: number; nombre: string; descripcion: string; telefono: string; direccion: string; imagen: string }[]>([]);
 const error = ref(false);
+
+const nombreBusqueda = ref('')
+const empresaFiltradas = computed(() => {
+  return empresas.value.filter(empresa => empresa.nombre.toLowerCase().includes(nombreBusqueda.value.toLowerCase()))
+})
+
 
 // Función para obtener los datos de la ciudad y sus empresas
 const fetchCiudadData = async (idCiudad: number) => {
@@ -46,7 +52,7 @@ const fetchCiudadData = async (idCiudad: number) => {
 const route = useRoute();
 
 const recortarTexto = (texto: string, maxLongitud: number) => {
-    return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
+  return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
 };
 
 onMounted(async () => {
@@ -67,12 +73,18 @@ onMounted(async () => {
 <template>
   <h1>Inicio > Ciudad > {{ ciudadNombre }}</h1>
   <div class="category-enterprises-container">
-
     <div v-if="!error">
-      <h2 style="font-size: 30px">Empresas en {{ ciudadNombre }}:</h2>
 
       <div v-if="empresas.length > 0" class="empresa-list">
-        <div v-for="empresa in empresas" :key="empresa.idEmpresa">
+
+        <div style="display: flex; justify-content: space-between">
+          <h2 style="font-size: 30px">Empresas en {{ ciudadNombre }}:</h2>
+          <div>
+            <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+          </div>
+        </div>
+
+        <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
           <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
             <div class="cont-img-tef">
               <div class="empresa-contact-info ">
@@ -84,7 +96,8 @@ onMounted(async () => {
             <div class="empresa-details">
               <h3>{{ empresa.nombre }}</h3>
               <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-              <p class="empresa-description"> <strong>Descripción</strong> {{  recortarTexto(empresa.descripcion, 167) }}</p>
+              <p class="empresa-description"> <strong>Descripción</strong> {{ recortarTexto(empresa.descripcion, 167) }}
+              </p>
             </div>
           </router-link>
         </div>
@@ -105,6 +118,16 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+input[type="search"] {
+  color: black;
+  padding: 5px;
+  border: 1px solid #fff;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px black;
+  outline: none;
+}
+
 .decorador {
   display: flex;
 }
@@ -205,7 +228,7 @@ p {
 
 .empresa-list {
   width: 100%;
-  
+
 }
 
 

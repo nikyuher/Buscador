@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { fetchEmpresasByCategoria, fetchEmpresasById } from '../stores/Buscador';
 
 const categoriaNombre = ref('');
 const empresas = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; telefono: string; imagen: string }[]>([]);
 const error = ref(false);
+
+const nombreBusqueda = ref('')
+const empresaFiltradas = computed(() => {
+  return empresas.value.filter(empresa => empresa.nombre.toLowerCase().includes(nombreBusqueda.value.toLowerCase()))
+})
 
 const recortarTexto = (texto: string, maxLongitud: number) => {
   return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
@@ -61,14 +66,19 @@ onMounted(async () => {
 <template>
   <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
   <div class="category-enterprises-container">
+    <div style="display: flex; justify-content: space-between">
+      <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
+      <div>
+        <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+      </div>
+    </div>
 
     <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
-
     <div v-if="!error && empresas.length" class="empresa-list">
-      <div v-for="empresa in empresas" :key="empresa.idEmpresa">
+      <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
         <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
           <div class="empresa-img-container">
-            <div class="empresa-contact-info" >
+            <div class="empresa-contact-info">
               <v-icon>mdi-phone</v-icon>
               <p>{{ empresa.telefono }}</p>
             </div>
@@ -84,11 +94,21 @@ onMounted(async () => {
       </div>
     </div>
 
-    <p v-else-if="!error" class="no-data">No hay empresas en esta categoría.</p>
+    <p v-else-if="!error" style="margin: auto">No hay empresas en esta categoría.</p>
   </div>
 </template>
 
 <style scoped>
+input[type="search"] {
+  color: black;
+  padding: 5px;
+  border: 1px solid #fff;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px black;
+  outline: none;
+}
+
 .decorador {
   display: flex;
 }
@@ -110,7 +130,7 @@ a {
 .category-enterprises-container {
   padding: 20px;
   background-color: rgb(209, 209, 209);
-  display: flex;
+  flex-wrap: wrap;
   width: 60%;
   margin: 150px auto;
 }

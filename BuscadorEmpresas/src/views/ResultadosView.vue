@@ -18,6 +18,12 @@ const ciudadStore = useCiudadStore()
 const empresas = ref<Empresa[]>([])
 const ciudadesEmpresas = ref<CiudadeEmpresas | null>(null)
 
+const nombreBusqueda = ref('')
+const empresaFiltradas = computed(() => {
+    return empresas.value.filter(empresa => empresa.nombre.toLowerCase().includes(nombreBusqueda.value.toLowerCase()))
+})
+
+
 const recortarTexto = (texto: string, maxLongitud: number) => {
     return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
 };
@@ -37,9 +43,18 @@ onMounted(async () => {
 
 <template>
     <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
-    <div v-if="idCiudad === null" class="category-enterprises-container">
-        <div v-if="empresas.length > 0" class="empresa-list">
-            <div v-for="empresa in empresas" :key="empresa.idEmpresa">
+    <div v-if="idCiudad === null && empresas.length > 0" class="category-enterprises-container">
+
+        <div style="display: flex; justify-content: space-between">
+            <h2 style="font-size: 30px">Empresas con: {{ empresaName }}</h2>
+            <div>
+                <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+            </div>
+        </div>
+
+
+        <div class="empresa-list">
+            <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
                 <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
                     <div class="cont-img-tef">
                         <div class="empresa-contact-info ">
@@ -58,8 +73,8 @@ onMounted(async () => {
             </div>
         </div>
     </div>
-    <div v-else class="category-enterprises-container">
-        <div v-if="ciudadesEmpresas" class="empresa-list">
+    <div v-else-if="ciudadesEmpresas" class="category-enterprises-container">
+        <div class="empresa-list">
             <h2>{{ ciudadesEmpresas.nombre }}</h2>
             <div v-for="(ciudad, index) in ciudadesEmpresas.empresasCiudades" :key="index">
                 <router-link :to="{ name: 'Empresa', params: { idEmpresa: ciudad.empresa.idEmpresa } }"
@@ -84,8 +99,21 @@ onMounted(async () => {
             </div>
         </div>
     </div>
+    <div v-else class="category-enterprises-container">
+        <h1>No nay datos relacionados con tu busqueda.</h1>
+    </div>
 </template>
 <style scoped>
+input[type="search"] {
+    color: black;
+    padding: 5px;
+    border: 1px solid #fff;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px black;
+    outline: none;
+}
+
 .decorador {
     display: flex;
 }
@@ -138,6 +166,9 @@ a {
     background-color: rgb(209, 209, 209);
     width: 60%;
     margin: 150px auto;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
 ul {
@@ -170,12 +201,6 @@ p {
     margin-bottom: 20px;
 }
 
-.category-enterprises-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
 
 .error-message,
 .no-data {
