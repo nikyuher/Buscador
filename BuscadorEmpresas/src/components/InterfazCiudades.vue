@@ -132,12 +132,15 @@ li {
     align-items: center;
     color: #333;
     text-decoration: none;
-    transition: color 0.3s;
     font-size: 18px;
+    transition:   0.5s;
 }
 
 .category-item:hover {
-    color: #b006ff;
+    padding: 0 15px;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: rgba(255, 0, 0, 0.562);
 }
 
 .bullet {
@@ -147,7 +150,9 @@ li {
     border-radius: 50%;
     margin-right: 10px;
 }
-
+.span{
+text-align: left;
+}
 .extra-category {
     flex: 1 1 50%;
 }
@@ -172,14 +177,14 @@ li {
 }
 
 /* Responsive para móvil */
-@media (max-width: 1019px) {
+@media (max-width: 1018px) {
     .Categorias {
         font-size: 28px;
     }
 
     ul {
         flex-direction: column;
-        align-items: center;
+        align-items: left;
         height: auto;
     }
 

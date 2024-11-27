@@ -336,7 +336,7 @@ ul,
   border-radius: 5px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1018px) {
   .search-box {
     padding-top: 50px;
     min-height: 500px;
@@ -369,7 +369,7 @@ ul,
   }
 
   .categories-container {
-    width: 90%;
+    width: 27%;
   }
 
   input[type="text"] {

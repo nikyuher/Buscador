@@ -45,9 +45,9 @@ onMounted(async () => {
 </script>
 
 <template>
-    <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
     <div v-if="idCiudad === null && empresas.length > 0" class="category-enterprises-container">
-
+        
+        <h1 class="breadcrumb">Inicio > Relacionadas > {{ empresaName }}"</h1>
         <div style="display: flex; justify-content: space-between">
             <h2 style="font-size: 30px">Empresas con: {{ empresaName }}</h2>
             <div>

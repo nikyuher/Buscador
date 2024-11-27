@@ -122,12 +122,15 @@ li {
     align-items: center;
     color: #333;
     text-decoration: none;
-    transition: color 0.3s;
     font-size: 18px;
+    transition:   0.5s;
 }
 
 .category-item:hover {
-    color: #b006ff;
+    padding: 0 15px;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: rgba(255, 0, 0, 0.562);
 }
 
 .bullet {
@@ -166,13 +169,15 @@ li {
         font-size: 28px;
     }
     ul {
+        
         flex-direction: column;
-        align-items: center;
+        align-items: left;
         height: auto;
+        margin: auto
     }
-    li, .extra-category {
+    li {
+        display: flex;
         padding: 8px 10px;
-        text-align: center;
     }
     .toggle-buttons {
         display: flex;
