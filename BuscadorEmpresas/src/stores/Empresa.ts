@@ -34,13 +34,23 @@ export interface DatosEmpresa {
   imagen: string
 }
 
+export interface NewDatosEmpresa{
+  idEmpresa: number
+  nombre: string
+  descripcion: string
+  direccion: string
+  telefono: number
+  imagen: string
+  nombreCiudad: string[]
+}
+
 export const useEmpresaStore = defineStore({
   id: 'empresa',
 
   state: () => ({
     listaEmpresas: [] as Empresa[],
     empresa: null as Empresa | null,
-    listaBuscadorEmpresa: [] as Empresa[]
+    listaBuscadorEmpresa: [] as NewDatosEmpresa[]
   }),
 
   actions: {

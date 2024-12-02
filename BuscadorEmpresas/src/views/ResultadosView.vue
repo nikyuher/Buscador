@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 
 import { useEmpresaStore } from '@/stores/Empresa'
 import { useCiudadStore } from '@/stores/Ciudad'
-import type { Empresa } from '@/stores/Empresa'
+import type { Empresa, NewDatosEmpresa } from '@/stores/Empresa'
 import type { CiudadeEmpresas } from '@/stores/Ciudad'
 
 
@@ -15,7 +15,7 @@ const idCiudad = ref(route.params.idCiudad ? parseInt(route.params.idCiudad as s
 const empresaStore = useEmpresaStore()
 const ciudadStore = useCiudadStore()
 
-const empresas = ref<Empresa[]>([])
+const empresas = ref<NewDatosEmpresa[]>([])
 const ciudadesEmpresas = ref<CiudadeEmpresas | null>(null)
 
 const nombreBusqueda = ref('')
@@ -46,63 +46,70 @@ onMounted(async () => {
 
 <template>
     <div v-if="idCiudad === null && empresas.length > 0" class="category-enterprises-container">
-        
-        <h1 class="breadcrumb">Inicio > Relacionadas > {{ empresaName }}"</h1>
-        <div style="display: flex; justify-content: space-between">
-            <h2 style="font-size: 30px">Empresas con: {{ empresaName }}</h2>
-            <div>
-                <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
-            </div>
-        </div>
 
-        <div class="empresa-list">
-            <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
-                <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
-                    <div class="cont-img-tef">
-                        <div class="empresa-contact-info ">
-                            <v-icon>mdi-phone</v-icon>
-                            <p>{{ empresa.telefono }}</p>
-                        </div>
-                        <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-                    </div>
-                    <div class="empresa-details">
-                        <h3>{{ empresa.nombre }}</h3>
-                        <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-                        <p class="empresa-description"> <strong>Descripción</strong> {{
-                            recortarTexto(empresa.descripcion, 167) }}</p>
-                    </div>
-                </router-link>
-            </div>
-        </div>
-    </div>
-    <div v-else-if="ciudadesEmpresas" class="category-enterprises-container">
-        <div class="empresa-list">
+        <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
+        <div style="background-color: rgb(209, 209, 209); padding: 30px;">
             <div style="display: flex; justify-content: space-between">
-                <h2 style="font-size: 30px">Ciudad {{ ciudadesEmpresas.nombre }}</h2>
+                <h2 style="font-size: 30px">Empresas con: {{ empresaName }}</h2>
                 <div>
                     <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
                 </div>
             </div>
-            <div v-for="(ciudad, index) in empresaCiudadFiltradas" :key="index">
-                <router-link :to="{ name: 'Empresa', params: { idEmpresa: ciudad.empresa.idEmpresa } }"
-                    class="empresa-card">
-                    <div class="cont-img-tef">
-                        <div class="empresa-contact-info">
-                            <v-icon>mdi-phone</v-icon>
-                            <p>{{ ciudad.empresa.telefono }}</p>
+
+            <div class="empresa-list">
+                <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
+                    <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }"
+                        class="empresa-card">
+                        <div class="cont-img-tef">
+                            <div class="empresa-contact-info ">
+                                <v-icon>mdi-phone</v-icon>
+                                <p>{{ empresa.telefono }}</p>
+                            </div>
+                            <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
                         </div>
-                        <img :src="ciudad.empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+                        <div class="empresa-details">
+                            <h3>{{ empresa.nombre }}</h3>
+                            <p style="font-size: 15px;"><strong>Ciudad: </strong>{{ empresa.nombreCiudad[0] }}</p>
+                            <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+                            <p class="empresa-description"> <strong>Descripción</strong> {{
+                                recortarTexto(empresa.descripcion, 167) }}</p>
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else-if="ciudadesEmpresas" class="category-enterprises-container">
+        <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
+        <div style="background-color: rgb(209, 209, 209); padding: 30px;">
+            <div class="empresa-list">
+                <div style="display: flex; justify-content: space-between">
+                    <h2 style="font-size: 30px">Ciudad {{ ciudadesEmpresas.nombre }}</h2>
+                    <div>
+                        <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
                     </div>
-                    <div class="empresa-details">
-                        <h3>{{ ciudad.empresa.nombre }}</h3>
-                        <p class="empresa-address">
-                            <strong>Dirección:</strong> {{ ciudad.empresa.direccion }}
-                        </p>
-                        <p class="empresa-description">
-                            <strong>Descripción:</strong> {{ recortarTexto(ciudad.empresa.descripcion, 167) }}
-                        </p>
-                    </div>
-                </router-link>
+                </div>
+                <div v-for="(ciudad, index) in empresaCiudadFiltradas" :key="index">
+                    <router-link :to="{ name: 'Empresa', params: { idEmpresa: ciudad.empresa.idEmpresa } }"
+                        class="empresa-card">
+                        <div class="cont-img-tef">
+                            <div class="empresa-contact-info">
+                                <v-icon>mdi-phone</v-icon>
+                                <p>{{ ciudad.empresa.telefono }}</p>
+                            </div>
+                            <img :src="ciudad.empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+                        </div>
+                        <div class="empresa-details">
+                            <h3>{{ ciudad.empresa.nombre }}</h3>
+                            <p class="empresa-address">
+                                <strong>Dirección:</strong> {{ ciudad.empresa.direccion }}
+                            </p>
+                            <p class="empresa-description">
+                                <strong>Descripción:</strong> {{ recortarTexto(ciudad.empresa.descripcion, 167) }}
+                            </p>
+                        </div>
+                    </router-link>
+                </div>
             </div>
         </div>
     </div>
@@ -170,7 +177,6 @@ a {
 
 .category-enterprises-container {
     padding: 20px;
-    background-color: rgb(209, 209, 209);
     width: 60%;
     margin: 150px auto;
     flex-direction: column;
@@ -205,7 +211,11 @@ p {
     font-size: 17px;
     font-weight: 600;
     color: #000000;
-    margin-bottom: 20px;
+    color: rgb(245, 167, 51);
+    text-shadow: 
+                -1px -1px 2px black, 
+                -1px 1px 2px black, 
+                1px -1px 2px black;
 }
 
 

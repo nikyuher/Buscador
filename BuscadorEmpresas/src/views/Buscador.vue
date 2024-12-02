@@ -112,10 +112,6 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
           <p style="color: red;">{{ mensajeAdvertencia }}</p>
         </div>
         <div class="search-inputs">
-          <div class="keyword-container">
-            <input type="search" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput"
-              @keyup.enter="handleSearch()" />
-          </div>
           <div class="city-container">
             <input type="search" v-model="city" placeholder="Ciudad" @input="onCityInput" @keyup.enter="handleSearch()" />
             <ul v-if="citySuggestions.length" class="suggestions-list">
@@ -124,6 +120,10 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
                 {{ citySuggestion.nombre }}
               </li>
             </ul>
+          </div>
+          <div class="keyword-container">
+            <input type="search" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput"
+              @keyup.enter="handleSearch()" />
           </div>
           <div v-if="keyword.length >= 1 && validarEmpresa == true && IdCiudad == 0">
             <RouterLink :to="{ name: 'Resultado', params: { empresa: keyword } }">
