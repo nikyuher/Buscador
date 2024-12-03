@@ -71,47 +71,49 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1>Inicio > Ciudad > {{ ciudadNombre }}</h1>
   <div class="category-enterprises-container">
-    <div v-if="!error">
+    <h1 class="breadcrumb">Inicio > Ciudad > {{ ciudadNombre }}</h1>
+    <div style="background-color: rgb(209, 209, 209); padding: 30px;">
+      <div v-if="!error">
+        <div v-if="empresas.length > 0" class="empresa-list">
 
-      <div v-if="empresas.length > 0" class="empresa-list">
+          <div style="display: flex; justify-content: space-between">
+            <h2 style="font-size: 30px">Empresas en {{ ciudadNombre }}:</h2>
+            <div>
+              <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+            </div>
+          </div>
 
-        <div style="display: flex; justify-content: space-between">
-          <h2 style="font-size: 30px">Empresas en {{ ciudadNombre }}:</h2>
-          <div>
-            <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+          <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
+            <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
+              <div class="cont-img-tef">
+                <div class="empresa-contact-info ">
+                  <v-icon>mdi-phone</v-icon>
+                  <p>{{ empresa.telefono }}</p>
+                </div>
+                <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+              </div>
+              <div class="empresa-details">
+                <h3>{{ empresa.nombre }}</h3>
+                <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+                <p class="empresa-description"> <strong>Descripción</strong> {{ recortarTexto(empresa.descripcion, 167)
+                  }}
+                </p>
+              </div>
+            </router-link>
           </div>
         </div>
 
-        <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
-          <router-link :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
-            <div class="cont-img-tef">
-              <div class="empresa-contact-info ">
-                <v-icon>mdi-phone</v-icon>
-                <p>{{ empresa.telefono }}</p>
-              </div>
-              <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-            </div>
-            <div class="empresa-details">
-              <h3>{{ empresa.nombre }}</h3>
-              <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-              <p class="empresa-description"> <strong>Descripción</strong> {{ recortarTexto(empresa.descripcion, 167) }}
-              </p>
-            </div>
-          </router-link>
-        </div>
+        <p v-else>No hay empresas registradas en esta ciudad.</p>
       </div>
 
-      <p v-else>No hay empresas registradas en esta ciudad.</p>
-    </div>
+      <div v-else-if="error">
+        <p style="font-size: 20px; color: white;">Error al cargar los datos de la ciudad y sus empresas.</p>
+      </div>
 
-    <div v-else-if="error">
-      <p style="font-size: 20px; color: white;">Error al cargar los datos de la ciudad y sus empresas.</p>
-    </div>
-
-    <div v-else>
-      <p>Cargando datos...</p>
+      <div v-else>
+        <p>Cargando datos...</p>
+      </div>
     </div>
 
   </div>
@@ -176,10 +178,12 @@ a {
 }
 
 .category-enterprises-container {
-  padding: 20px;
-  background-color: rgb(209, 209, 209);
   width: 60%;
+  padding: 20px;
   margin: 150px auto;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 ul {
@@ -194,12 +198,6 @@ li {
   border-radius: 10px;
 }
 
-h1 {
-  color: rgb(0, 0, 0);
-  font-size: 17px;
-}
-
-
 p {
   margin: 5px 0;
   color: rgb(0, 0, 0);
@@ -207,16 +205,11 @@ p {
 
 .breadcrumb {
   font-size: 17px;
-  font-weight: 600;
-  color: #000000;
-  margin-bottom: 20px;
-}
-
-.category-enterprises-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  color: rgb(245, 167, 51);
+  text-shadow:
+    -1px -1px 2px black,
+    -1px 1px 2px black,
+    1px -1px 2px black;
 }
 
 .error-message,

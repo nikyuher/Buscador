@@ -64,37 +64,39 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
   <div class="category-enterprises-container">
-    <div style="display: flex; justify-content: space-between">
-      <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
-      <div>
-        <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+    <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
+    <div style="background-color: rgb(209, 209, 209); padding: 30px;">
+      <div style="display: flex; justify-content: space-between">
+        <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
+        <div>
+          <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+        </div>
       </div>
-    </div>
 
-    <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
-    <div v-if="!error && empresas.length" class="empresa-list">
-      <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
-        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
-          <div class="empresa-img-container">
-            <div class="empresa-contact-info">
-              <v-icon>mdi-phone</v-icon>
-              <p>{{ empresa.telefono }}</p>
+      <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
+      <div v-if="!error && empresas.length" class="empresa-list">
+        <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
+          <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
+            <div class="empresa-img-container">
+              <div class="empresa-contact-info">
+                <v-icon>mdi-phone</v-icon>
+                <p>{{ empresa.telefono }}</p>
+              </div>
+              <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
             </div>
-            <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-          </div>
-          <div class="empresa-details">
-            <h3>{{ empresa.nombre }}</h3>
-            <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-            <p class="empresa-description"><strong>Descripción:</strong> {{ recortarTexto(empresa.descripcion, 167) }}
-            </p>
-          </div>
-        </RouterLink>
+            <div class="empresa-details">
+              <h3>{{ empresa.nombre }}</h3>
+              <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+              <p class="empresa-description"><strong>Descripción:</strong> {{ recortarTexto(empresa.descripcion, 167) }}
+              </p>
+            </div>
+          </RouterLink>
+        </div>
       </div>
-    </div>
 
-    <p v-else-if="!error" style="margin: auto">No hay empresas en esta categoría.</p>
+      <p v-else-if="!error" style="margin: auto">No hay empresas en esta categoría.</p>
+    </div>
   </div>
 </template>
 
@@ -128,18 +130,21 @@ a {
 }
 
 .category-enterprises-container {
-  padding: 20px;
-  background-color: rgb(209, 209, 209);
-  flex-wrap: wrap;
   width: 60%;
+  padding: 20px;
   margin: 150px auto;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 .breadcrumb {
   font-size: 17px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 20px;
+  color: rgb(245, 167, 51);
+  text-shadow:
+    -1px -1px 2px black,
+    -1px 1px 2px black,
+    1px -1px 2px black;
 }
 
 .error-message,

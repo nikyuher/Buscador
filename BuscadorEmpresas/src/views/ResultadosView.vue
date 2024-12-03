@@ -196,10 +196,6 @@ li {
     border-radius: 10px;
 }
 
-h1 {
-    color: rgb(0, 0, 0);
-    font-size: 17px;
-}
 
 
 p {
@@ -209,8 +205,6 @@ p {
 
 .breadcrumb {
     font-size: 17px;
-    font-weight: 600;
-    color: #000000;
     color: rgb(245, 167, 51);
     text-shadow: 
                 -1px -1px 2px black, 
