@@ -101,6 +101,10 @@ const reducirCiudades = () => {
     opacity: 1;
 }
 
+h3{
+    margin-bottom: 2vh;
+}
+
 ul {
     list-style-type: none;
     padding: 0;

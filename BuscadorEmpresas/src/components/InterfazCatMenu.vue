@@ -88,6 +88,9 @@ const reducirCategorias = () => {
     transition: opacity 1s ease-in-out;
     margin-bottom: 5vh;
 }
+h3{
+    margin-bottom: 2vh;
+}
 
 .animate-list {
     opacity: 1;
