@@ -300,7 +300,7 @@ input:focus {
 
 .categories-container {
   text-align: center;
-  width: 80%;
+  width: 60%;
   margin: auto;
   animation: slideUp 1s ease;
 }

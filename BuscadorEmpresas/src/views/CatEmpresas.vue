@@ -66,7 +66,7 @@ onMounted(async () => {
 <template>
   <div class="category-enterprises-container">
     <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
-    <div style="background-color: rgb(209, 209, 209); padding: 30px;">
+    <div class="empresa_container" style= "padding: 30px;">
       <div style="display: flex; justify-content: space-between">
         <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
         <div>
@@ -93,12 +93,12 @@ onMounted(async () => {
             </div>
           </RouterLink>
         </div>
-        <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px;">
+        <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px; color: white;">
             <p>No hay empresas con el nombre que buscas</p>
         </div>
       </div>
 
-      <p v-else-if="!error" style="margin: auto">No hay empresas en esta categoría.</p>
+      <p v-else-if="!error" style="margin: auto; color: white;" >No hay empresas en esta categoría.</p>
     </div>
   </div>
 </template>
@@ -106,12 +106,13 @@ onMounted(async () => {
 <style scoped>
 input[type="search"] {
   color: black;
-  padding: 5px;
-  border: 1px solid #fff;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px black;
-  outline: none;
+    padding: 9px;
+    border: 1px solid #fff;
+    margin-right: 12vh;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px black;
+    outline: none;
 }
 
 .decorador {
@@ -120,6 +121,7 @@ input[type="search"] {
 
 .empresa-card {
   background-color: #ffffff;
+  margin-bottom: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 100%;
@@ -127,23 +129,32 @@ input[type="search"] {
   align-items: center;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+h2{
+  color: white;
+  margin-bottom: 2vh;
+}
 
 a {
   text-decoration: none;
+}
+.empresa_container{
+  background-color: #387676;
+  border-radius: 15px;
 }
 
 .category-enterprises-container {
   width: 60%;
   padding: 20px;
-  margin: 150px auto;
+  margin: 50px auto;
   flex-direction: column;
   align-items: center;
   padding: 20px;
 }
 
 .breadcrumb {
-  font-size: 17px;
+  font-size: 18px;
   color: rgb(245, 167, 51);
+  margin: 2vh;
   text-shadow:
     -1px -1px 2px black,
     -1px 1px 2px black,
@@ -169,7 +180,7 @@ a {
 
 .empresa-img {
   max-width: 100%;
-  height: 100px;
+  height: 130px;
   border-radius: 10px;
   margin-bottom: 15px;
 }
@@ -187,11 +198,12 @@ a {
   text-align: left;
   padding: 10px;
   color: #333;
+  margin-left: 3vh;
 }
 
 .empresa-details h3 {
   font-size: 20px;
-  color: #404fd4;
+  color: #ff4d4f;
   margin-bottom: 10px;
 }
 
