@@ -28,10 +28,10 @@ const handleLogout = () => {
     </div>
 
     <div class="user-actions">
-      <div style="padding-top: 20px;">
-        <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link" style="margin-right: 20px;">Register
+      <div v-if="!isLoggedIn" style="padding-top: 20px;">
+        <RouterLink to="/Register" class="nav__link" style="margin-right: 20px;">Register
         </RouterLink>
-        <RouterLink v-if="!isLoggedIn" to="/Login" class="nav__link">Login</RouterLink>
+        <RouterLink to="/Login" class="nav__link">Login</RouterLink>
       </div>
       <div v-if="isLoggedIn" class="logged-in-actions">
         <div v-if="isLoggedIn && loginStore.isAdmin">
@@ -54,7 +54,7 @@ const handleLogout = () => {
 
 
 <style scoped>
-.nav__link{
+.nav__link {
   font-weight: bold;
   padding: 10px;
 }
@@ -68,7 +68,8 @@ const handleLogout = () => {
 
 }
 
-span, .Solicitudes{
+span,
+.Solicitudes {
   padding: 5px;
   font-size: 17px;
 }
@@ -93,22 +94,22 @@ span {
 .header {
   width: 100%;
   height: 12vh;
-  background-color: black;
+  background-color: #7834ff;
   color: white;
   display: flex;
-  align-items: top;
-  padding-top: 10px;
   justify-content: space-evenly;
-
+  align-items: center;
 }
 
 a,
 h1 {
-  text-align: center;
-  margin: auto;
-  align-items: center;
+
   text-decoration: none;
   color: white;
+}
+a{
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 17px;
 }
 
 .logo {
@@ -155,8 +156,6 @@ nav a:first-of-type {
 
 .user-actions {
   display: flex;
-  flex-direction: column;
-  align-items: top;
   font-family: Arial, Helvetica, sans-serif;
 }
 

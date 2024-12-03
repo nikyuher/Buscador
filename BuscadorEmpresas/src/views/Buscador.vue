@@ -212,19 +212,18 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
   display: inline-block;
   width: 100%;
   min-height: 700px;
-  margin: 40px auto;
   background-image: url(https://treeburealtygroup.com/wp-content/uploads/2024/02/Portada-Corasol.jpg);
   background-size: cover;
 }
 
 .search-box h2 {
-  color: rgb(242, 255, 54);
+  color: rgb(255, 255, 255);
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   padding: 30px 0;
   font-size: 50px;
   font-weight: 900;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family:'Courier New', Courier, monospace;
   animation: bounceIn 1s ease;
 }
 
