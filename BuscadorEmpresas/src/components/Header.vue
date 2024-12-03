@@ -23,12 +23,12 @@ const handleLogout = () => {
   <div class="header">
     <div class="header-name">
       <RouterLink to="/">
-        <h1>BuscaNet</h1>
+        <h1 style="font-size: 35px;">BuscaNet</h1>
       </RouterLink>
     </div>
 
     <div class="user-actions">
-      <div>
+      <div style="padding-top: 20px;">
         <RouterLink v-if="!isLoggedIn" to="/Register" class="nav__link" style="margin-right: 20px;">Register
         </RouterLink>
         <RouterLink v-if="!isLoggedIn" to="/Login" class="nav__link">Login</RouterLink>
@@ -92,12 +92,14 @@ span {
 
 .header {
   width: 100%;
-  height: 10vh;
-  background-color: #2a5f4d;
+  height: 12vh;
+  background-color: black;
   color: white;
   display: flex;
-  align-items: center;
+  align-items: top;
+  padding-top: 10px;
   justify-content: space-evenly;
+
 }
 
 a,
@@ -154,8 +156,7 @@ nav a:first-of-type {
 .user-actions {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  align-items: top;
   font-family: Arial, Helvetica, sans-serif;
 }
 

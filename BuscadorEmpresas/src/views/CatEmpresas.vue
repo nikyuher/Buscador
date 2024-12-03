@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { fetchEmpresasByCategoria, fetchEmpresasById } from '../stores/Buscador';
 
 const categoriaNombre = ref('');
 const empresas = ref<{ idEmpresa: number; nombre: string; descripcion: string; direccion: string; telefono: string; imagen: string }[]>([]);
 const error = ref(false);
+
+const nombreBusqueda = ref('')
+const empresaFiltradas = computed(() => {
+  return empresas.value.filter(empresa => empresa.nombre.toLowerCase().includes(nombreBusqueda.value.toLowerCase()))
+})
 
 const recortarTexto = (texto: string, maxLongitud: number) => {
   return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
@@ -61,12 +66,17 @@ onMounted(async () => {
 <template>
   <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
   <div class="category-enterprises-container">
+    <div style="display: flex; justify-content: space-between">
+      <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
+      <div>
+        <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
+      </div>
+    </div>
 
     <p v-if="error" class="error-message">Hubo un error al cargar los datos.</p>
-
     <div v-if="!error && empresas.length" class="empresa-list">
-      <div v-for="empresa in empresas" :key="empresa.idEmpresa" class="empresa-card">
-        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-link">
+      <div v-for="empresa in empresaFiltradas" :key="empresa.idEmpresa">
+        <RouterLink :to="{ name: 'Empresa', params: { idEmpresa: empresa.idEmpresa } }" class="empresa-card">
           <div class="empresa-img-container">
             <div class="empresa-contact-info">
               <v-icon>mdi-phone</v-icon>
@@ -77,17 +87,28 @@ onMounted(async () => {
           <div class="empresa-details">
             <h3>{{ empresa.nombre }}</h3>
             <p class="empresa-address"><strong>Dirección:</strong> {{ empresa.direccion }}</p>
-            <p class="empresa-description"><strong>Descripción:</strong> {{ recortarTexto(empresa.descripcion, 167) }}</p>
+            <p class="empresa-description"><strong>Descripción:</strong> {{ recortarTexto(empresa.descripcion, 167) }}
+            </p>
           </div>
         </RouterLink>
       </div>
     </div>
 
-    <p v-else-if="!error" class="no-data">No hay empresas en esta categoría.</p>
+    <p v-else-if="!error" style="margin: auto">No hay empresas en esta categoría.</p>
   </div>
 </template>
 
 <style scoped>
+input[type="search"] {
+  color: black;
+  padding: 5px;
+  border: 1px solid #fff;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px black;
+  outline: none;
+}
+
 .decorador {
   display: flex;
 }
@@ -96,15 +117,10 @@ onMounted(async () => {
   background-color: #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  border-radius: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 20px;
   width: 100%;
-  max-width: 350px;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 a {
@@ -114,14 +130,13 @@ a {
 .category-enterprises-container {
   padding: 20px;
   background-color: rgb(209, 209, 209);
-  display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  width: 60%;
+  margin: 150px auto;
 }
 
 .breadcrumb {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   color: #333;
   margin-bottom: 20px;
@@ -136,36 +151,32 @@ a {
 }
 
 .empresa-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  width: 100%;
 }
 
 .empresa-img-container {
-  width: 100%;
+  width: 190px;
   text-align: center;
-  margin-bottom: 15px;
 }
 
 .empresa-img {
   max-width: 100%;
-  height: 150px;
-  object-fit: cover;
+  height: 100px;
   border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .empresa-contact-info {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #555;
+  color: #000000;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
 .empresa-details {
-  text-align: center;
+  text-align: left;
   padding: 10px;
   color: #333;
 }
@@ -179,7 +190,7 @@ a {
 .empresa-description,
 .empresa-address {
   font-size: 14px;
-  color: #555;
+  color: #000000;
   margin-bottom: 8px;
 }
 

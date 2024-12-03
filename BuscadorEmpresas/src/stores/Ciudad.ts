@@ -26,6 +26,10 @@ interface EmpresasCiudade {
 interface Empresa {
   idEmpresa: number
   nombre: string
+  descripcion: string
+  direccion: string
+  telefono: number
+  imagen: string
 }
 
 export const useCiudadStore = defineStore({
@@ -42,7 +46,7 @@ export const useCiudadStore = defineStore({
   actions: {
     async GetAllCiudades() {
       try {
-        const response = await fetch(`api/Ciudad`, {
+        const response = await fetch(`/api/Ciudad`, {
           method: 'GET'
         })
 
@@ -63,7 +67,7 @@ export const useCiudadStore = defineStore({
     },
     async GetCiudadId(idCiudad: number) {
       try {
-        const response = await fetch(`api/Ciudad/${idCiudad}`, {
+        const response = await fetch(`/api/Ciudad/${idCiudad}`, {
           method: 'GET'
         })
 
@@ -84,7 +88,7 @@ export const useCiudadStore = defineStore({
     },
     async BuscadorCiudad(nombreCiudad: string) {
       try {
-        const response = await fetch(`api/Ciudad/buscar?nombre=${nombreCiudad}`, {
+        const response = await fetch(`/api/Ciudad/buscar?nombre=${nombreCiudad}`, {
           method: 'GET'
         })
 
@@ -105,7 +109,7 @@ export const useCiudadStore = defineStore({
     },
     async GetEmpresasByCiudad(idCiudad: number) {
       try {
-        const response = await fetch(`api/Ciudad/${idCiudad}/empresas`, {
+        const response = await fetch(`/api/Ciudad/${idCiudad}/empresas`, {
           method: 'GET'
         })
 
@@ -124,10 +128,10 @@ export const useCiudadStore = defineStore({
         throw error
       }
     },
-    async GetEmpresaExistente(idCiudad: number, idEmpresa: number) {
+    async GetEmpresaExistente(nombreEmpresa: string, idCiudad: number) {
       try {
         const response = await fetch(
-          `api/Ciudad/empresa?idEmpresa=${idEmpresa}&idCiudad=${idCiudad}`,
+          `/api/Ciudad/empresa?nombreEmpresa=${nombreEmpresa}&idCiudad=${idCiudad}`,
           {
             method: 'GET'
           }
@@ -158,7 +162,7 @@ export const useCiudadStore = defineStore({
           nombre: DatosCiudad.nombre
         }
 
-        const response = await fetch(`api/Ciudad`, {
+        const response = await fetch(`/api/Ciudad`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -188,7 +192,7 @@ export const useCiudadStore = defineStore({
           nombre: DatosCiudad.nombre
         }
 
-        const response = await fetch(`api/Ciudad`, {
+        const response = await fetch(`/api/Ciudad`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -213,7 +217,7 @@ export const useCiudadStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Ciudad/${idCategoria}`, {
+        const response = await fetch(`/api/Ciudad/${idCategoria}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`

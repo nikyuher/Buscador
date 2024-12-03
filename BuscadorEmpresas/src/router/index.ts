@@ -13,57 +13,62 @@ const router = createRouter({
     {
       path: '/Categoria/:nombre,:idCategoria',
       name: 'CatEmpresas',
-      component: () => import('../views/CatEmpresas.vue')
+      component: () => import('@/views/CatEmpresas.vue')
     },
     {
       path: '/Empresa/:idEmpresa',
       name: 'Empresa',
-      component: () => import('../views/EmpresasView.vue')
+      component: () => import('@/views/EmpresasView.vue')
     },
     {
       path: '/Ciudad/:idCiudad',
       name: 'Ciudad',
-      component: () => import('../views/CiudadView.vue')
+      component: () => import('@/views/CiudadView.vue')
     },
     {
       path: '/Ciudad/:idCiudad/empresas/:idEmpresa',
       name: 'CiudadEmpresas',
-      component: () => import('../views/CiudadEmpresasView.vue')
+      component: () => import('@/views/CiudadEmpresasView.vue')
     },
     {
       path: '/Solicitudes',
       name: 'Solicitudes',
-      component: () => import('../views/SolicitudesView.vue')
+      component: () => import('@/views/SolicitudesView.vue')
     },
     {
       path: '/Login',
       name: 'Login',
-      component: () => import('../views/Login.vue')
+      component: () => import('@/views/Login.vue')
     },
     {
       path: '/Register',
       name: 'Register',
-      component: () => import('../views/Register.vue')
+      component: () => import('@/views/Register.vue')
     },
     {
       path: '/PanelAdmin',
       name: 'PanelAdmin',
-      component: () => import('../views/PanelAdmin.vue')
+      component: () => import('@/views/PanelAdmin.vue')
     },
     {
       path: '/Perfil',
       name: 'Perfil',
-      component: () => import('../views/PerfilView.vue')
+      component: () => import('@/views/PerfilView.vue')
     },
     {
       path: '/ChangePassword',
       name: 'ChangePassword',
-      component: () => import('../views/ChangePasswordView.vue')
+      component: () => import('@/views/ChangePasswordView.vue')
+    },
+    {
+      path: '/Resultado/:empresa/:idCiudad?',
+      name: 'Resultado',
+      component: () => import('@/views/ResultadosView.vue')
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: () => import('../views/ErrorUrlView.vue')
+      component: () => import('@/views/ErrorUrlView.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {
