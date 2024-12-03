@@ -93,6 +93,9 @@ onMounted(async () => {
             </div>
           </RouterLink>
         </div>
+        <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px;">
+            <p>No hay empresas con el nombre que buscas</p>
+        </div>
       </div>
 
       <p v-else-if="!error" style="margin: auto">No hay empresas en esta categoría.</p>

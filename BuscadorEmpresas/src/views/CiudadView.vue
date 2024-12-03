@@ -102,9 +102,12 @@ onMounted(async () => {
               </div>
             </router-link>
           </div>
+          <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px;">
+            <p>No hay empresas con el nombre que buscas</p>
+        </div>
         </div>
 
-        <p v-else>No hay empresas registradas en esta ciudad.</p>
+        <p style="text-align: center;padding: 40px;" v-else>No hay empresas registradas en esta ciudad.</p>
       </div>
 
       <div v-else-if="error">
