@@ -24,8 +24,12 @@ const empresaFiltradas = computed(() => {
 })
 
 const empresaCiudadFiltradas = computed(() => {
-    return ciudadesEmpresas.value?.empresasCiudades.filter(empresa => empresa.empresa.nombre.toLowerCase().includes(nombreBusqueda.value.toLowerCase()))
-})
+    const lista = ciudadesEmpresas.value?.empresasCiudades?.filter(empresa =>
+        empresa.empresa.nombre.toLowerCase().includes(nombreBusqueda.value.toLowerCase())
+    ) || []; // Si no hay empresasCiudades, asigna un arreglo vacío
+
+    return lista; // `lista` será siempre un arreglo, nunca undefined
+});
 
 const recortarTexto = (texto: string, maxLongitud: number) => {
     return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
@@ -76,6 +80,9 @@ onMounted(async () => {
                         </div>
                     </router-link>
                 </div>
+                <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px;">
+                    <p>No hay empresas con el nombre que buscas</p>
+                </div>
             </div>
         </div>
     </div>
@@ -89,7 +96,7 @@ onMounted(async () => {
                         <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
                     </div>
                 </div>
-                <div v-for="(ciudad, index) in empresaCiudadFiltradas" :key="index">
+                <div v-for="ciudad in empresaCiudadFiltradas" :key="ciudad.idEmpresaCiudad">
                     <router-link :to="{ name: 'Empresa', params: { idEmpresa: ciudad.empresa.idEmpresa } }"
                         class="empresa-card">
                         <div class="cont-img-tef">
@@ -109,6 +116,9 @@ onMounted(async () => {
                             </p>
                         </div>
                     </router-link>
+                </div>
+                <div v-if="empresaCiudadFiltradas.length === 0" style="text-align: center;padding: 40px;">
+                    <p>No hay empresas con el nombre que buscas</p>
                 </div>
             </div>
         </div>
@@ -196,10 +206,6 @@ li {
     border-radius: 10px;
 }
 
-h1 {
-    color: rgb(0, 0, 0);
-    font-size: 17px;
-}
 
 
 p {
@@ -209,13 +215,11 @@ p {
 
 .breadcrumb {
     font-size: 17px;
-    font-weight: 600;
-    color: #000000;
     color: rgb(245, 167, 51);
-    text-shadow: 
-                -1px -1px 2px black, 
-                -1px 1px 2px black, 
-                1px -1px 2px black;
+    text-shadow:
+        -1px -1px 2px black,
+        -1px 1px 2px black,
+        1px -1px 2px black;
 }
 
 
