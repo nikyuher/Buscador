@@ -281,82 +281,131 @@ onMounted(async () => {
 
 <template>
   <div class="solicitud-wrapper">
-    <h1 class="titulo-soli">Envia tu Solicitud de Empresa</h1>
     <div class="cont-form-soli">
+      <h1 class="titulo-soli">Envía tu Solicitud de Empresa</h1>
       <form @submit.prevent="enviarPeticion">
+        <!-- Nombre -->
         <div class="form-group">
           <label for="nombreEmpresa">Nombre:</label>
-          <p style="color: grey;"> Caracteres: {{ caracteresNombre }} / 60</p>
-          <input v-model="nombreEmpresa" id="nombreEmpresa" placeholder="Empresa" @input="limitarNombre" type="text"
-            required />
+          <input
+            v-model="nombreEmpresa"
+            id="nombreEmpresa"
+            placeholder="Nombre de la empresa"
+            @input="limitarNombre"
+            maxlength="60"
+            type="text"
+            required
+          />
+          <small>Caracteres: {{ caracteresNombre }} / 60</small>
           <p class="error-message" v-if="errores.nombreEmpresa">{{ errores.nombreEmpresa }}</p>
         </div>
 
+        <!-- Descripción -->
         <div class="form-group">
           <label for="descripcionEmpresa">Descripción:</label>
-          <p style="color: grey;"> Caracteres: {{ caracteresDescripcion }} / 1000</p>
-          <textarea v-model="descripcionEmpresa" id="descripcionEmpresa" @input="limitarDescripcion"
-            placeholder="Descripcion de la empresa" required></textarea>
+          <textarea
+            v-model="descripcionEmpresa"
+            id="descripcionEmpresa"
+            placeholder="Descripción de la empresa"
+            @input="limitarDescripcion"
+            maxlength="1000"
+            required
+          ></textarea>
+          <small>Caracteres: {{ caracteresDescripcion }} / 1000</small>
           <p class="error-message" v-if="errores.descripcionEmpresa">{{ errores.descripcionEmpresa }}</p>
         </div>
 
+        <!-- Dirección -->
         <div class="form-group">
           <label for="direccionEmpresa">Dirección:</label>
-          <input v-model="direccionEmpresa" id="direccionEmpresa"
-            placeholder="Calle, Número, Código Postal, Ciudad, País" readonly required>
-          <div id="map" style="height: 300px;"></div>
+          <input
+            v-model="direccionEmpresa"
+            id="direccionEmpresa"
+            placeholder="Calle, Número, Código Postal, Ciudad, País"
+            readonly
+            required
+          />
+          <div id="map" style="height: 300px; border-radius: 8px; margin-top: 10px;"></div>
         </div>
 
+        <!-- Teléfono -->
         <div class="form-group">
           <label for="telefonoEmpresa">Teléfono:</label>
-          <input v-model="telefonoEmpresa" id="telefonoEmpresa" type="number" placeholder="123456789" />
+          <input
+            v-model="telefonoEmpresa"
+            id="telefonoEmpresa"
+            type="number"
+            placeholder="123456789"
+            required
+          />
           <p class="error-message" v-if="errores.telefonoEmpresa">{{ errores.telefonoEmpresa }}</p>
         </div>
 
+        <!-- Correo -->
         <div class="form-group">
           <label for="correoEmpresa">Correo:</label>
-          <input v-model="correoEmpresa" id="correoEmpresa" type="text" placeholder="ejemplo@gmail.com" />
+          <input
+            v-model="correoEmpresa"
+            id="correoEmpresa"
+            type="email"
+            placeholder="ejemplo@gmail.com"
+            required
+          />
           <p class="error-message" v-if="errores.correoEmpresa">{{ errores.correoEmpresa }}</p>
         </div>
 
+        <!-- Sitio Web -->
         <div class="form-group">
           <label for="sitioWebEmpresa">Sitio Web:</label>
-          <input v-model="sitioWebEmpresa" id="sitioWebEmpresa" placeholder="http://MiSitioWeb.com" type="text"
-            required />
+          <input
+            v-model="sitioWebEmpresa"
+            id="sitioWebEmpresa"
+            type="url"
+            placeholder="http://MiSitioWeb.com"
+            required
+          />
           <p class="error-message" v-if="errores.sitioWebEmpresa">{{ errores.sitioWebEmpresa }}</p>
         </div>
 
+        <!-- Imagen -->
         <div class="form-group">
           <label for="imagenEmpresaURL">URL de la Imagen:</label>
-          <input v-model="imagenEmpresaURL" id="imagenEmpresaURL" placeholder="http://ImagenEmpresa.com" type="text"
-            required />
+          <input
+            v-model="imagenEmpresaURL"
+            id="imagenEmpresaURL"
+            type="url"
+            placeholder="http://ImagenEmpresa.com"
+            required
+          />
           <p class="error-message" v-if="errores.imagenEmpresaURL">{{ errores.imagenEmpresaURL }}</p>
         </div>
 
+        <!-- Categoría -->
         <div class="form-group">
           <label for="idCategoriaEmpresa">Categoría:</label>
           <select v-model="idCategoriaEmpresa" id="idCategoriaEmpresa" required>
-            <option v-for="categoria in categoriasOrdenadas " :key="categoria.idCategoria"
-              :value="categoria.idCategoria">
+            <option v-for="categoria in categoriasOrdenadas" :key="categoria.idCategoria" :value="categoria.idCategoria">
               {{ categoria.nombre }}
             </option>
           </select>
           <p class="error-message" v-if="errores.idCategoriaEmpresa">{{ errores.idCategoriaEmpresa }}</p>
         </div>
 
+        <!-- Ciudad -->
         <div class="form-group">
           <label for="idCiudadEmpresa">Ciudad:</label>
           <select v-model="idCiudadEmpresa" id="idCiudadEmpresa" required>
-            <option v-for="ciudad in ciudadesOrdenadas " :key="ciudad.idCiudad" :value="ciudad.idCiudad">
+            <option v-for="ciudad in ciudadesOrdenadas" :key="ciudad.idCiudad" :value="ciudad.idCiudad">
               {{ ciudad.nombre }}
             </option>
           </select>
           <p class="error-message" v-if="errores.idCiudadEmpresa">{{ errores.idCiudadEmpresa }}</p>
         </div>
 
-        <button type="submit" class="submit-btn">
-          Enviar Solicitud
-        </button>
+        <!-- Botón de envío -->
+        <button type="submit" class="submit-btn">Enviar Solicitud</button>
+
+        <!-- Snackbars -->
         <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
           {{ Message }}
         </v-snackbar>
@@ -370,33 +419,29 @@ onMounted(async () => {
 
 <style scoped>
 .solicitud-wrapper {
-  background-image: url('../asserts/DALL.jpg');
-  background-size: cover;
-  background-position: center;
+  background: #f3f4f6;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .titulo-soli {
-  color: #4153b4;
   text-align: center;
-  font-size: 25px;
-  padding: 20px;
-  margin: 30px;
-  box-shadow: 5px 5px 15px 5px black;
-  font-family: 'Montserrat', sans-serif;
-  backdrop-filter: blur(20px);
-  border-radius: 15px;
+  font-size: 24px;
+  color: #342bb6;
+  margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .cont-form-soli {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 30px;
-  border-radius: 15px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 700px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  width: 400px;
 }
 
 .form-group {
@@ -404,54 +449,40 @@ onMounted(async () => {
 }
 
 label {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 8px;
   display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
 }
 
 input,
 textarea,
 select {
-  width: 90%;
+  width: 100%;
   padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 textarea {
   resize: vertical;
-  resize: none;
-  height: 317px;
+  height: 120px;
 }
 
-
-button.submit-btn {
+.submit-btn {
   width: 100%;
   padding: 15px;
-  background-color: #007BFF;
-  color: #fff;
-  font-size: 16px;
+  background-color: #342bb6;
+  color: white;
+  font-size: 18px;
   border: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, opacity 0.3s ease;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-button.submit-btn:disabled {
-  background-color: #007BFF;
-  /* Mantener el color, pero cambiar la opacidad */
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-button.submit-btn:hover:enabled {
-  background-color: #0056b3;
-}
-
-.error-message {
-  color: red;
-  font-size: 12px;
+.submit-btn:hover {
+  background-color: #281d93;
 }
 </style>

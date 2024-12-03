@@ -53,7 +53,7 @@
   background-color: #2a2a2a;
   max-width: 100%;
   max-height: 100%;
-  padding: 30px 0;
+  padding: 10px 0;
 }
 
 .footer-container {

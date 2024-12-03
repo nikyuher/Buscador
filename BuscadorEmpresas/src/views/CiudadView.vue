@@ -73,7 +73,7 @@ onMounted(async () => {
 <template>
   <div class="category-enterprises-container">
     <h1 class="breadcrumb">Inicio > Ciudad > {{ ciudadNombre }}</h1>
-    <div style="background-color: rgb(209, 209, 209); padding: 30px;">
+    <div style="background-color: #387676; border-radius: 15px; padding: 30px;">
       <div v-if="!error">
         <div v-if="empresas.length > 0" class="empresa-list">
 
@@ -125,12 +125,18 @@ onMounted(async () => {
 <style scoped>
 input[type="search"] {
   color: black;
-  padding: 5px;
+  padding: 8px;
+  margin-right: 5vh;
   border: 1px solid #fff;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 2px 2px 5px black;
   outline: none;
+}
+h2{
+  color: white;
+  margin-bottom: 2vh;
+  margin-left: 2vh;
 }
 
 .decorador {
@@ -147,6 +153,7 @@ input[type="search"] {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 100%;
+  margin: 5px;
   display: flex;
   align-items: center;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -183,7 +190,7 @@ a {
 .category-enterprises-container {
   width: 60%;
   padding: 20px;
-  margin: 150px auto;
+  margin: 50px auto;
   flex-direction: column;
   align-items: center;
   padding: 20px;
@@ -207,7 +214,9 @@ p {
 }
 
 .breadcrumb {
-  font-size: 17px;
+  font-size: 19px;
+  margin-bottom: 2vh;
+  margin-left: 4vh;
   color: rgb(245, 167, 51);
   text-shadow:
     -1px -1px 2px black,
@@ -234,7 +243,7 @@ p {
 }
 
 .empresa-img {
-  max-width: 100%;
+  max-width: 200px;
   height: 100px;
   border-radius: 10px;
   margin-bottom: 15px;
@@ -244,6 +253,7 @@ p {
   text-align: justify;
   padding: 20px;
   width: 80%;
+  margin-left: 2vh;
 }
 
 .empresa-details h3 {

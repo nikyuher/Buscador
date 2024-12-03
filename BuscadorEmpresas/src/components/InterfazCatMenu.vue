@@ -90,6 +90,7 @@ const reducirCategorias = () => {
 }
 h3{
     margin-bottom: 2vh;
+    margin-top: 5vh;
 }
 
 .animate-list {

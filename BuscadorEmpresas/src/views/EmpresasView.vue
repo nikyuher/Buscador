@@ -98,10 +98,13 @@ onMounted(async () => {
 
     <div class="empresa" v-if="empresa">
       <div class="empresa-header">
-        <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
-        <div class="empresa-info">
-          <h2>{{ empresa.nombre }}</h2>
-          <p class="empresa-category">Categoría: {{  }}</p>
+        <!-- Contenedor de la imagen y el overlay -->
+        <div class="empresa-image-container">
+          <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
+          <div class="empresa-overlay">
+            <h2 class="empresa-nombre">{{ empresa.nombre }}</h2>
+            <p class="empresa-category">Categoría: {{  }}</p>
+          </div>
         </div>
       </div>
 
@@ -168,28 +171,47 @@ onMounted(async () => {
 }
 
 .empresa-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px;
-  background-color: #fff;
+  position: relative;
+}
+
+.empresa-image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
 }
 
 .empresa-img {
   width: 100%;
-  max-height: 250px;
+  height: 300px;
   object-fit: cover;
-  border-radius: 8px;
 }
 
-.empresa-info {
-  text-align: center;
-  margin-top: 16px;
+.empresa-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  border-radius: 15px;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  color: white;
+}
+
+.empresa-nombre {
+  font-size: 40px;
+  font-weight: bold;
+  margin-left: 4vh;
 }
 
 .empresa-category {
-  font-size: 14px;
-  color: #888;
+  font-size: 18px;
+  margin-top: 5px;
+  color: #ccc;
+  margin-left: 4vh;
 }
 
 .cont {

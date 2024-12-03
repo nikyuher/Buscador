@@ -94,7 +94,7 @@ span {
 .header {
   width: 100%;
   height: 12vh;
-  background-color: #7834ff;
+  background-color: #387676;
   color: white;
   display: flex;
   justify-content: space-evenly;

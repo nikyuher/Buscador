@@ -223,7 +223,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
   padding: 30px 0;
   font-size: 50px;
   font-weight: 900;
-  font-family:'Courier New', Courier, monospace;
+  font-family:'Roboto';
   animation: bounceIn 1s ease;
 }
 
