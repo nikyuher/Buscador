@@ -239,8 +239,8 @@ onMounted(async () => {
 
 <template>
     <div>
+        <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
         <div v-if="listaEmpresas.length > 0">
-            <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
             <table class="styled-table">
                 <thead>
                     <tr>
@@ -327,7 +327,6 @@ onMounted(async () => {
             </table>
         </div>
         <div v-else style="text-align: center; margin: 20px;">
-            <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
             <p>No tienes ninguna empresa creada.</p>
         </div>
     </div>
