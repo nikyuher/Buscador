@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 
 import { useEmpresaStore } from '@/stores/Empresa'
 import { useCiudadStore } from '@/stores/Ciudad'
-import type { Empresa, NewDatosEmpresa } from '@/stores/Empresa'
+import type { NewDatosEmpresa } from '@/stores/Empresa'
 import type { CiudadeEmpresas } from '@/stores/Ciudad'
 
 
@@ -52,7 +52,7 @@ onMounted(async () => {
     <div v-if="idCiudad === null && empresas.length > 0" class="category-enterprises-container">
 
         <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
-        <div style="background-color: rgb(209, 209, 209); padding: 30px;">
+        <div style="background-color: #387676; border-radius: 15px; padding: 30px;">
             <div style="display: flex; justify-content: space-between">
                 <h2 style="font-size: 30px">Empresas con: {{ empresaName }}</h2>
                 <div>
@@ -128,14 +128,22 @@ onMounted(async () => {
     </div>
 </template>
 <style scoped>
+
 input[type="search"] {
-    color: black;
-    padding: 5px;
-    border: 1px solid #fff;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px black;
-    outline: none;
+  color: black;
+  padding: 8px;
+  margin-right: 5vh;
+  border: 1px solid #fff;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px black;
+  outline: none;
+}
+
+h2{
+  color: white;
+  margin-bottom: 2vh;
+  margin-left: 2vh;
 }
 
 .decorador {
@@ -152,6 +160,7 @@ input[type="search"] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 100%;
+    margin: 5px;
     display: flex;
     align-items: center;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -186,12 +195,11 @@ a {
 }
 
 .category-enterprises-container {
-    padding: 20px;
     width: 60%;
-    margin: 150px auto;
+    margin: 10px auto;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding-bottom:200px ;
 }
 
 ul {
@@ -214,12 +222,14 @@ p {
 }
 
 .breadcrumb {
-    font-size: 17px;
-    color: rgb(245, 167, 51);
-    text-shadow:
-        -1px -1px 2px black,
-        -1px 1px 2px black,
-        1px -1px 2px black;
+  font-size: 19px;
+  margin-bottom: 2vh;
+  margin-left: 4vh;
+  color: rgb(245, 167, 51);
+  text-shadow:
+    -1px -1px 2px black,
+    -1px 1px 2px black,
+    1px -1px 2px black;
 }
 
 

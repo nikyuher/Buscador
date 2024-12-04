@@ -169,6 +169,9 @@ onMounted(async () => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
+.empresa-category{
+  color: white !important;
+}
 
 .empresa-header {
   position: relative;

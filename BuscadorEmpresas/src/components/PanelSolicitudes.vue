@@ -435,6 +435,9 @@ onMounted(async () => {
   font-weight: bold;
 }
 
+.error-message{
+  color:red;
+}
 .cont-form-soli {
   background-color: white;
   padding: 40px;

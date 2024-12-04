@@ -103,11 +103,11 @@ onMounted(async () => {
             </router-link>
           </div>
           <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px;">
-            <p>No hay empresas con el nombre que buscas</p>
+            <p style="color: white;">No hay empresas con el nombre que buscas</p>
         </div>
         </div>
 
-        <p style="text-align: center;padding: 40px;" v-else>No hay empresas registradas en esta ciudad.</p>
+        <p style="text-align: center;padding: 40px; color:white;" v-else>No hay empresas registradas en esta ciudad.</p>
       </div>
 
       <div v-else-if="error">
@@ -189,11 +189,10 @@ a {
 
 .category-enterprises-container {
   width: 60%;
-  padding: 20px;
-  margin: 50px auto;
+  margin: 10px auto;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding-bottom:200px ;
 }
 
 ul {
