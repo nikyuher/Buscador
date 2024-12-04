@@ -75,36 +75,33 @@ onMounted(() => {
 </script>
 
 <template>
-    <div>
-        <div v-if="ListaPeticiones.length > 0">
-            <h2 style="margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th> Nº</th>
-                        <th>Nombre</th>
-                        <th>Descripcion</th>
-                        <th>Direccion</th>
-                        <th>Imagen</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(peticion, index) in ListaPeticiones" :key="index">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ peticion.nombreEmpresa }}</td>
-                        <td>{{ peticion.descripcionEmpresa }}</td>
-                        <td>{{ peticion.direccionEmpresa }}</td>
-                        <td><img :src="peticion.imagenEmpresaURL" alt="Imagen Empresa" width="100" /></td>
-                        <td><button class="elimar" @click="rechazarPeticion(peticion.idPeticion)">Eliminar</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-else>
-            <h2 style="margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
-            <p>¡No tienes ninguna solicitud pediente!</p>
-        </div>
+    <h2 style="width: 300px;margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
+    <div v-if="ListaPeticiones.length > 0" style="width: 1000px; margin: auto">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th> Nº</th>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Direccion</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(peticion, index) in ListaPeticiones" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ peticion.nombreEmpresa }}</td>
+                    <td>{{ peticion.descripcionEmpresa }}</td>
+                    <td>{{ peticion.direccionEmpresa }}</td>
+                    <td><img :src="peticion.imagenEmpresaURL" alt="Imagen Empresa" width="100" /></td>
+                    <td><button class="elimar" @click="rechazarPeticion(peticion.idPeticion)">Eliminar</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div v-else style="text-align: center;">
+        <p style="margin:auto;">¡No tienes ninguna solicitud pediente!</p>
     </div>
     <v-snackbar v-model="success" color="green" timeout="2000" location="top" absolute>
         {{ successMessage }}
@@ -127,9 +124,10 @@ onMounted(() => {
 
 
 .styled-table {
-    width: 100%;
+    width: 90%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    margin: auto;
     text-align: center;
 }
 
@@ -152,9 +150,10 @@ onMounted(() => {
 img {
     border-radius: 5px;
 }
-.elimar{
+
+.elimar {
     background-color: red;
-    color:white;
+    color: white;
     padding: 07px;
     border-radius: 5px;
 }

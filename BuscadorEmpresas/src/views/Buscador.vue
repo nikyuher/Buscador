@@ -107,7 +107,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
   <body>
     <div class="search-container">
       <div class="search-box">
-        <h2>¿Quieres encontrar tu empresa?</h2>
+        <h2>¿Estas buscando alguna empresa?</h2>
         <div v-if="errorMsg">
           <p style="color: red;">{{ mensajeAdvertencia }}</p>
         </div>
@@ -223,7 +223,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
   padding: 30px 0;
   font-size: 50px;
   font-weight: 900;
-  font-family:'Roboto';
+  font-family:'Courier New', Courier, monospace;
   animation: bounceIn 1s ease;
 }
 

@@ -167,7 +167,7 @@ onMounted(async () => {
 }
 
 .container {
-    width: 90%;
+    width:1200px;
     margin: auto;
     padding: 20px;
 }

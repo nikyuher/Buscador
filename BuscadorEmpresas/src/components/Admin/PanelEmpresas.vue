@@ -150,6 +150,11 @@ const seleccionarEmpresaParaEditar = async (empresa: any) => {
   }
 };
 
+const recortarTexto = (texto: string, maxLongitud: number) => {
+    return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
+};
+
+
 const confirmarEnvio = async () => {
   try {
     if (!nombre.value || !descripcion.value || !direccion.value || !imagen.value) {
@@ -329,7 +334,7 @@ const obtenerNombreCiudades = (idCiudad: number) => {
       <tbody>
         <tr v-for=" empresa in empresasFiltradas" :key="empresa.idEmpresa">
           <td>{{ empresa.nombre }}</td>
-          <td style="display: flex; max-width: 400px; border: none;text-align: justify">{{ empresa.descripcion }}</td>
+          <td style="display: flex; max-width: 400px; border: none;text-align: justify">{{ recortarTexto(empresa.descripcion, 200) }}</td>
           <td>{{ empresa.direccion }}</td>
           <td>
             <div v-for="(categoria, index) in empresa.empresaCategorias.map(m => m.idCategoria)" :key="index">
@@ -356,7 +361,7 @@ const obtenerNombreCiudades = (idCiudad: number) => {
                   </div>
                   <div>
                     <label for="descripcion">Descripción:</label>
-                    <textarea v-model="descripcion" id="descripcion" required></textarea>
+                    <textarea style="height: 300px;" v-model="descripcion" id="descripcion" required></textarea>
                   </div>
 
                   <div>
