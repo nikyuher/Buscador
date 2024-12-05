@@ -61,15 +61,6 @@ const onKeywordInput = async () => {
 
     validarEmpresa.value = true;
     errorMsg.value = false;
-
-  //   const empresaSeleccionada = suggestions.value.find(s => s.nombre === keyword.value);
-  //   if (empresaSeleccionada) {
-  //     IdEmpresa.value = empresaSeleccionada.idEmpresa;
-  //     validarEmpresa.value = true;
-  //   }
-  // } else {
-  //   suggestions.value = [];
-  //   validarEmpresa.value = false;
   }
 };
 

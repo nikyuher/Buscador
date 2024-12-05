@@ -81,14 +81,14 @@ onMounted(async () => {
                     </router-link>
                 </div>
                 <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px;">
-                    <p>No hay empresas con el nombre que buscas</p>
+                    <p style="color: white">No hay empresas con el nombre que buscas</p>
                 </div>
             </div>
         </div>
     </div>
     <div v-else-if="ciudadesEmpresas" class="category-enterprises-container">
         <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
-        <div style="background-color: rgb(209, 209, 209); padding: 30px;">
+        <div style="background-color: #387676; border-radius: 15px; padding: 30px;">
             <div class="empresa-list">
                 <div style="display: flex; justify-content: space-between">
                     <h2 style="font-size: 30px">Ciudad {{ ciudadesEmpresas.nombre }}</h2>
@@ -118,13 +118,16 @@ onMounted(async () => {
                     </router-link>
                 </div>
                 <div v-if="empresaCiudadFiltradas.length === 0" style="text-align: center;padding: 40px;">
-                    <p>No hay empresas con el nombre que buscas</p>
+                    <p style="color: white">No hay empresas con el nombre que buscas</p>
                 </div>
             </div>
         </div>
     </div>
     <div v-else class="category-enterprises-container">
-        <h1>No nay datos relacionados con tu busqueda.</h1>
+        <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
+        <div style="background-color: #387676; border-radius: 15px; padding: 30px; text-align: center">
+            <p style="color: white;">No nay datos relacionados con tu busqueda.</p>
+        </div>
     </div>
 </template>
 <style scoped>

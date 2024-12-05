@@ -66,7 +66,7 @@ onMounted(async () => {
 <template>
   <div class="category-enterprises-container">
     <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
-    <div class="empresa_container" style= "padding: 30px;">
+    <div class="empresa_container" style="padding: 30px;">
       <div style="display: flex; justify-content: space-between">
         <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
         <div>
@@ -94,11 +94,12 @@ onMounted(async () => {
           </RouterLink>
         </div>
         <div v-if="empresaFiltradas.length == 0" style="text-align: center;padding: 40px; color: white;">
-            <p>No hay empresas con el nombre que buscas</p>
+          <p>No hay empresas con el nombre que buscas</p>
         </div>
       </div>
-
-      <p v-else-if="!error" style="margin: auto; color: white;" >No hay empresas en esta categoría.</p>
+      <div v-else-if="!error" style="text-align: center;">
+        <p style=" color: white;">No hay empresas en esta categoría.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -106,13 +107,13 @@ onMounted(async () => {
 <style scoped>
 input[type="search"] {
   color: black;
-    padding: 9px;
-    border: 1px solid #fff;
-    margin-right: 12vh;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px black;
-    outline: none;
+  padding: 9px;
+  border: 1px solid #fff;
+  margin-right: 12vh;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px black;
+  outline: none;
 }
 
 .decorador {
@@ -129,7 +130,8 @@ input[type="search"] {
   align-items: center;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-h2{
+
+h2 {
   color: white;
   margin-bottom: 2vh;
 }
@@ -137,7 +139,8 @@ h2{
 a {
   text-decoration: none;
 }
-.empresa_container{
+
+.empresa_container {
   background-color: #387676;
   border-radius: 15px;
 }

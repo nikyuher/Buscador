@@ -110,8 +110,8 @@ onMounted(async () => {
         <p style="text-align: center;padding: 40px; color:white;" v-else>No hay empresas registradas en esta ciudad.</p>
       </div>
 
-      <div v-else-if="error">
-        <p style="font-size: 20px; color: white;">Error al cargar los datos de la ciudad y sus empresas.</p>
+      <div v-else-if="error" style="text-align: center;">
+        <p style=" color: white;">La Ciudad que buscaste no existe o fue mal ejecutada.</p>
       </div>
 
       <div v-else>

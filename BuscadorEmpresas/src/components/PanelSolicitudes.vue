@@ -310,6 +310,7 @@ onMounted(async () => {
             @input="limitarDescripcion"
             maxlength="1000"
             required
+            style="height: 200px; resize: none;"
           ></textarea>
           <small>Caracteres: {{ caracteresDescripcion }} / 1000</small>
           <p class="error-message" v-if="errores.descripcionEmpresa">{{ errores.descripcionEmpresa }}</p>
@@ -430,7 +431,7 @@ onMounted(async () => {
 .titulo-soli {
   text-align: center;
   font-size: 24px;
-  color: #342bb6;
+  color: #4d42e9;
   margin-bottom: 20px;
   font-weight: bold;
 }
@@ -476,7 +477,7 @@ textarea {
 .submit-btn {
   width: 100%;
   padding: 15px;
-  background-color: #342bb6;
+  background-color: #3067ff;
   color: white;
   font-size: 18px;
   border: none;

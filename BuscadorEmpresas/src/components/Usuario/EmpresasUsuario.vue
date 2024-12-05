@@ -272,7 +272,7 @@ onMounted(async () => {
                                         </div>
                                         <div>
                                             <label for="descripcion">Descripción:</label>
-                                            <textarea v-model="descripcion" id="descripcion" required></textarea>
+                                            <textarea style="height: 200px;resize: none;" v-model="descripcion" id="descripcion" required></textarea>
                                         </div>
 
                                         <div>

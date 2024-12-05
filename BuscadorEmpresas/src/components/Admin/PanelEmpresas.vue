@@ -255,7 +255,7 @@ const obtenerNombreCiudades = (idCiudad: number) => {
             </div>
             <div>
               <label for="descripcion">Descripción:</label>
-              <textarea v-model="descripcion" id="descripcion" required></textarea>
+              <textarea v-model="descripcion" id="descripcion" required style="height: 200px; resize: none"></textarea>
             </div>
 
             <div>
@@ -361,7 +361,7 @@ const obtenerNombreCiudades = (idCiudad: number) => {
                   </div>
                   <div>
                     <label for="descripcion">Descripción:</label>
-                    <textarea style="height: 300px;" v-model="descripcion" id="descripcion" required></textarea>
+                    <textarea style="height: 200px; resize: none;" v-model="descripcion" id="descripcion" required ></textarea>
                   </div>
 
                   <div>
