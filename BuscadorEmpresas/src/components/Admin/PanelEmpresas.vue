@@ -151,7 +151,7 @@ const seleccionarEmpresaParaEditar = async (empresa: any) => {
 };
 
 const recortarTexto = (texto: string, maxLongitud: number) => {
-    return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
+  return texto.length > maxLongitud ? texto.slice(0, maxLongitud) + '...' : texto;
 };
 
 
@@ -317,9 +317,8 @@ const obtenerNombreCiudades = (idCiudad: number) => {
         </select>
       </div>
     </div>
-
-
-    <table class="styled-table">
+    <div class="container-table">
+      <table class="styled-table">
       <thead>
         <tr>
           <th>Nombre</th>
@@ -334,8 +333,8 @@ const obtenerNombreCiudades = (idCiudad: number) => {
       <tbody>
         <tr v-for=" empresa in empresasFiltradas" :key="empresa.idEmpresa">
           <td>{{ empresa.nombre }}</td>
-          <td style="display: flex; max-width: 400px; border: none;text-align: justify">{{ recortarTexto(empresa.descripcion, 200) }}</td>
-          <td>{{ empresa.direccion }}</td>
+          <td style="width: 30%; border: none;text-align: justify; word-break: break-word;">{{ recortarTexto(empresa.descripcion, 200) }}</td>
+          <td style="text-align: left;word-break: break-word;">{{ empresa.direccion }}</td>
           <td>
             <div v-for="(categoria, index) in empresa.empresaCategorias.map(m => m.idCategoria)" :key="index">
               <p class="categoria-p">{{ obtenerNombreCategoria(categoria) }}</p>
@@ -412,6 +411,7 @@ const obtenerNombreCiudades = (idCiudad: number) => {
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
   <button class="btn-subir-top" @click="subirTop">
     <v-icon>mdi-arrow-up</v-icon>
@@ -426,6 +426,11 @@ const obtenerNombreCiudades = (idCiudad: number) => {
 </template>
 
 <style scoped>
+.container-table{
+  width: 1200px;
+  margin: auto
+}
+
 .scroll-container {
   background-color: white;
   padding: 30px;

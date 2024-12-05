@@ -132,7 +132,7 @@ onMounted(async () => {
                 <tr v-for="(peticion, index) in filteredPeticiones" :key="peticion.idPeticion">
                     <td>{{ index + 1 }}</td>
                     <td>{{ peticion.nombreEmpresa }}</td>
-                    <td>{{ peticion.descripcionEmpresa }}</td>
+                    <td style="word-break: break-word; text-align: justify;">{{ peticion.descripcionEmpresa }}</td>
                     <td>{{ peticion.direccionEmpresa }}</td>
                     <td>
                         <p class="categoria-p">{{ obtenerNombreCategoria(peticion.idCategoriaEmpresa) }}</p>

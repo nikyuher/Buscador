@@ -92,7 +92,7 @@ onMounted(() => {
                 <tr v-for="(peticion, index) in ListaPeticiones" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ peticion.nombreEmpresa }}</td>
-                    <td>{{ peticion.descripcionEmpresa }}</td>
+                    <td style="border: none;text-align: justify;word-break: break-word;">{{ peticion.descripcionEmpresa }}</td>
                     <td>{{ peticion.direccionEmpresa }}</td>
                     <td><img :src="peticion.imagenEmpresaURL" alt="Imagen Empresa" width="100" /></td>
                     <td><button class="elimar" @click="rechazarPeticion(peticion.idPeticion)">Eliminar</button></td>
