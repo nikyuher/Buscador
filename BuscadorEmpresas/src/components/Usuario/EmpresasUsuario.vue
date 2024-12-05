@@ -241,90 +241,94 @@ onMounted(async () => {
     <div>
         <h2 style="margin: 5px 50px 30px 50px;">Mis Empresas</h2>
         <div v-if="listaEmpresas.length > 0">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th> Nº</th>
-                        <th>Nombre</th>
-                        <th>Direccion</th>
-                        <th>Imagen</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(empresa, index) in listaEmpresas" :key="index" class="style-form">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ empresa.empresa.nombre }}</td>
-                        <td>{{ empresa.empresa.direccion }}</td>
-                        <td><img :src="empresa.empresa.imagen" alt="Imagen Empresa" width="100" /></td>
-                        <td>
-                            <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-editar`]" max-width="600">
-                                <template v-slot:activator="{ props: activatorProps }">
-                                    <v-btn class="edit" style="margin-right: 20px;" prepend-icon="mdi-pen"
-                                        v-bind="activatorProps"
-                                        @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa.empresa)"></v-btn>
-                                </template>
-                                <div class="scroll-container">
-                                    <form @submit.prevent="confirmarEnvio">
-                                        <div>
-                                            <label for="nombre">Nombre de la Empresa:</label>
-                                            <input v-model="nombre" id="nombre" type="text" required />
-                                        </div>
-                                        <div>
-                                            <label for="descripcion">Descripción:</label>
-                                            <textarea style="height: 200px;resize: none;" v-model="descripcion" id="descripcion" required></textarea>
-                                        </div>
+            <div class="container-table">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th> Nº</th>
+                            <th>Nombre</th>
+                            <th>Direccion</th>
+                            <th>Imagen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(empresa, index) in listaEmpresas" :key="index" class="style-form">
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ empresa.empresa.nombre }}</td>
+                            <td style="word-break: break-word;">{{ empresa.empresa.direccion }}</td>
+                            <td><img :src="empresa.empresa.imagen" alt="Imagen Empresa" width="100" /></td>
+                            <td>
+                                <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-editar`]" max-width="600">
+                                    <template v-slot:activator="{ props: activatorProps }">
+                                        <v-btn class="edit" style="margin-right: 20px;" prepend-icon="mdi-pen"
+                                            v-bind="activatorProps"
+                                            @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa.empresa)"></v-btn>
+                                    </template>
+                                    <div class="scroll-container">
+                                        <form @submit.prevent="confirmarEnvio">
+                                            <div>
+                                                <label for="nombre">Nombre de la Empresa:</label>
+                                                <input v-model="nombre" id="nombre" type="text" required />
+                                            </div>
+                                            <div>
+                                                <label for="descripcion">Descripción:</label>
+                                                <textarea style="height: 200px;resize: none;" v-model="descripcion"
+                                                    id="descripcion" required></textarea>
+                                            </div>
 
-                                        <div>
-                                            <label for="direccion">Dirección:</label>
-                                            <input v-model="direccion" id="direccion" type="text" required readonly />
-                                            <div id="map" style="height: 300px;"></div>
-                                        </div>
-                                        <div>
-                                            <label for="telefono">Telefono:</label>
-                                            <input v-model="telefono" type="number" required>
-                                        </div>
-                                        <div>
-                                            <label for="correoEmpresa">Correo Empresa:</label>
-                                            <input v-model="correoEmpresa" type="text" required>
-                                        </div>
-                                        <div>
-                                            <label for="sitioWeb">Sitio Web:</label>
-                                            <input v-model="sitioWeb" type="text" required>
-                                        </div>
-                                        <div>
-                                            <label for="imagen">URL de la Imagen:</label>
-                                            <input v-model="imagen" id="imagen" type="text" required />
-                                        </div>
-                                        <div>
-                                            <button class="aceptar" type="submit">{{ editMode ? 'Guardar Cambios' :
-                                                'Añadir Empresa' }}</button>
-                                            <button class="denegar" type="button"
-                                                @click="cerrarDialogo(`${empresa.idEmpresa}-editar`); limpiarFormulario()">Cerrar</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </v-dialog>
-                            <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-eliminar`]" max-width="600">
-                                <template v-slot:activator="{ props: activatorProps }">
-                                    <v-btn class="denegar" prepend-icon="mdi-delete" v-bind="activatorProps"
-                                        @click="abrirDialogo(`${empresa.idEmpresa}-eliminar`);"></v-btn>
-                                </template>
-                                <div style="background-color: white; padding: 30px; border-radius: 10px">
-                                    <h2>¿Seguro que quieres Eliminarlo?</h2>
-                                    <v-btn style="margin-right: 20px;" class="aceptar"
-                                        @click="eliminarEmpresa(empresa.idUsuarioEmpresa)">
-                                        Si
-                                    </v-btn>
-                                    <v-btn class="denegar" style="margin-left: 20px;"
-                                        @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No</v-btn>
+                                            <div>
+                                                <label for="direccion">Dirección:</label>
+                                                <input v-model="direccion" id="direccion" type="text" required
+                                                    readonly />
+                                                <div id="map" style="height: 300px;"></div>
+                                            </div>
+                                            <div>
+                                                <label for="telefono">Telefono:</label>
+                                                <input v-model="telefono" type="number" required>
+                                            </div>
+                                            <div>
+                                                <label for="correoEmpresa">Correo Empresa:</label>
+                                                <input v-model="correoEmpresa" type="text" required>
+                                            </div>
+                                            <div>
+                                                <label for="sitioWeb">Sitio Web:</label>
+                                                <input v-model="sitioWeb" type="text" required>
+                                            </div>
+                                            <div>
+                                                <label for="imagen">URL de la Imagen:</label>
+                                                <input v-model="imagen" id="imagen" type="text" required />
+                                            </div>
+                                            <div>
+                                                <button class="aceptar" type="submit">{{ editMode ? 'Guardar Cambios' :
+                                                    'Añadir Empresa' }}</button>
+                                                <button class="denegar" type="button"
+                                                    @click="cerrarDialogo(`${empresa.idEmpresa}-editar`); limpiarFormulario()">Cerrar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </v-dialog>
+                                <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-eliminar`]" max-width="600">
+                                    <template v-slot:activator="{ props: activatorProps }">
+                                        <v-btn class="denegar" prepend-icon="mdi-delete" v-bind="activatorProps"
+                                            @click="abrirDialogo(`${empresa.idEmpresa}-eliminar`);"></v-btn>
+                                    </template>
+                                    <div style="background-color: white; padding: 30px; border-radius: 10px">
+                                        <h2>¿Seguro que quieres Eliminarlo?</h2>
+                                        <v-btn style="margin-right: 20px;" class="aceptar"
+                                            @click="eliminarEmpresa(empresa.idUsuarioEmpresa)">
+                                            Si
+                                        </v-btn>
+                                        <v-btn class="denegar" style="margin-left: 20px;"
+                                            @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No</v-btn>
 
-                                </div>
-                            </v-dialog>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                    </div>
+                                </v-dialog>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div v-else style="text-align: center; margin: 20px;">
             <p>No tienes ninguna empresa creada.</p>
@@ -340,6 +344,10 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.container-table{
+  width: 1200px;
+  margin: auto
+}
 .scroll-container {
     background-color: white;
     padding: 30px;

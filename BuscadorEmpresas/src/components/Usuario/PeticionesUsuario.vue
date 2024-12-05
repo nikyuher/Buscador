@@ -76,7 +76,7 @@ onMounted(() => {
 
 <template>
     <h2 style="width: 300px;margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
-    <div v-if="ListaPeticiones.length > 0" style="width: 1000px; margin: auto">
+    <div v-if="ListaPeticiones.length > 0" style="width: 1200px; margin: auto">
         <table class="styled-table">
             <thead>
                 <tr>
@@ -113,6 +113,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
 .cont-data-peticion {
 
     background-color: rgb(226, 232, 255);
@@ -124,7 +125,7 @@ onMounted(() => {
 
 
 .styled-table {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     margin: auto;
