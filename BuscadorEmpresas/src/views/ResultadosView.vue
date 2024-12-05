@@ -264,6 +264,7 @@ p {
 .empresa-details {
     text-align: justify;
     padding: 20px;
+    color: #333;
     width: 80%;
 }
 
@@ -278,6 +279,7 @@ p {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 16px;
     color: #000000;
+    word-break: break-word;
     margin-bottom: 8px;
 }
 

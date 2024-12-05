@@ -20,9 +20,14 @@
 
                 <div class="input-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña" required />
+                    <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña"
+                        required />
                 </div>
-
+                <div class="changePassword">
+                    <span class="obj1">
+                        <RouterLink to="/Login">¿Ya tienes una cuenta?</RouterLink>
+                    </span>
+                </div>
                 <button type="submit" :disabled="loading">
                     {{ loading ? "Registrando..." : "Registrarse" }}
                 </button>
@@ -74,6 +79,32 @@ const register = async () => {
 </script>
 
 <style scoped>
+.changePassword {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 5px;
+  justify-content: end;
+  flex-wrap: wrap;
+}
+
+.changePassword a {
+  text-decoration: none;
+  color: #0b57d0;
+}
+
+.obj1,
+.obj2 {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.obj1:hover,
+.obj2:hover {
+  border-radius: 10px;
+  background-color: rgba(87, 187, 201, 0.205);
+
+}
+
 .cont-form {
     padding: 100px 20px;
     display: flex;
@@ -154,7 +185,7 @@ button:disabled {
         display: flex;
         position: relative;
         margin-top: 15vh;
-        
+
     }
 
     .form-card {

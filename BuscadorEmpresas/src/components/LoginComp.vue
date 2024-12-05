@@ -56,6 +56,9 @@ const login = async () => {
           </div>
         </div>
         <div class="changePassword">
+          <span class="obj1">
+            <RouterLink to="/Register">¿No tienes una cuenta?</RouterLink>
+          </span>
           <span class="obj2">
             <RouterLink to="/ChangePassword">¿Olvidaste tú contraseña?</RouterLink>
           </span>
@@ -77,8 +80,9 @@ const login = async () => {
   display: flex;
   margin-bottom: 10px;
   padding: 5px;
-  justify-content: end;
+  justify-content:space-between;
   flex-wrap: wrap;
+  
 }
 
 .changePassword a {
@@ -88,7 +92,8 @@ const login = async () => {
 
 .obj1,
 .obj2 {
-  padding: 5px;
+  padding: 3px;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -161,32 +166,32 @@ button:disabled {
 }
 
 @media (max-width: 600px) {
-    .cont-form {
-        padding: 20px;
-        display: flex;
-        position: relative;
-        margin-top: 15vh;
-        
-    }
+  .cont-form {
+    padding: 20px;
+    display: flex;
+    position: relative;
+    margin-top: 15vh;
 
-    .form-card {
-        padding: 20px;
-    }
+  }
 
-    .header-name a {
-        font-size: 20px;
-    }
+  .form-card {
+    padding: 20px;
+  }
 
-    h2 {
-        font-size: 18px;
-    }
+  .header-name a {
+    font-size: 20px;
+  }
 
-    .input-group input {
-        padding: 8px;
-    }
+  h2 {
+    font-size: 18px;
+  }
 
-    button {
-        font-size: 14px;
-    }
+  .input-group input {
+    padding: 8px;
+  }
+
+  button {
+    font-size: 14px;
+  }
 }
 </style>

@@ -202,6 +202,7 @@ a {
   padding: 10px;
   color: #333;
   margin-left: 3vh;
+  width: 80%;
 }
 
 .empresa-details h3 {
@@ -215,6 +216,7 @@ a {
   font-size: 14px;
   color: #000000;
   margin-bottom: 8px;
+  word-break: break-word;
 }
 
 .empresa-card:hover {

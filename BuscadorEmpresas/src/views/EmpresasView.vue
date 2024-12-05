@@ -128,7 +128,7 @@ onMounted(async () => {
           </div>
 
           <h3>Descripción</h3>
-          <p>{{ empresa.descripcion }}</p>
+          <p style="word-break:break-word;">{{ empresa.descripcion }}</p>
         </div>
 
         <div class="cont-publicidad">
