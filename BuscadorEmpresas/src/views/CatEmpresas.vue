@@ -65,7 +65,11 @@ onMounted(async () => {
 
 <template>
   <div class="category-enterprises-container">
-    <h1 class="breadcrumb">Inicio > Categoria > {{ categoriaNombre }}</h1>
+    <h1>
+      <RouterLink to="/" class="breadcrumb">
+        Inicio > Categoria > {{ categoriaNombre }}
+      </RouterLink>
+    </h1>
     <div class="empresa_container" style="padding: 30px;">
       <div style="display: flex; justify-content: space-between">
         <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
@@ -147,11 +151,10 @@ a {
 
 .category-enterprises-container {
   width: 60%;
-  padding: 20px;
-  margin: 50px auto;
+  padding: 10px 0 250px 0;
+  margin: auto;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
 }
 
 .breadcrumb {

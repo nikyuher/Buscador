@@ -72,7 +72,11 @@ onMounted(async () => {
 
 <template>
   <div class="category-enterprises-container">
-    <h1 class="breadcrumb">Inicio > Ciudad > {{ ciudadNombre }}</h1>
+    <h1>
+      <router-link to="/" class="breadcrumb">
+        Inicio > Ciudad > {{ ciudadNombre }}
+      </router-link>
+    </h1>
     <div style="background-color: #387676; border-radius: 15px; padding: 30px;">
       <div v-if="!error">
         <div v-if="empresas.length > 0" class="empresa-list">
@@ -189,10 +193,10 @@ a {
 
 .category-enterprises-container {
   width: 60%;
-  margin: 10px auto;
+  margin:auto;
   flex-direction: column;
   align-items: center;
-  padding-bottom:200px ;
+  padding-bottom:250px ;
 }
 
 ul {
