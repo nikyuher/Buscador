@@ -48,8 +48,7 @@ const searchWithoutId = () => {
     errorMsg.value = true
   } 
   else if(validarEmpresa.value && validarCiudad.value){
-    mensajeAdvertencia.value = 'Buscando por ciudad y empresa.';
-    errorMsg.value = true
+
   }
   else {
     mensajeAdvertencia.value = 'Debe seleccionar valores válidos.';
@@ -114,7 +113,7 @@ const selectCitySuggestion = (citySuggestion: { idCiudad: number; nombre: string
             </ul>
           </div>
           <div class="keyword-container">
-            <input type="search" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput" 
+            <input type="search" v-model="keyword" placeholder="Nombre empresa" @input="onKeywordInput"
               @keyup.enter="handleSearch()" />
           </div>
           <div v-if="keyword.length >= 1 && validarEmpresa == true && IdCiudad == 0">
@@ -247,7 +246,7 @@ input:focus {
   color: black;
   background-color: white;
   border: none;
-  border-radius: 15px;
+  border-radius: 0 10px 10px 0;
   cursor: pointer;
   padding: 10px;
   height: 46px;
@@ -270,12 +269,12 @@ input:focus {
   background: white;
   border: 1px solid #ccc;
   border-radius: 5px;
-  position: relative;
+  position: absolute;
   z-index: 10;
+  width: 10%;
   max-height: 200px;
   overflow-y: auto;
   animation: fadeIn 0.5s ease-in-out;
- 
 }
 
 .suggestions-list li {
@@ -290,6 +289,7 @@ input:focus {
 }
 
 .categories-container {
+  text-align: center;
   width: 60%;
   margin: auto;
   animation: slideUp 1s ease;
@@ -339,10 +339,8 @@ ul,
 
   .search-inputs {
     flex-direction: column;
-        gap: 10px;
-        display: flex;
-        margin-top: 50px;
-        align-items: center;
+    gap: 10px;
+    margin-top: 50px;
   }
 
   .search-button {
@@ -355,11 +353,13 @@ ul,
     font-size: 24px;
   }
 
+  .suggestions-list {
+    width: 70%;
+    margin-left: 7vh;
+  }
+
   .categories-container {
-    display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    width: 27%;
   }
 
   input[type="text"] {
