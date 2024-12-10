@@ -11,7 +11,7 @@ const isVisible = ref(false)
 const esResponsive = ref(window.innerWidth <= 1019)
 
 const actualizarModoResponsive = () => {
-    esResponsive.value = window.innerWidth <= 1019;
+    esResponsive.value = window.innerWidth <= 1319;
     if (!esResponsive.value) {
         mostrarTodo.value = true; // Mostrar todas las categorías en pantallas grandes
     } else {
@@ -72,7 +72,12 @@ const reducirCategorias = () => {
 </template>
 
 <style scoped>
+/* Estilos globales */
 .Categorias {
+    font-size: 40px;
+    margin-bottom: 2vh;
+    margin-top: 5vh;
+    text-align: center;
     opacity: 0;
     transform: translateY(-20px);
     transition: opacity 1s ease, transform 1s ease;
@@ -85,35 +90,35 @@ const reducirCategorias = () => {
 
 .categories-list {
     opacity: 0;
-    transition: opacity 1s ease-in-out;
     margin-bottom: 5vh;
-}
-h3{
-    margin-bottom: 2vh;
-    margin-top: 5vh;
+    transition: opacity 1s ease-in-out;
 }
 
 .animate-list {
     opacity: 1;
 }
 
+/* Estilo de listas */
 ul {
     list-style-type: none;
     padding: 0;
-    height: 200px;
     margin: 0;
-    flex-direction: column;
     display: flex;
     flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
 }
 
 li {
     display: flex;
     align-items: center;
     padding: 8px 20px;
-    opacity: 0;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    opacity: 0;
+    text-align: center;
+    flex: 1 1 calc(33.333% - 100px);
 }
 
 .animate-list li {
@@ -121,20 +126,23 @@ li {
     transform: translateY(0);
 }
 
+li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de enlaces */
 .category-item {
     display: flex;
     align-items: center;
     color: #333;
     text-decoration: none;
     font-size: 18px;
-    transition:   0.5s;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .category-item:hover {
-    padding: 0 15px;
     border-radius: 5px;
-    color: #ffffff;
-    background-color: rgba(255, 0, 0, 0.562);
 }
 
 .bullet {
@@ -145,48 +153,40 @@ li {
     margin-right: 10px;
 }
 
-/* Estilo de las categorías extras para mostrarse en dos columnas */
-.extra-category {
-    flex: 1 1 50%;
-}
-
-/* Botones de "Ver Más" y "Ver Menos" */
+/* Botones "Ver Más" y "Ver Menos" */
 .ver-mas, .ver-menos {
-    background-color: #b006ff;
+    background-color: #387676;
     color: white;
     padding: 10px 20px;
-    margin-top: 10px;
+    margin-top: 3vh;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 .ver-mas:hover, .ver-menos:hover {
-    background-color: #8805bb;
+    background-color: #7aacac;
 }
 
-/* Responsive para móvil */
-@media (max-width: 1019px) {
+/* Estilos Responsive */
+@media (max-width: 1319px) {
     .Categorias {
         font-size: 28px;
     }
+
     ul {
-        
         flex-direction: column;
-        align-items: left;
-        height: auto;
-        margin: auto
+        gap: 15px;
     }
+
     li {
-        display: flex;
-        padding: 8px 10px;
-    }
-    .toggle-buttons {
-        display: flex;
+        flex: 1 1 100%;
         justify-content: center;
-        width: 100%;
+        padding: 10px;
+        font-size: 16px;
     }
 }
+
 </style>

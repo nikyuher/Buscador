@@ -183,30 +183,51 @@ nav a:first-of-type {
   margin-right: 20px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+@media (min-width: 768px) and (max-width: 1023px) {
+  .header {
+    padding: 10px 15px;
+        height: 20vh;
+        flex-direction: column;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
+  .header-name {
+    margin-bottom: 0;
   }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  .user-actions {
+    flex-direction: row; /* Alinea horizontalmente los elementos */
+    gap: 20px;
   }
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .user-actions a,
+  .user-actions button {
+    font-size: 16px;
+    width: auto; /* Tamaño ajustable según el contenido */
   }
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 767px) {
+  .header {
+    padding: 10px 15px;
+        height: 20vh;
+        flex-direction: column;
+  }
+
+  .header-name h1 {
+    font-size: 24px; /* Reduce el tamaño del título */
+  }
+
+  .user-actions a,
+  .user-actions button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .logout-button {
+    font-size: 14px;
+    padding: 8px;
+  }
+  
 }
 </style>
