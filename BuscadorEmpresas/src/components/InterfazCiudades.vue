@@ -9,7 +9,7 @@ const CiudadesIniciales = ref<CiudadeEmpresas[]>([]);
 const CiudadesExtras = ref<CiudadeEmpresas[]>([]);
 const mostrarTodo = ref(false);
 const isVisible = ref(false);
-const esResponsive = ref(window.innerWidth <= 1019);
+const esResponsive = ref(window.innerWidth <= 1319);
 
 // Función para actualizar el modo responsive según el ancho de la ventana
 const actualizarModoResponsive = () => {
@@ -79,8 +79,12 @@ const reducirCiudades = () => {
 </template>
 
 <style scoped>
-/* Estilos de la animación y estructura */
+/* Estilos globales */
 .Categorias {
+    font-size: 40px;
+    margin-bottom: 2vh;
+    margin-top: 5vh;
+    text-align: center;
     opacity: 0;
     transform: translateY(-20px);
     transition: opacity 1s ease, transform 1s ease;
@@ -93,36 +97,38 @@ const reducirCiudades = () => {
 
 .categories-list {
     opacity: 0;
-    transition: opacity 1s ease-in-out;
     margin-bottom: 5vh;
+    transition: opacity 1s ease-in-out;
 }
 
 .animate-list {
     opacity: 1;
 }
 
-h3{
-    margin-bottom: 2vh;
-}
-
+/* Estilo de listas */
 ul {
     list-style-type: none;
     padding: 0;
-    height: 300px;
     margin: 0;
     display: flex;
-    flex-direction: column;
     flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+h3{
+    margin-bottom: 5vh;
 }
 
 li {
     display: flex;
     align-items: center;
     padding: 8px 20px;
-    opacity: 0;
-    flex-wrap: wrap;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    opacity: 0;
+    text-align: center;
+    flex: 1 1 calc(33.333% - 100px);
 }
 
 .animate-list li {
@@ -130,21 +136,24 @@ li {
     transform: translateY(0);
 }
 
+li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+/* Estilo de enlaces */
 .category-item {
     display: flex;
     align-items: center;
     color: #333;
     text-decoration: none;
     font-size: 18px;
-    transition:   0.5s;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .category-item:hover {
-    padding: 0 15px;
+
     border-radius: 5px;
-    color: #ffffff;
-    background-color: rgba(255, 0, 0, 0.562);
 }
 
 .bullet {
@@ -154,54 +163,53 @@ li {
     border-radius: 50%;
     margin-right: 10px;
 }
-.span{
-text-align: left;
-}
-.extra-category {
-    flex: 1 1 50%;
-}
 
-/* Botones de "Ver Más" y "Ver Menos" */
-.ver-mas,
-.ver-menos {
-    background-color: #b006ff;
+/* Botones "Ver Más" y "Ver Menos" */
+.ver-mas, .ver-menos {
+    background-color: #387676;
     color: white;
     padding: 10px 20px;
-    margin-top: 10px;
+    margin-top: 3vh;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
-.ver-mas:hover,
-.ver-menos:hover {
-    background-color: #8805bb;
+.ver-mas:hover, .ver-menos:hover {
+    background-color: #688f8f;
 }
-
-/* Responsive para móvil */
-@media (max-width: 1018px) {
+@media (max-width: 1319px) {
+    li {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: translateY(20px);
+    opacity: 0;
+    text-align: center;
+    flex: 1 1 calc(33.333% - 20px);
+}
+}
+/* Estilos Responsive */
+@media (max-width: 1024px) {
     .Categorias {
         font-size: 28px;
     }
 
     ul {
         flex-direction: column;
-        align-items: left;
-        height: auto;
+        gap: 15px;
     }
 
-    li,
-    .extra-category {
-        padding: 8px 10px;
-        text-align: center;
-    }
-
-    .toggle-buttons {
-        display: flex;
+    li {
+        flex: 1 1 100%;
         justify-content: center;
-        width: 100%;
+        padding: 10px;
+        font-size: 16px;
     }
 }
+
 </style>
