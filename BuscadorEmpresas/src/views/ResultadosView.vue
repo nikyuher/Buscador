@@ -51,7 +51,11 @@ onMounted(async () => {
 <template>
     <div v-if="idCiudad === null && empresas.length > 0" class="category-enterprises-container">
 
-        <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
+        <h1>
+            <router-link to="/" class="breadcrumb">
+                Inicio > Relacionadas > "{{ empresaName }}"
+            </router-link>
+        </h1>
         <div style="background-color: #387676; border-radius: 15px; padding: 30px;">
             <div style="display: flex; justify-content: space-between">
                 <h2 style="font-size: 30px">Empresas con: {{ empresaName }}</h2>
@@ -87,7 +91,11 @@ onMounted(async () => {
         </div>
     </div>
     <div v-else-if="ciudadesEmpresas" class="category-enterprises-container">
-        <h1 class="breadcrumb">Inicio > Relacionadas > "{{ empresaName }}"</h1>
+        <h1>
+            <router-link to="/" class="breadcrumb">
+                Inicio > Relacionadas > "{{ empresaName }}"
+            </router-link>
+        </h1>
         <div style="background-color: #387676; border-radius: 15px; padding: 30px;">
             <div class="empresa-list">
                 <div style="display: flex; justify-content: space-between">
