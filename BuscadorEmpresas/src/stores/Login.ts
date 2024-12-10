@@ -243,7 +243,28 @@ export const useLoginStore = defineStore({
       localStorage.removeItem('usuario')
       localStorage.removeItem('jwtToken')
       console.log('Sesión cerrada')
-    }
+    },
+
+    checkTokenValidity() {
+      if (!this.isTokenValid) {
+        this.logout()
+      }
+    },
+    loadUserOnStartup() {
+      this.checkTokenValidity()
+      if (this.isTokenValid) {
+        const decodedToken = jwtDecode<JwtPayload>(this.token!)
+        this.usuario = {
+          idUsuario: parseInt(decodedToken.nameid),
+          nombre: decodedToken.unique_name,
+          correo: decodedToken.email,
+          rol: decodedToken.role === 'Admin',
+        }
+      } else {
+        this.logout()
+      }
+    },
+    
   },
   getters: {
     isAuthenticated: (state) => state.usuario !== null,
@@ -252,6 +273,17 @@ export const useLoginStore = defineStore({
     },
     rol(state): boolean {
       return state.usuario?.rol || false
+    },
+    isTokenValid: (state): boolean => {
+      if (!state.token) return false
+      try {
+        const decoded = jwtDecode<JwtPayload>(state.token)
+        const currentTime = Math.floor(Date.now() / 1000) // Tiempo actual en segundos
+        return decoded.exp > currentTime // Comprobar si el token no ha expirado
+      } catch (error) {
+        console.error('Error al decodificar el token:', error)
+        return false
+      }
     }
   }
 })

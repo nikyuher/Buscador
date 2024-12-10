@@ -3,7 +3,18 @@ import { RouterView } from 'vue-router'
 import { useRoute } from 'vue-router';
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
-const route = useRoute(); 
+import { useLoginStore } from '@/stores/Login'
+import router from './router';
+const route = useRoute();
+
+// Usamos el store de Login para manejar la validación del token
+router.beforeEach((to, from, next) => {
+  const loginStore = useLoginStore()
+  loginStore.checkTokenValidity()
+  next()
+})
+
+// Al cargar la aplicación, validamos el token
 </script>
 
 <template>
