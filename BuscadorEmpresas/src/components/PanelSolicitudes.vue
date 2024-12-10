@@ -476,4 +476,13 @@ textarea {
 .submit-btn:hover {
   background-color: #281d93;
 }
+@media (max-width: 767px) {
+  .estilos-form{
+    display: grid;
+  }
+  .bloque-1,
+.bloque-2 {
+  width: 100%;
+}
+}
 </style>
