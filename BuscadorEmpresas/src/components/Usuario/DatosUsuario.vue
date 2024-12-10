@@ -130,6 +130,7 @@ const confirmarSesion = async (modo: string) => {
         editMode.value = false
         changePassWord.value = false
         errorMessage.value = `Su sesión a caducado. Vuelva a iniciar sesión`
+        loginStore.logout()
     }
 }
 
