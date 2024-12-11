@@ -103,8 +103,6 @@ onMounted(async () => {
           <img :src="empresa.imagen" alt="Imagen de la empresa" class="empresa-img" />
           <div class="empresa-overlay">
             <h2 class="empresa-nombre">{{ empresa.nombre }}</h2>
-            <!-- <p class="empresa-category">Categoría: {{ empresa.empresaCategorias.map(categoria => categoria.idCategoria).join(', ') }}</p> -->
-            <p class="empresa-category">Categoría: {{ }}</p>
           </div>
         </div>
       </div>
@@ -206,7 +204,7 @@ onMounted(async () => {
 }
 
 .empresa-nombre {
-  font-size: 40px;
+  font-size: 50px;
   font-weight: bold;
   margin-left: 4vh;
 }
