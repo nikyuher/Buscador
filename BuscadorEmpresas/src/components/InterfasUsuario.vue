@@ -76,4 +76,12 @@ const cambiarComponente = (componente: string) => {
   flex-grow: 1;
   padding: 20px;
 }
+@media (max-width: 430px) {
+.cont-perfil{
+  display: grid;
+}
+.barra-opciones{
+  width: 100%;
+}
+}
 </style>
