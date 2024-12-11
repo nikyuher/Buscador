@@ -71,8 +71,8 @@ onMounted(async () => {
       </RouterLink>
     </h1>
     <div class="empresa_container" style="padding: 30px;">
-      <div style="display: flex; justify-content: space-between">
-        <h2 style="font-size: 30px">Empresas en {{ categoriaNombre }}:</h2>
+      <div class="empresa-filter">
+        <h2>Empresas en {{ categoriaNombre }}:</h2>
         <div>
           <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
         </div>
@@ -123,6 +123,10 @@ input[type="search"] {
 .decorador {
   display: flex;
 }
+.empresa-filter{
+  display: flex; 
+  justify-content: space-between;
+}
 
 .empresa-card {
   background-color: #ffffff;
@@ -138,6 +142,7 @@ input[type="search"] {
 h2 {
   color: white;
   margin-bottom: 2vh;
+  font-size: 30px;
 }
 
 a {
@@ -159,12 +164,8 @@ a {
 
 .breadcrumb {
   font-size: 18px;
-  color: rgb(245, 167, 51);
+  color: #ff9900;
   margin: 2vh;
-  text-shadow:
-    -1px -1px 2px black,
-    -1px 1px 2px black,
-    1px -1px 2px black;
 }
 
 .error-message,
@@ -227,24 +228,69 @@ a {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .category-enterprises-container {
+    width: 90%;
+    padding: 10px 20px;
+    margin-bottom: 5vh;
+  }
+  .breadcrumb{
+        font-size: medium;
+  }
+
   .empresa-card {
-    width: 100%;
-    max-width: 100%;
-    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+
+  h2{
+    text-align: center;
+    font-size: 25px;
   }
 
   .empresa-img {
-    height: 120px;
+    max-width: 165px;
+    max-height: 110px;
+    border-radius: 10px;
+  }
+
+  .empresa-filter{
+  display: flex; 
+  flex-direction: column;
+}
+
+  .empresa-details {
+    padding: 0;
+    margin-top: 10px;
   }
 
   .empresa-details h3 {
-    font-size: 18px;
+    font-size: 16px;
+    color: #ff4d4f;
   }
 
   .empresa-description,
   .empresa-address {
-    font-size: 13px;
+    font-size: 12px;
+    color: #333;
+    word-break: break-word;
+    margin-bottom: 10px;
   }
+
+  input[type="search"] {
+    margin: 10px auto;
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
 }
+
 </style>

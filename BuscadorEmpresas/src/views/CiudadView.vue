@@ -81,7 +81,7 @@ onMounted(async () => {
       <div v-if="!error">
         <div v-if="empresas.length > 0" class="empresa-list">
 
-          <div style="display: flex; justify-content: space-between">
+          <div class="empresa-filter">
             <h2 style="font-size: 30px">Empresas en {{ ciudadNombre }}:</h2>
             <div>
               <input v-model="nombreBusqueda" type="search" placeholder="Buscar...">
@@ -129,38 +129,85 @@ onMounted(async () => {
 <style scoped>
 input[type="search"] {
   color: black;
-  padding: 8px;
-  margin-right: 5vh;
+  padding: 9px;
   border: 1px solid #fff;
+  margin-right: 12vh;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 2px 2px 5px black;
   outline: none;
 }
-h2{
-  color: white;
-  margin-bottom: 2vh;
-  margin-left: 2vh;
-}
 
 .decorador {
   display: flex;
 }
-
-.cont-img-tef {
-  width: 190px;
-  text-align: center;
+.empresa-filter{
+  display: flex; 
+  justify-content: space-between;
 }
 
 .empresa-card {
   background-color: #ffffff;
+  margin-bottom: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 100%;
-  margin: 5px;
   display: flex;
   align-items: center;
   transition: transform 0.2s, box-shadow 0.2s;
+}
+
+h2 {
+  color: white;
+  margin-bottom: 2vh;
+  font-size: 30px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.empresa_container {
+  background-color: #387676;
+  border-radius: 15px;
+}
+
+.category-enterprises-container {
+  width: 60%;
+  padding: 10px 0 250px 0;
+  margin: auto;
+  flex-direction: column;
+  align-items: center;
+}
+
+.breadcrumb {
+  font-size: 18px;
+  color: #ff9900;
+  margin: 2vh;
+}
+
+.error-message,
+.no-data {
+  font-size: 18px;
+  color: #ff4d4f;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.empresa-list {
+  width: 100%;
+}
+
+.empresa-img-container {
+  width: 190px;
+  text-align: center;
+}
+
+.empresa-img {
+  max-width: 100%;
+  height: 130px;
+  border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .empresa-contact-info {
@@ -172,109 +219,96 @@ h2{
   margin-bottom: 10px;
 }
 
-a {
-  text-decoration: none;
-}
-
-.Datos {
-  background-color: rgb(0, 0, 0);
-  border-radius: 10px;
-  padding: 40px 40px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-.Datos p {
-  font-size: 17px;
-}
-
-.Datos h2 {
-  color: rgb(235, 160, 48);
-}
-
-.category-enterprises-container {
-  width: 60%;
-  margin:auto;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom:250px ;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  background-color: rgb(23 6 51 / 88%);
-  margin: 30px;
+.empresa-details {
+  text-align: left;
   padding: 10px;
-  border-radius: 10px;
+  color: #333;
+  margin-left: 3vh;
+  width: 80%;
 }
 
-p {
-  margin: 5px 0;
-  color: rgb(0, 0, 0);
-}
-
-.breadcrumb {
-  font-size: 19px;
-  margin-bottom: 2vh;
-  margin-left: 4vh;
-  color: rgb(245, 167, 51);
-  text-shadow:
-    -1px -1px 2px black,
-    -1px 1px 2px black,
-    1px -1px 2px black;
-}
-
-.error-message,
-.no-data {
-  font-size: 18px;
+.empresa-details h3 {
+  font-size: 20px;
   color: #ff4d4f;
-  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
-.empresa-list {
-  width: 100%;
-
+.empresa-description,
+.empresa-address {
+  font-size: 14px;
+  color: #000000;
+  margin-bottom: 8px;
+  word-break: break-word;
 }
-
 
 .empresa-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.empresa-img {
-  max-width: 200px;
-  height: 100px;
-  border-radius: 10px;
-  margin-bottom: 15px;
+@media (max-width: 900px) {
+  .category-enterprises-container {
+    width: 90%;
+    padding: 10px 20px;
+    margin-bottom: 5vh;
+  }
+  .breadcrumb{
+        font-size: medium;
+  }
+
+  .empresa-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+
+  h2{
+    text-align: center;
+    font-size: 25px;
+  }
+
+  .empresa-img {
+    max-width: 165px;
+    max-height: 110px;
+    border-radius: 10px;
+  }
+
+  .empresa-filter{
+  display: flex; 
+  flex-direction: column;
 }
 
-.empresa-details {
-  text-align: justify;
-  padding: 20px;
-  width: 80%;
-  margin-left: 2vh;
+  .empresa-details {
+    padding: 0;
+    margin-top: 10px;
+  }
+
+  .empresa-details h3 {
+    font-size: 16px;
+    color: #ff4d4f;
+  }
+
+  .empresa-description,
+  .empresa-address {
+    font-size: 12px;
+    color: #333;
+    word-break: break-word;
+    margin-bottom: 10px;
+  }
+
+  input[type="search"] {
+    margin: 10px auto;
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
 }
 
-.empresa-details h3 {
-  font-size: 18px;
-  color: #404fd4;
-  margin-bottom: 10px;
-}
-
-.empresa-description,
-.empresa-address {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 16px;
-  color: #000000;
-  word-break: break-word;
-  margin-bottom: 8px;
-}
-
-.empresa-address {
-  color: #000000;
-}
 </style>

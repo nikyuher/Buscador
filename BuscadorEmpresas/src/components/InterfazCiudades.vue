@@ -132,6 +132,7 @@ li {
     box-sizing: border-box;
 }
 
+
 .animate-list li {
     opacity: 1;
     transform: translateY(0);
@@ -139,7 +140,8 @@ li {
 
 li:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.527);
+    ;
 }
 
 /* Estilo de enlaces */
@@ -153,7 +155,8 @@ li:hover {
 }
 
 .category-item:hover {
-    border-radius: 5px;
+    border-radius: 10px;
+    color: #ff4d4f;
 }
 
 .bullet {
