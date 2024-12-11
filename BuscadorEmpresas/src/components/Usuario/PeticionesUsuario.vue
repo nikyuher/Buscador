@@ -2,8 +2,8 @@
 import { useLoginStore } from '@/stores/Login';
 import { useUsuarioStore } from '@/stores/Usuario';
 import { ref, onMounted } from 'vue';
-import { usePeticionesStore } from '@/stores/Peticiones'
-// Definición de los headers para la tabla
+import { usePeticionesStore } from '@/stores/Peticiones';
+
 const headers = ref([
     { text: 'Nº', value: 'index', align: 'start' },
     { text: 'Nombre', value: 'nombreEmpresa' },
@@ -14,7 +14,7 @@ const headers = ref([
 
 const loginStore = useLoginStore();
 const usuarioStore = useUsuarioStore();
-const peticionesStore = usePeticionesStore()
+const peticionesStore = usePeticionesStore();
 
 const idUsuario = loginStore.usuario?.idUsuario;
 
@@ -29,8 +29,8 @@ const DatosPeticionesUsuario = async (id: number) => {
     try {
         await usuarioStore.GetPeticionesByUsuario(id);
         ListaPeticiones.value = usuarioStore.peticionesUsuario;
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        console.error(err);
     }
 };
 
@@ -41,28 +41,27 @@ const confirmarSesion = async () => {
         }
     } catch (err) {
         error.value = true;
-        errorMessage.value = `Su sesión ha caducado. Vuelva a iniciar sesión.`;
+        errorMessage.value = 'Su sesión ha caducado. Vuelva a iniciar sesión.';
     }
 };
 
 const rechazarPeticion = async (idPeticion: number) => {
     try {
         if (idUsuario) {
-            await peticionesStore.EliminarPeticion(idPeticion)
+            await peticionesStore.EliminarPeticion(idPeticion);
 
             success.value = true;
             error.value = false;
             await usuarioStore.GetPeticionesByUsuario(idUsuario);
             ListaPeticiones.value = usuarioStore.peticionesUsuario;
-            successMessage.value = 'Petición rechazada correctamente'
+            successMessage.value = 'Petición rechazada correctamente';
         }
     } catch (err) {
         success.value = false;
         error.value = true;
-
-        errorMessage.value = `${err}`
+        errorMessage.value = `${err}`;
     }
-}
+};
 
 onMounted(() => {
     confirmarSesion();
@@ -76,7 +75,7 @@ onMounted(() => {
 
 <template>
     <h2 style="width: 300px;margin: 5px 50px 30px 50px;">Solicitudes Pendientes</h2>
-    <div v-if="ListaPeticiones.length > 0" style="width: 1200px; margin: auto">
+    <div v-if="ListaPeticiones.length > 0" style="max-width: 1200px; margin: auto">
         <table class="styled-table">
             <thead>
                 <tr>
@@ -115,14 +114,12 @@ onMounted(() => {
 <style scoped>
 
 .cont-data-peticion {
-
     background-color: rgb(226, 232, 255);
     border-radius: 10px;
     margin: 20px;
     padding: 20px;
-    box-shadow: 5px 5px 10px black
+    box-shadow: 5px 5px 10px black;
 }
-
 
 .styled-table {
     width: 100%;
@@ -147,7 +144,6 @@ onMounted(() => {
     background-color: #f9f9f9;
 }
 
-
 img {
     border-radius: 5px;
 }
@@ -155,7 +151,54 @@ img {
 .elimar {
     background-color: red;
     color: white;
-    padding: 07px;
+    padding: 7px;
     border-radius: 5px;
+}
+
+
+@media (max-width: 1460px) {
+    .styled-table {
+        border: 0;
+    }
+
+    .styled-table thead tr th{
+        width: auto;
+        display: flex;
+    }
+
+    .styled-table tbody tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .styled-table td {
+        display: flex;
+        text-align: right;
+        font-size: 0.9em;
+        border: 0;
+        padding: 5px 10px;
+    }
+
+    .styled-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: capitalize;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+    .elimar {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 0.9em;
+    }
 }
 </style>
