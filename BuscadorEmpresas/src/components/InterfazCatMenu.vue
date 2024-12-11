@@ -102,23 +102,27 @@ const reducirCategorias = () => {
 ul {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
+    align-items: stretch;
+    max-width: 1200px;
 }
 
 li {
     display: flex;
     align-items: center;
-    padding: 8px 20px;
+    justify-content: center;
+    padding: 10px 20px;
     border-radius: 5px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: translateY(20px);
     opacity: 0;
     text-align: center;
-    flex: 1 1 calc(33.333% - 100px);
+    flex: 1 1 calc(33.333% - 20px); /* Tres columnas con espacio */
+    box-sizing: border-box;
 }
 
 .animate-list li {
@@ -177,16 +181,25 @@ li:hover {
     }
 
     ul {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 10px;
     }
 
     li {
-        flex: 1 1 100%;
-        justify-content: center;
+        flex: 1 1 calc(50% - 10px); /* Dos columnas en pantallas medianas */
         padding: 10px;
         font-size: 16px;
     }
 }
 
+@media (max-width: 1318px) {
+    ul {
+        flex-direction: column;
+    }
+
+    li {
+        flex: 1 1 100%; /* Una columna en pantallas pequeñas */
+    }
+}
 </style>
+

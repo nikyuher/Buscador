@@ -13,7 +13,7 @@ const esResponsive = ref(window.innerWidth <= 1319);
 
 // Función para actualizar el modo responsive según el ancho de la ventana
 const actualizarModoResponsive = () => {
-    esResponsive.value = window.innerWidth <= 1019;
+    esResponsive.value = window.innerWidth <= 1319;
     mostrarTodo.value = !esResponsive.value; // Mostrar todas las categorías en pantallas grandes
 };
 
@@ -109,26 +109,27 @@ const reducirCiudades = () => {
 ul {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
-}
-h3{
-    margin-bottom: 5vh;
+    align-items: stretch;
+    max-width: 1200px;
 }
 
 li {
     display: flex;
     align-items: center;
-    padding: 8px 20px;
+    justify-content: center;
+    padding: 10px 20px;
     border-radius: 5px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: translateY(20px);
     opacity: 0;
     text-align: center;
-    flex: 1 1 calc(33.333% - 100px);
+    flex: 1 1 calc(33.333% - 20px); /* Tres columnas con espacio */
+    box-sizing: border-box;
 }
 
 .animate-list li {
@@ -152,7 +153,6 @@ li:hover {
 }
 
 .category-item:hover {
-
     border-radius: 5px;
 }
 
@@ -178,38 +178,34 @@ li:hover {
 }
 
 .ver-mas:hover, .ver-menos:hover {
-    background-color: #688f8f;
+    background-color: #7aacac;
 }
-@media (max-width: 1319px) {
-    li {
-    display: flex;
-    align-items: center;
-    padding: 8px 20px;
-    border-radius: 5px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    transform: translateY(20px);
-    opacity: 0;
-    text-align: center;
-    flex: 1 1 calc(33.333% - 20px);
-}
-}
+
 /* Estilos Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 1319px) {
     .Categorias {
         font-size: 28px;
     }
 
     ul {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 10px;
     }
 
     li {
-        flex: 1 1 100%;
-        justify-content: center;
+        flex: 1 1 calc(50% - 10px); /* Dos columnas en pantallas medianas */
         padding: 10px;
         font-size: 16px;
     }
 }
 
+@media (max-width: 1318px) {
+    ul {
+        flex-direction: column;
+    }
+
+    li {
+        flex: 1 1 100%; /* Una columna en pantallas pequeñas */
+    }
+}
 </style>
