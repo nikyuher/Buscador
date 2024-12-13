@@ -254,16 +254,45 @@ onMounted(async () => {
                     </thead>
                     <tbody>
                         <tr v-for="(empresa, index) in listaEmpresas" :key="index" class="style-form">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ empresa.empresa.nombre }}</td>
-                            <td style="word-break: break-word;">{{ empresa.empresa.direccion }}</td>
-                            <td><img :src="empresa.empresa.imagen" alt="Imagen Empresa" width="100" /></td>
                             <td>
+                                <div class="contenedor-td omitir-style">
+                                    <div class="viewMobile">
+                                        <p><strong>Nº: </strong></p>
+                                    </div>
+                                    <div>
+                                        <p>{{ index + 1 }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="contenedor-td">
+                                    <div class="viewMobile">
+                                        <p><strong>Nombre: </strong></p>
+                                    </div>
+                                    <div>
+                                        <p>{{ empresa.empresa.nombre }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="word-break: break-word;">
+
+                                <div class="contenedor-td">
+                                    <div class="viewMobile">
+                                        <p><strong>Direccion: </strong></p>
+                                    </div>
+                                    <div>
+                                        <p>{{ empresa.empresa.direccion }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><img :src="empresa.empresa.imagen" alt="Imagen Empresa" width="100" /></td>
+                            <td class="orden-botones">
                                 <v-dialog v-model="dialogosVisibles[`${empresa.idEmpresa}-editar`]" max-width="600">
                                     <template v-slot:activator="{ props: activatorProps }">
                                         <v-btn class="edit" style="margin-right: 20px;" prepend-icon="mdi-pen"
                                             v-bind="activatorProps"
-                                            @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa.empresa)"></v-btn>
+                                            @click="abrirDialogo(`${empresa.idEmpresa}-editar`); seleccionarEmpresaParaEditar(empresa.empresa)">
+                                        </v-btn>
                                     </template>
                                     <div class="scroll-container">
                                         <form @submit.prevent="confirmarEnvio">
@@ -319,8 +348,9 @@ onMounted(async () => {
                                             @click="eliminarEmpresa(empresa.idUsuarioEmpresa)">
                                             Si
                                         </v-btn>
-                                        <v-btn class="denegar" style="margin-left: 20px;"
-                                            @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No</v-btn>
+                                        <v-btn class="denegar"
+                                            @click="cerrarDialogo(`${empresa.idEmpresa}-eliminar`); limpiarFormulario()">No
+                                        </v-btn>
 
                                     </div>
                                 </v-dialog>
@@ -344,10 +374,15 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.container-table{
-  width: 1200px;
-  margin: auto
+.viewMobile {
+    display: none;
 }
+
+.container-table {
+    width: auto;
+    margin: auto
+}
+
 .scroll-container {
     background-color: white;
     padding: 30px;
@@ -490,6 +525,7 @@ h1 {
     padding: 10px;
     background-color: #ff3535;
     color: white;
+    margin-right: 20px;
 }
 
 .aceptar:hover {
@@ -502,5 +538,81 @@ h1 {
 
 .denegar:hover {
     background-color: #861010;
+}
+
+@media (max-width: 1460px) {
+    .styled-table {
+        border: 0;
+    }
+
+    .styled-table thead tr th {
+        width: auto;
+        display: none;
+    }
+
+    .styled-table tbody tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .styled-table td {
+        display: flex;
+        text-align: right;
+        font-size: 0.9em;
+        border: 0;
+        padding: 5px 10px;
+    }
+
+    .styled-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: capitalize;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+    .elimar {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 0.9em;
+    }
+
+    .denegar,
+    .edit,
+    .aceptar {
+        width: 100%;
+    }
+
+    .viewMobile {
+        display: block;
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .contenedor-td {
+        text-align: left;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+    }
+
+    .orden-botones {
+        display: flex;
+        flex-wrap: wrap;
+
+    }
+
+    .omitir-style .viewMobile {
+        width: 30px;
+    }
 }
 </style>
