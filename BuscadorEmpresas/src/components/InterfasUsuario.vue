@@ -1,24 +1,48 @@
 <script setup lang="ts">
-import ListaEmpresas from '@/components/Usuario/EmpresasUsuario.vue'
-import ListaPeticiones from '@/components/Usuario/PeticionesUsuario.vue'
-import DatosUsuario from '@/components/Usuario/DatosUsuario.vue'
+import ListaEmpresas from '@/components/Usuario/EmpresasUsuario.vue';
+import ListaPeticiones from '@/components/Usuario/PeticionesUsuario.vue';
+import DatosUsuario from '@/components/Usuario/DatosUsuario.vue';
 
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue';
 
-const componenteVisible = ref('DatosUsuario')
-const seleccionado = ref('DatosUsuario') // Mantiene el elemento seleccionado
+const componenteVisible = ref('DatosUsuario');
+const seleccionado = ref('DatosUsuario');
+const mostrarOpciones = ref(false);
 
 const cambiarComponente = (componente: string) => {
-  componenteVisible.value = componente
-  seleccionado.value = componente // Actualiza el elemento seleccionado
-}
+  componenteVisible.value = componente;
+  seleccionado.value = componente;
+};
 
+const toggleOpciones = () => {
+  mostrarOpciones.value = !mostrarOpciones.value;
+};
 
+// Verifica el ancho de la ventana y ajusta mostrarOpciones
+const checkWindowWidth = () => {
+  if (window.innerWidth > 620) {
+    mostrarOpciones.value = true; // Muestra siempre las opciones en pantallas grandes
+  } else {
+    mostrarOpciones.value = false; // Oculta por defecto en pantallas pequeñas
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('resize', checkWindowWidth);
+  checkWindowWidth(); // Ejecuta al montarse
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkWindowWidth);
+});
 </script>
 
 <template>
   <div class="cont-perfil">
-    <div class="barra-opciones">
+    <div class="icon-menu">
+      <v-icon class="boton-menu" @click="toggleOpciones">mdi-menu</v-icon>
+    </div>
+    <div class="barra-opciones" :class="{ visible: mostrarOpciones, oculto: !mostrarOpciones }">
       <p :class="{ activo: seleccionado === 'DatosUsuario' }" @click="cambiarComponente('DatosUsuario')">
         Información Usuario
       </p>
@@ -44,6 +68,14 @@ const cambiarComponente = (componente: string) => {
 </template>
 
 <style scoped>
+.icon-menu {
+  display: none;
+  background-color: rgb(80, 91, 114);
+  color: white;
+  padding: 10px;
+  font-size: 20px;
+}
+
 .barra-opciones {
   background-color: rgb(80, 91, 114);
   width: 300px;
@@ -63,7 +95,6 @@ const cambiarComponente = (componente: string) => {
 .barra-opciones p.activo {
   color: white;
   font-weight: bold;
-  /* Opcional: para mayor énfasis */
 }
 
 .cont-perfil {
@@ -75,5 +106,26 @@ const cambiarComponente = (componente: string) => {
 .contenido {
   flex-grow: 1;
   padding: 20px;
+}
+
+.barra-opciones.oculto {
+  display: none;
+}
+
+.barra-opciones.visible {
+  display: block;
+}
+
+@media (max-width: 620px) {
+  .cont-perfil {
+    display: block;
+  }
+
+  .icon-menu {
+    display: block;
+  }
+  .barra-opciones{
+    width: 100%;
+  }
 }
 </style>

@@ -11,17 +11,23 @@
                 <div class="input-group">
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" v-model="nombre" placeholder="Ingrese su nombre" required />
+                    <div v-if="!isNombreValid" class="error-message">El nombre debe tener más de 3 caracteres.</div>
                 </div>
 
                 <div class="input-group">
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" v-model="correo" placeholder="Ingrese su correo" required />
+                    <div v-if="!isEmailValid" class="error-message">El correo debe ser un @gmail.com válido.</div>
                 </div>
 
                 <div class="input-group">
                     <label for="password">Contraseña</label>
                     <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña"
                         required />
+                    <div v-if="!isPasswordValid" class="error-message">
+                        La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, un número y
+                        un símbolo.
+                    </div>
                 </div>
                 <div class="changePassword">
                     <span class="obj1">
@@ -40,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useLoginStore } from '../stores/Login';
 import { useRouter } from 'vue-router';
 
@@ -54,7 +60,22 @@ const loading = ref(false);
 const loginStore = useLoginStore();
 const router = useRouter();
 
+// Validaciones
+const isNombreValid = ref(true);
+const isEmailValid = ref(true);
+const isPasswordValid = ref(true);
+
 const register = async () => {
+    isNombreValid.value = nombre.value.length > 3;
+    isEmailValid.value = /.+@gmail\.com$/.test(correo.value);
+    isPasswordValid.value = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(password.value);
+
+
+    if (!isEmailValid.value || !isPasswordValid.value || !isNombreValid) {
+        return;
+    }
+
+
     loading.value = true;
     errorMessage.value = null;
     successMessage.value = null;
@@ -80,28 +101,28 @@ const register = async () => {
 
 <style scoped>
 .changePassword {
-  display: flex;
-  margin-bottom: 10px;
-  padding: 5px;
-  justify-content: end;
-  flex-wrap: wrap;
+    display: flex;
+    margin-bottom: 10px;
+    padding: 5px;
+    justify-content: end;
+    flex-wrap: wrap;
 }
 
 .changePassword a {
-  text-decoration: none;
-  color: #0b57d0;
+    text-decoration: none;
+    color: #0b57d0;
 }
 
 .obj1,
 .obj2 {
-  padding: 5px;
-  cursor: pointer;
+    padding: 5px;
+    cursor: pointer;
 }
 
 .obj1:hover,
 .obj2:hover {
-  border-radius: 10px;
-  background-color: rgba(87, 187, 201, 0.205);
+    border-radius: 10px;
+    background-color: rgba(87, 187, 201, 0.205);
 
 }
 
