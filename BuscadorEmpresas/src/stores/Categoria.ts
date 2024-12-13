@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { useLoginStore } from '../stores/Login'
+import BaseUrl from '@/stores/BaseUrl'
 
+const UrlApi = BaseUrl.baseUrl
 interface Caterorias {
   idCategoria: number
   nombre: string
@@ -35,7 +37,7 @@ export const useCategoriaStore = defineStore({
   actions: {
     async GetAllCategorias() {
       try {
-        const response = await fetch(`api/Categoria`, {
+        const response = await fetch(`${UrlApi}/Categoria`, {
           method: 'GET'
         })
 
@@ -56,7 +58,7 @@ export const useCategoriaStore = defineStore({
     },
     async GetCategoriaId(idCategoria: number) {
       try {
-        const response = await fetch(`api/Categoria/${idCategoria}`, {
+        const response = await fetch(`${UrlApi}/Categoria/${idCategoria}`, {
           method: 'GET'
         })
 
@@ -78,7 +80,7 @@ export const useCategoriaStore = defineStore({
     },
     async GetEmpresasByCategoria(idCategoria: number) {
       try {
-        const response = await fetch(`api/Categoria/${idCategoria}/empresas`, {
+        const response = await fetch(`${UrlApi}/Categoria/${idCategoria}/empresas`, {
           method: 'GET'
         })
 
@@ -99,7 +101,7 @@ export const useCategoriaStore = defineStore({
     },
     async GetNumEmpresasByCategoria(idCategoria: number) {
       try {
-        const response = await fetch(`api/Categoria/${idCategoria}/NumEmpresas`, {
+        const response = await fetch(`${UrlApi}/Categoria/${idCategoria}/NumEmpresas`, {
           method: 'GET'
         })
 
@@ -128,7 +130,7 @@ export const useCategoriaStore = defineStore({
           nombre: nombre
         }
 
-        const response = await fetch(`api/Categoria`, {
+        const response = await fetch(`${UrlApi}/Categoria`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`
@@ -152,7 +154,7 @@ export const useCategoriaStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Categoria`, {
+        const response = await fetch(`${UrlApi}/Categoria`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -177,7 +179,7 @@ export const useCategoriaStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Categoria/${idCategoria}`, {
+        const response = await fetch(`${UrlApi}/Categoria/${idCategoria}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`

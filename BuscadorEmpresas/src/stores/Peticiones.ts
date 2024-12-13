@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { useLoginStore } from '../stores/Login'
+import BaseUrl from '@/stores/BaseUrl'
 
+const UrlApi = BaseUrl.baseUrl
 const loginStore = useLoginStore()
 
 interface Peticion {
@@ -36,7 +38,7 @@ export const usePeticionesStore = defineStore({
       try {
         const token = loginStore.token
 
-        const response = await fetch(`api/Peticion`, {
+        const response = await fetch(`${UrlApi}/Peticion`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`
@@ -62,7 +64,7 @@ export const usePeticionesStore = defineStore({
       try {
         const token = loginStore.token
 
-        const response = await fetch(`api/Peticion/validar?peticionId=${idPeticion}`, {
+        const response = await fetch(`${UrlApi}/Peticion/validar?peticionId=${idPeticion}`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`
@@ -83,7 +85,7 @@ export const usePeticionesStore = defineStore({
     async obtenerCiudades() {
       try {
         const token = loginStore.token;
-        const response = await fetch(`api/Ciudad`, {
+        const response = await fetch(`${UrlApi}/Ciudad`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -106,7 +108,7 @@ export const usePeticionesStore = defineStore({
     async obtenerCategorias() {
       try {
         const token = loginStore.token;
-        const response = await fetch(`api/Categoria`, {
+        const response = await fetch(`${UrlApi}/Categoria`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -143,7 +145,7 @@ export const usePeticionesStore = defineStore({
           idCiudadEmpresa: datosPeticion.idCiudadEmpresa
         };
     
-        const response = await fetch(`api/Peticion`, {
+        const response = await fetch(`${UrlApi}/Peticion`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -168,7 +170,7 @@ export const usePeticionesStore = defineStore({
         const token = loginStore.token
         const idUsuario = loginStore.usuario?.idUsuario
 
-        const response = await fetch(`api/Peticion/${idPeticion}?idUsuario=${idUsuario}`, {
+        const response = await fetch(`${UrlApi}/Peticion/${idPeticion}?idUsuario=${idUsuario}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`

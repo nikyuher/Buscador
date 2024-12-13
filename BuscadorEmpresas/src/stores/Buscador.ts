@@ -1,3 +1,7 @@
+import BaseUrl from '@/stores/BaseUrl'
+
+const UrlApi = BaseUrl.baseUrl
+
 interface Empresa {
   idEmpresa: number
   nombre: string
@@ -15,7 +19,7 @@ interface Categoria {
 
 export const fetchCategorias = async (): Promise<Categoria[]> => {
   try {
-    const response = await fetch('/api/Categoria')
+    const response = await fetch(`${UrlApi}/Categoria`)
     return await response.json()
   } catch (error) {
     console.error('Error fetching categories:', error)
@@ -26,7 +30,7 @@ export const fetchCategorias = async (): Promise<Categoria[]> => {
 // Función para obtener sugerencias de empresas
 export const fetchSuggestions = async (keyword: string): Promise<Empresa[]> => {
   try {
-    const response = await fetch(`/api/Empresa/buscar?nombre=${encodeURIComponent(keyword)}`)
+    const response = await fetch(`${UrlApi}/Empresa/buscar?nombre=${encodeURIComponent(keyword)}`)
     return await response.json()
   } catch (error) {
     console.error('Error fetching suggestions:', error)
@@ -37,7 +41,7 @@ export const fetchSuggestions = async (keyword: string): Promise<Empresa[]> => {
 // Función para obtener sugerencias de ciudades
 export const fetchCitySuggestions = async (cityName: string): Promise<Ciudad[]> => {
   try {
-    const response = await fetch(`/api/Ciudad/buscar?nombre=${encodeURIComponent(cityName)}`)
+    const response = await fetch(`${UrlApi}/Ciudad/buscar?nombre=${encodeURIComponent(cityName)}`)
     return await response.json()
   } catch (error) {
     console.error('Error fetching city suggestions:', error)
@@ -49,7 +53,7 @@ export const fetchCitySuggestions = async (cityName: string): Promise<Ciudad[]> 
 export const searchEmpresas = async (keyword: string, city: string): Promise<Empresa[]> => {
   try {
     const response = await fetch(
-      `/api/Empresa/buscar?keyword=${encodeURIComponent(keyword)}&city=${encodeURIComponent(city)}`
+      `${UrlApi}/Empresa/buscar?keyword=${encodeURIComponent(keyword)}&city=${encodeURIComponent(city)}`
     )
     return await response.json()
   } catch (error) {
@@ -62,7 +66,7 @@ export const fetchEmpresasByCategoria = async (
   idCategoria: number
 ): Promise<{ categoriaNombre: string; empresas: { idEmpresa: number; nombre: string }[] }> => {
   try {
-    const response = await fetch(`/api/Categoria/${idCategoria}/empresas`)
+    const response = await fetch(`${UrlApi}/Categoria/${idCategoria}/empresas`)
     if (!response.ok) {
       throw new Error(`Error al obtener empresas por categoría: ${response.statusText}`)
     }
@@ -85,7 +89,7 @@ export const fetchEmpresasByCategoria = async (
 
 export const fetchEmpresasById = async (idEmpresa: number) => {
   try {
-    const response = await fetch(`/api/Empresa/${idEmpresa}`)
+    const response = await fetch(`${UrlApi}/Empresa/${idEmpresa}`)
     if (!response.ok) {
       throw new Error(`Error al obtener el id de las empresas: ${response.statusText}`)
     }
@@ -106,7 +110,7 @@ export const fetchEmpresasById = async (idEmpresa: number) => {
 
 export const fetchCiudadById = async (idCiudad: number) => {
   try {
-    const response = await fetch(`/api/Ciudad/${idCiudad}`)
+    const response = await fetch(`${UrlApi}/Ciudad/${idCiudad}`)
     if (!response.ok) {
       throw new Error(`Error al obtener los detalles de la ciudad: ${response.statusText}`)
     }
@@ -124,7 +128,7 @@ export const fetchCiudadById = async (idCiudad: number) => {
 // Función para obtener las empresas por ID de ciudad
 export const fetchEmpresasByCiudad = async (idCiudad: number) => {
   try {
-    const response = await fetch(`/api/Ciudad/${idCiudad}/empresas`)
+    const response = await fetch(`${UrlApi}/Ciudad/${idCiudad}/empresas`)
     if (!response.ok) {
       throw new Error(`Error al obtener empresas por ciudad: ${response.statusText}`)
     }
@@ -148,7 +152,7 @@ export const fetchEmpresasByCiudad = async (idCiudad: number) => {
 // Función para obtener la empresa por ID de ciudad y empresa
 export const fetchEmpresaByCiudad = async (idEmpresa: number, idCiudad: number) => {
   try {
-    const response = await fetch(`/api/Ciudad/empresa?idEmpresa=${idEmpresa}&idCiudad=${idCiudad}`)
+    const response = await fetch(`${UrlApi}/Ciudad/empresa?idEmpresa=${idEmpresa}&idCiudad=${idCiudad}`)
     if (!response.ok) {
       const errorData = await response.json() // Obtener el mensaje de error de la respuesta
       throw new Error(errorData.message || 'Error desconocido') // Usa el mensaje de error o un mensaje genérico

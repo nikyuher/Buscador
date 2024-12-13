@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { jwtDecode } from 'jwt-decode'
+import BaseUrl from '@/stores/BaseUrl'
 
+const UrlApi = BaseUrl.baseUrl
 interface Usuario {
   idUsuario: number
   nombre: string
@@ -33,7 +35,7 @@ export const useLoginStore = defineStore({
       const login = { correo, contrasena }
 
       try {
-        const response = await fetch(`/api/Usuario/login`, {
+        const response = await fetch(`${UrlApi}/Usuario/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -76,7 +78,7 @@ export const useLoginStore = defineStore({
           correo: correo
         }
 
-        const response = await fetch('/api/Usuario/register', {
+        const response = await fetch(`${UrlApi}/Usuario/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -116,7 +118,7 @@ export const useLoginStore = defineStore({
           correo: email
         }
 
-        const response = await fetch('api/Usuario/solicitar-recuperacion', {
+        const response = await fetch(`${UrlApi}/Usuario/solicitar-recuperacion`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -146,7 +148,7 @@ export const useLoginStore = defineStore({
           codigo: codigo
         }
 
-        const response = await fetch('api/Usuario/verficar-codigo', {
+        const response = await fetch(`${UrlApi}/Usuario/verficar-codigo`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -183,7 +185,7 @@ export const useLoginStore = defineStore({
           confirmarContrasena: password2
         }
 
-        const response = await fetch('api/Usuario/restablecer-contrasena', {
+        const response = await fetch(`${UrlApi}/Usuario/restablecer-contrasena`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -217,7 +219,7 @@ export const useLoginStore = defineStore({
 
         const idUsuario = this.usuario?.idUsuario
 
-        const response = await fetch(`api/Usuario/cambiar-contrasena?idUsuario=${idUsuario}`, {
+        const response = await fetch(`${UrlApi}/Usuario/cambiar-contrasena?idUsuario=${idUsuario}`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${this.token}`,

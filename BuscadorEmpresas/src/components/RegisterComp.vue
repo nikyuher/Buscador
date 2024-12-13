@@ -67,7 +67,8 @@ const isPasswordValid = ref(true);
 
 const register = async () => {
     isNombreValid.value = nombre.value.length > 3;
-    isEmailValid.value = /.+@gmail\.com$/.test(correo.value);
+    isEmailValid.value = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo.value);
+
     isPasswordValid.value = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(password.value);
 
 

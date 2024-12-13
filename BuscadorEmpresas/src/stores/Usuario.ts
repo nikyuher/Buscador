@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 import { useLoginStore } from '../stores/Login'
+import BaseUrl from '@/stores/BaseUrl'
+
+const UrlApi = BaseUrl.baseUrl
 
 interface Usuario {
   idUsuario: number
@@ -43,7 +46,7 @@ export const useUsuarioStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Usuario`, {
+        const response = await fetch(`${UrlApi}/Usuario`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`
@@ -70,7 +73,7 @@ export const useUsuarioStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Usuario/${idUsuario}`, {
+        const response = await fetch(`${UrlApi}/Usuario/${idUsuario}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`
@@ -97,7 +100,7 @@ export const useUsuarioStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Usuario/${idUsuario}/peticiones`, {
+        const response = await fetch(`${UrlApi}/Usuario/${idUsuario}/peticiones`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`
@@ -124,7 +127,7 @@ export const useUsuarioStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Usuario/${idUsuario}/empresas`, {
+        const response = await fetch(`${UrlApi}/Usuario/${idUsuario}/empresas`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`
@@ -151,7 +154,7 @@ export const useUsuarioStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Usuario`, {
+        const response = await fetch(`${UrlApi}/Usuario`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -181,7 +184,7 @@ export const useUsuarioStore = defineStore({
         const loginStore = useLoginStore()
         const token = loginStore.token
 
-        const response = await fetch(`api/Usuario/${idUsuario}`, {
+        const response = await fetch(`${UrlApi}/Usuario/${idUsuario}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`
@@ -206,7 +209,7 @@ export const useUsuarioStore = defineStore({
         const idUsuario = loginStore.usuario?.idUsuario
 
         const response = await fetch(
-          `api/Usuario/${idUsuario}/empresa?idEmpresaUsuario=${IdEmpresaUsuario}`,
+          `${UrlApi}/Usuario/${idUsuario}/empresa?idEmpresaUsuario=${IdEmpresaUsuario}`,
           {
             method: 'DELETE',
             headers: {
