@@ -275,7 +275,6 @@ onMounted(async () => {
                                 </div>
                             </td>
                             <td style="word-break: break-word;">
-
                                 <div class="contenedor-td">
                                     <div class="viewMobile">
                                         <p><strong>Direccion: </strong></p>

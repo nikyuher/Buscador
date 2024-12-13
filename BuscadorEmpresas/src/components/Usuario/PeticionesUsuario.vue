@@ -89,10 +89,46 @@ onMounted(() => {
             </thead>
             <tbody>
                 <tr v-for="(peticion, index) in ListaPeticiones" :key="index">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ peticion.nombreEmpresa }}</td>
-                    <td style="border: none;text-align: justify;word-break: break-word;">{{ peticion.descripcionEmpresa }}</td>
-                    <td>{{ peticion.direccionEmpresa }}</td>
+                    <td>
+                        <div class="contenedor-td omitir-style">
+                            <div class="viewMobile">
+                                <p><strong>Nº: </strong></p>
+                            </div>
+                            <div>
+                                <p>{{ index + 1 }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contenedor-td">
+                            <div class="viewMobile">
+                                <p><strong>Nombre: </strong></p>
+                            </div>
+                            <div>
+                                <p>{{ peticion.nombreEmpresa }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="border: none;word-break: break-word;">
+                        <div class="contenedor-td">
+                            <div class="viewMobile">
+                                <p><strong>Descripcion: </strong></p>
+                            </div>
+                            <div>
+                                <p>{{ peticion.descripcionEmpresa }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contenedor-td">
+                            <div class="viewMobile">
+                                <p><strong>Direccion: </strong></p>
+                            </div>
+                            <div>
+                                <p>{{ peticion.direccionEmpresa }}</p>
+                            </div>
+                        </div>
+                    </td>
                     <td><img :src="peticion.imagenEmpresaURL" alt="Imagen Empresa" width="100" /></td>
                     <td><button class="elimar" @click="rechazarPeticion(peticion.idPeticion)">Eliminar</button></td>
                 </tr>
@@ -112,7 +148,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .cont-data-peticion {
     background-color: rgb(226, 232, 255);
     border-radius: 10px;
@@ -161,9 +196,9 @@ img {
         border: 0;
     }
 
-    .styled-table thead tr th{
+    .styled-table thead tr th {
         width: auto;
-        display: flex;
+        display: none;
     }
 
     .styled-table tbody tr {
@@ -199,6 +234,36 @@ img {
         width: 100%;
         margin-top: 10px;
         font-size: 0.9em;
+    }
+
+    .denegar,
+    .edit,
+    .aceptar {
+        width: 100%;
+    }
+
+    .viewMobile {
+        display: block;
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .contenedor-td {
+        text-align: left;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+    }
+
+    .orden-botones {
+        display: flex;
+        flex-wrap: wrap;
+
+    }
+
+    .omitir-style .viewMobile {
+        width: 30px;
     }
 }
 </style>
